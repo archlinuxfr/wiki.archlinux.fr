@@ -78,10 +78,6 @@ $messages = array(
 'qbedit'         => 'Ẓṛeg',
 'qbspecialpages' => 'Tudmawin Special',
 
-# Vector skin
-'vector-namespace-main'      => 'Tasna',
-'vector-namespace-mediawiki' => 'Tabrat',
-
 'errorpagetitle'   => 'Anezri',
 'returnto'         => 'Dwl ghar $1.',
 'tagline'          => 'Zi {{SITENAME}}',
@@ -99,7 +95,7 @@ $messages = array(
 'editthispage'     => 'Ẓṛg tasna ya',
 'delete'           => 'Kks',
 'protect'          => 'Mstn',
-'protect_change'   => '↓ sbadl',
+'protect_change'   => 'sbadl',
 'newpage'          => 'Tasna d-tamaynut',
 'talkpage'         => 'Siwl xf tasna ya',
 'talkpagelinktext' => 'Awal',
@@ -168,7 +164,7 @@ teqqad ad yilli days ca n usekkil war itwagg deg isem .',
 # Login and logout pages
 'yourname'                => 'Izwl-usqdac:',
 'yourpassword'            => 'Tawalt n wadaf:',
-'remembermypassword'      => 'ejj (login) inu deg uselkim a',
+'remembermypassword'      => 'ejj (login) inu deg uselkim a (for a maximum of $1 {{PLURAL:$1|day|days}})',
 'login'                   => 'Adf',
 'nav-login-createaccount' => 'Adef / egg amiḍan',
 'loginprompt'             => "itxessa ad-teṭfed (''cookies'') bac ad tadfed ɣar {{SITENAME}}.",
@@ -270,9 +266,6 @@ mala war texsed tirra inac ad twaẓṛegent , ad twamsebḍant .
 Ur ten-teg ca da.<br />
 tjadjid-anɣ Ɛawt ila qa d cekk ig yuran manaya, niɣ tesneɣlet-id zi ca n uɣbal nniḍn d alelli.
 '''UR SADDAF CA TIRRA ƔARSENT COPYRIGHTE BLA MA AD-IXES BAB-INES !'''",
-'longpagewarning'            => "'''WARNING: Tasna ya dag-s $1 kilobyte ;
-ca n imsuṭṭuyen(browsers) war zemren ca ad ẓṛegen tasniwin dag-sent 32 kb niɣ ktar.
-ixessa ad ten tebḍid ɣar tigezmin(sections) d timeẓyanin.'''",
 'templatesused'              => 'Timudmiwin itwaggen di Tasna ya:',
 'templatesusedpreview'       => 'Timudmiwin igg itwasxdemen dg uzar-ascan a :',
 'template-protected'         => '(twaḥḍa)',
@@ -405,7 +398,7 @@ Tasniwin di [[Special:Watchlist|your watchlist]] d '''tizurarin'''.",
 'filehist-dimensions'       => 'Tisektiwin',
 'filehist-filesize'         => 'Tiddi n ufaylu',
 'filehist-comment'          => 'Tinit',
-'imagelinks'                => '↓ Iwurn n usdaw',
+'imagelinks'                => 'Iwurn n usdaw',
 'linkstoimage'              => '{{PLURAL:$1|Tasna ya teqn-ad|$1 Tasniwin a qnent-id}} ɣa ufaylu ya :',
 'nolinkstoimage'            => 'war telli ca n Tasna teqqen-d ɣa ufaylu ya.',
 'sharedupload'              => 'Wa d ijj ufaylu itwacrec jar aṭṭas n isenfaren(projects).',
@@ -512,7 +505,6 @@ Tasniwin di [[Special:Watchlist|your watchlist]] d '''tizurarin'''.",
 # Watchlist
 'watchlist'         => 'Tabdart uḥṭṭu inu',
 'mywatchlist'       => 'Tabdart uḥṭṭu inu',
-'watchlistfor'      => "(i '''$1''')",
 'addedwatch'        => 'Temmarni ɣar Tabdart uḥṭṭu',
 'addedwatchtext'    => 'Tasna "[[:$1]]" Temmarni ɣar [[Special:Watchlist|Tabdart uḥṭṭu]].',
 'removedwatch'      => 'twakkes zi Tabdart uḥṭṭu',
@@ -671,17 +663,17 @@ snaqlitent s ufus.'''",
 'importlogpage' => 'Siri-d aɣmis',
 
 # Tooltip help for the actions
-'tooltip-pt-userpage'             => '↓ Tasna inu',
+'tooltip-pt-userpage'             => 'Tasna inu',
 'tooltip-pt-mytalk'               => 'Tasna usiwl inu',
 'tooltip-pt-preferences'          => 'Isemyifiyen inu',
 'tooltip-pt-watchlist'            => 'Tabdart n Tasniwin umi txmamd bac ad-ten teẓṛegd',
-'tooltip-pt-mycontris'            => '↓ Umuɣ n tiwuriwin inu',
+'tooltip-pt-mycontris'            => 'Umuɣ n tiwuriwin inu',
 'tooltip-pt-login'                => 'Neqqar ac adef s umiḍan nnek; maca malla texsed waha',
 'tooltip-pt-logout'               => 'Ufugh',
 'tooltip-ca-talk'                 => 'Amsawal xef tasna n ukettur',
 'tooltip-ca-edit'                 => 'Tzemmared a tẓeṛged tasna ya.
 Bbeẓ x ufeskar n uzar-timeẓṛi zzat i gha txemmled min turid',
-'tooltip-ca-addsection'           => '↓ Arni tinit deg usiwl a.',
+'tooltip-ca-addsection'           => 'Arni tinit deg usiwl a.',
 'tooltip-ca-viewsource'           => 'Tasna ya tẓarq. tzemred atẓred aɣbal ines.',
 'tooltip-ca-history'              => 'Isughulen izrin n tasna ya.',
 'tooltip-ca-protect'              => 'Ẓarq Tasna ya',
@@ -726,9 +718,9 @@ Bbeẓ x ufeskar n uzar-timeẓṛi zzat i gha txemmled min turid',
 'nextdiff'     => 'Amṣebḍi zzat  →',
 
 # Media information
-'file-info-size'       => '($1 × $2 pixel, tiddi(size) n ufaylu: $3, anaw(type) n MIME: $4)',
+'file-info-size'       => '$1 × $2 pixel, tiddisize n ufaylu: $3, anawtype n MIME: $4',
 'file-nohires'         => '<small>walu ca n resolution yemɣa x wa.</small>',
-'svg-long-desc'        => '(Afaylu n SVG, dis $1 × $2 pixel, Tiddi n ufaylu: $3)',
+'svg-long-desc'        => 'Afaylu n SVG, dis $1 × $2 pixel, Tiddi n ufaylu: $3',
 'show-big-image'       => 'Resolution ameqran',
 'show-big-image-thumb' => '<small>Tiddi n uzar-ascan: $1 × $2 pixel </small>',
 
