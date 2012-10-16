@@ -58,16 +58,23 @@ class SrConverter extends LanguageConverter {
 		);
 	}
 
-	/* rules should be defined as -{ekavian | iyekavian-} -or-
-		-{code:text | code:text | ...}-
-		update: delete all rule parsing because it's not used
-		        currently, and just produces a couple of bugs
-	*/
+	/**
+	 * rules should be defined as -{ekavian | iyekavian-} -or-
+	 * -{code:text | code:text | ...}-
+	 *
+	 * update: delete all rule parsing because it's not used
+	 * currently, and just produces a couple of bugs
+	 *
+	 * @param $rule string
+	 * @param $flags array
+	 * @return array
+	 */
 	function parseManualRule( $rule, $flags = array() ) {
 		if ( in_array( 'T', $flags ) ) {
 			return parent::parseManualRule( $rule, $flags );
 		}
 
+		$carray = array();
 		// otherwise ignore all formatting
 		foreach ( $this->mVariants as $v ) {
 			$carray[$v] = $rule;
@@ -76,11 +83,15 @@ class SrConverter extends LanguageConverter {
 		return $carray;
 	}
 
-	/*
+	/**
 	 * A function wrapper:
 	 *   - if there is no selected variant, leave the link
 	 *     names as they were
 	 *   - do not try to find variants for usernames
+	 *
+	 * @param $link string
+	 * @param $nt Title
+	 * @param $ignoreOtherCond bool
 	 */
 	function findVariantLink( &$link, &$nt, $ignoreOtherCond = false ) {
 		// check for user namespace
@@ -96,9 +107,14 @@ class SrConverter extends LanguageConverter {
 			$link = $oldlink;
 	}
 
-	/*
+	/**
 	 * We want our external link captions to be converted in variants,
 	 * so we return the original text instead -{$text}-, except for URLs
+	 *
+	 * @param $text string
+	 * @param $noParse bool
+	 *
+	 * @return string
 	 */
 	function markNoConversion( $text, $noParse = false ) {
 		if ( $noParse || preg_match( "/^https?:\/\/|ftp:\/\/|irc:\/\//", $text ) )
@@ -106,9 +122,14 @@ class SrConverter extends LanguageConverter {
 		return $text;
 	}
 
-	/*
+	/**
 	 * An ugly function wrapper for parsing Image titles
 	 * (to prevent image name conversion)
+	 *
+	 * @param $text string
+	 * @param $toVariant bool
+	 *
+	 * @return string
 	 */
 	function autoConvert( $text, $toVariant = false ) {
 		global $wgTitle;
@@ -122,6 +143,11 @@ class SrConverter extends LanguageConverter {
 	/**
 	 *  It translates text into variant, specials:
 	 *    - ommiting roman numbers
+	 *
+	 * @param $text string
+	 * @param $toVariant string
+	 *
+	 * @return string
 	 */
 	function translate( $text, $toVariant ) {
 		$breaks = '[^\w\x80-\xff]';
@@ -147,6 +173,32 @@ class SrConverter extends LanguageConverter {
 
 		return $ret;
 	}
+
+	/**
+	 * Guess if a text is written in Cyrillic or Latin.
+	 * Overrides LanguageConverter::guessVariant()
+	 *
+	 * @param string  $text The text to be checked
+	 * @param string  $variant Language code of the variant to be checked for
+	 * @return bool  true if $text appears to be written in $variant
+	 *
+	 * @author Nikola Smolenski <smolensk@eunet.rs>
+	 * @since 1.19
+	 */
+	public function guessVariant( $text, $variant ) {
+		$numCyrillic = preg_match_all("/[шђчћжШЂЧЋЖ]/u", $text, $dummy);
+		$numLatin = preg_match_all("/[šđčćžŠĐČĆŽ]/u", $text, $dummy);
+
+		if( $variant == 'sr-ec' ) {
+			return (boolean) ($numCyrillic > $numLatin);
+		} elseif( $variant == 'sr-el' ) {
+			return (boolean) ($numLatin > $numCyrillic);
+		} else {
+			return false;
+		}
+
+	}
+
 }
 
 /**
@@ -175,13 +227,26 @@ class LanguageSr extends LanguageSr_ec {
 		$wgHooks['ArticleSaveComplete'][] = $this->mConverter;
 	}
 
+	/**
+	 * @param $count int
+	 * @param $forms array
+	 *
+	 * @return string
+	 */
 	function convertPlural( $count, $forms ) {
-		if ( !count( $forms ) ) { return ''; }
+		if ( !count( $forms ) ) {
+			return '';
+		}
 
-		// if no number with word, then use $form[0] for singular and $form[1] for plural or zero
-		if ( count( $forms ) === 2 ) return $count == 1 ? $forms[0] : $forms[1];
+		// If the actual number is not mentioned in the expression, then just two forms are enough:
+		// singular for $count == 1
+		// plural   for $count != 1
+		// For example, "This user belongs to {{PLURAL:$1|one group|several groups}}."
+		if ( count( $forms ) === 2 ) {
+			return $count == 1 ? $forms[0] : $forms[1];
+		}
 
-		// FIXME: CLDR defines 4 plural forms. Form with decimals missing.
+		// @todo FIXME: CLDR defines 4 plural forms. Form with decimals missing.
 		// See http://unicode.org/repos/cldr-tmp/trunk/diff/supplemental/language_plural_rules.html#ru
 		$forms = $this->preConvertPlural( $forms, 3 );
 

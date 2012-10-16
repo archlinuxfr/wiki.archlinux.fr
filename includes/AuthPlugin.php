@@ -67,7 +67,7 @@ class AuthPlugin {
 	 * Modify options in the login template.
 	 *
 	 * @param $template UserLoginTemplate object.
-	 * @param $type String 'signup' or 'login'.
+	 * @param $type String 'signup' or 'login'. Added in 1.16.
 	 */
 	public function modifyUITemplate( &$template, &$type ) {
 		# Override this!
@@ -131,6 +131,8 @@ class AuthPlugin {
 	 * and use the same keys. 'Realname' 'Emailaddress' and 'Nickname'
 	 * all reference this.
 	 *
+	 * @param $prop string
+	 *
 	 * @return Boolean
 	 */
 	public function allowPropChange( $prop = '' ) {
@@ -151,6 +153,15 @@ class AuthPlugin {
 	 * @return bool
 	 */
 	public function allowPasswordChange() {
+		return true;
+	}
+
+	/**
+	 * Should MediaWiki store passwords in its local database?
+	 *
+	 * @return bool
+	 */
+	public function allowSetLocalPassword() {
 		return true;
 	}
 
@@ -254,9 +265,20 @@ class AuthPlugin {
 	 * Get an instance of a User object
 	 *
 	 * @param $user User
+	 *
+	 * @return AuthPluginUser
 	 */
 	public function getUserInstance( User &$user ) {
 		return new AuthPluginUser( $user );
+	}
+
+	/**
+	 * Get a list of domains (in HTMLForm options format) used.
+	 *
+	 * @return array
+	 */
+	public function domainList() {
+		return array();
 	}
 }
 

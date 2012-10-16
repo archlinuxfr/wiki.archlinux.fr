@@ -142,8 +142,6 @@ $messages = array(
 'index-category'                 => 'Pàgina indicizëda',
 'noindex-category'               => ' Pàgina non indicizëda',
 
-'mainpagetext' => "'''L'instalaziòn d'MediaWiki l'è andêda ben'''",
-
 'about'         => "A prupòsit d'",
 'article'       => 'Artècual',
 'newwindow'     => "(la s'avèra int'una fnèstra nova)",
@@ -283,8 +281,6 @@ Par piasé, fa raport a un [[Special:ListUsers/sysop|aministrador]] cun la nota 
 'extlink_tip'     => 'Culegamént esteran (arcordat d\'scrivar dadnénz "http://")',
 'headline_sample' => 'Intestaziòn',
 'headline_tip'    => "Intestaziòn d'e' sgond livèl",
-'math_sample'     => 'Mèt aquè dentar una formula',
-'math_tip'        => 'Formula metemètica (LaTeX)',
 'nowiki_sample'   => 'Mèt dentar i tu scrètt sìnza furmataziòn',
 'nowiki_tip'      => 'Làsa perdar la furmataziòn wiki',
 'image_tip'       => "Figura ch'la sta insèn a e' scrètt",
@@ -480,8 +476,7 @@ $1 {{PLURAL:$1|elemént|elemént}}',
 'linksearch' => 'Ghènz int ê web',
 
 # Special:Log/newusers
-'newuserlogpage'          => "Regèstar d'j nov",
-'newuserlog-create-entry' => "L'è arivé un patàca nov",
+'newuserlogpage' => "Regèstar d'j nov",
 
 # Special:ListGroupRights
 'listgrouprights-members' => "(Lèsta d'j mèmbar)",
@@ -492,10 +487,8 @@ $1 {{PLURAL:$1|elemént|elemént}}',
 # Watchlist
 'watchlist'         => "Pàgin ch'a ten d'öcc",
 'mywatchlist'       => "Pàgin ch'a ten d'öcc",
-'addedwatch'        => "Mett insem a la lèsta d'pàgin sot öcc",
 'addedwatchtext'    => "La pàgina \"[[:\$1]]\" adès l'è int la lèsta dal [[Special:Watchlist|pàgin da tnì d'öcc]]. D'ôra inenz t'pù avdé tòt al mudèfic a sta pàgina e a la pàgina d'cunversaziòn int la [[Special:RecentChanges|lèsta d'j cambiamént rezent]], in '''gros''', acsè j 's'pò guardè mej.
 Se in un sgond temp t'vu cavé la pàgina dala lèsta da tnì d'öcc, s-cjaza un'ètra volta sora e' butòn \"ten d'öcc\".",
-'removedwatch'      => 'Cavé dala lèsta dal pàgin da tnì sot öcc',
 'removedwatchtext'  => 'La pàgina "[[:$1]]" l\'è stëda scanzlèda dala lèsta dal [[Special:Watchlist|pàgin da tnì sot öcc]].',
 'watch'             => "Tèn d'öcc",
 'watchthispage'     => "Ten d'öcc sta pagina",
@@ -513,9 +506,8 @@ Se in un sgond temp t'vu cavé la pàgina dala lèsta da tnì d'öcc, s-cjaza un
 'confirmdeletetext'     => "Oci! T'ste par scanzlè una pàgina cun tòta la storia d'j su cambiamént.
 Par piasé, cunferma ch't'ê propri l'intenziòn d'fël, ch'at capèss al su conseguenzi e quel ch't fë adès l'è in regola cun al [[{{MediaWiki:Policy-url}}]].",
 'actioncomplete'        => 'Lavor fät e finì',
-'deletedtext'           => 'La pàgina "<nowiki>$1</nowiki>" l\'è stëda scanzlèda.
+'deletedtext'           => 'La pàgina "$1" l\'è stëda scanzlèda.
 Guèrda $2 par avdé la lèsta daglj ultum scanzeladür.',
-'deletedarticle'        => 'l\'à scanzlé "[[$1]]"',
 'dellogpage'            => 'Regèstar dal scanzladùr',
 'deletecomment'         => 'Rasòn:',
 'deleteotherreason'     => 'Ètar mutiv:',
@@ -532,7 +524,7 @@ Guèrda $2 par avdé la lèsta daglj ultum scanzeladür.',
 'protectexpiry'               => 'Scadenza:',
 'protect_expiry_invalid'      => "La scadenza la n'è piò bona.",
 'protect_expiry_old'          => "T'cì ariv tèrd! La dèda d'scadenza l'è zà pasëda.",
-'protect-text'                => "Cun ste mudèl u s'pò guardè e u s'pò cambié ê livèl d'pruteziòn dla pàgina '''<nowiki>$1</nowiki>'''.",
+'protect-text'                => "Cun ste mudèl u s'pò guardè e u s'pò cambié ê livèl d'pruteziòn dla pàgina '''$1'''.",
 'protect-locked-access'       => "Oci! Ta n'ê miga i parmess par cambié i livel d'pruteziòn dla pàgina.
 S't'vù vdë in dô ch'j è i parmess, guèrda '''$1''':",
 'protect-cascadeon'           => "Sta pàgina pr'adès l'è bluchëda parchè l'è stra l'{{PLURAL:$1|la pàgina aquè sota, ch'l'à|al pàgin aquè sota, ch'j'à}} la pruteziòn ricursiva.
@@ -549,8 +541,7 @@ T'pù cambié ê livel d'pruteziòn d'sta pàgina, mo la pruteziòn ricursiva la
 'restriction-level'           => "Livel d'restriziòn:",
 
 # Undelete
-'undeletelink'     => 'Guèrda/Torna indrì',
-'undeletedarticle' => 'l\'à artruvè "[[$1]]"',
+'undeletelink' => 'Guèrda/Torna indrì',
 
 # Namespace form on various pages
 'namespace'      => "Spàzi d'é nom:",
@@ -631,8 +622,6 @@ Par piaser, daij un ètar nom.",
 Par piasé, met insem al du pàgin te, fasend copia e incola.",
 'movedto'          => 'Spusté vers:',
 'movetalk'         => "Sposta ènca la pàgina d'cunversaziòn",
-'1movedto2'        => "[[$1]] l'è stê mòs a [[$2]]",
-'1movedto2_redir'  => "[[$1]] l'è stè moss in [[$2]] par redireziòn",
 'movelogpage'      => "Regéstar d'j muvimént",
 'movereason'       => 'Rasòn:',
 'revertmove'       => 'Métla cum era prèma',
@@ -702,11 +691,10 @@ Par piasé, met insem al du pàgin te, fasend copia e incola.",
 'nextdiff'     => 'Mudèfica piò nova →',
 
 # Media information
-'file-info-size'       => "$1 × $2 pixel, amsùra d'e' file: $3, tipo MIME: $4",
-'file-nohires'         => "<small>U n' è pusèbil d'avdé cun òna risoluziòn piò élta. </small>",
-'svg-long-desc'        => "file d'taja SVG, dimensiòn numinèli $1 × $2 pixel, dimensiòn d'e' file: $3",
-'show-big-image'       => 'Versiòn ad amsura pina',
-'show-big-image-thumb' => "<small>Amsùra d'sta versiòn: $1 × $2 pixel</small>",
+'file-info-size' => "$1 × $2 pixel, amsùra d'e' file: $3, tipo MIME: $4",
+'file-nohires'   => "U n' è pusèbil d'avdé cun òna risoluziòn piò élta.",
+'svg-long-desc'  => "file d'taja SVG, dimensiòn numinèli $1 × $2 pixel, dimensiòn d'e' file: $3",
+'show-big-image' => 'Versiòn ad amsura pina',
 
 # Bad image list
 'bad_image_list' => "E' quèdar l'è quest'aquè:
@@ -728,11 +716,17 @@ Se parò un qvelcadon à lavurè sora sta figura, zerti infurmaziòn j n' curesp
 * exposuretime
 * fnumber
 * isospeedratings
-* focallength",
+* focallength
+* artist
+* copyright
+* imagedescription
+* gpslatitude
+* gpslongitude
+* gpsaltitude",
 
 # External editor support
 'edit-externally'      => 'Mudèfica ste file cun un prugrama esteran',
-'edit-externally-help' => "(Guèrda e' [http://www.mediawiki.org/wiki/Manual:External_editors setup instructions] par avé d'j ètri infurmaziòn) (l'è in inglés)",
+'edit-externally-help' => "(Guèrda e' [//www.mediawiki.org/wiki/Manual:External_editors setup instructions] par avé d'j ètri infurmaziòn) (l'è in inglés)",
 
 # 'all' in various places, this might be different for inflected languages
 'watchlistall2' => 'tòt',

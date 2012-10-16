@@ -40,7 +40,7 @@ class CommandLineInstaller extends Maintenance {
 
 		$this->addArg( 'admin', 'The username of the wiki administrator (WikiSysop)', true );
 		$this->addOption( 'pass', 'The password for the wiki administrator. You will be prompted for this if it isn\'t provided', false, true );
-		$this->addOption( 'email', 'The email for the wiki administrator', false, true );
+		/* $this->addOption( 'email', 'The email for the wiki administrator', false, true ); */
 		$this->addOption( 'scriptpath', 'The relative path of the wiki in the web server (/wiki)', false, true );
 
 		$this->addOption( 'lang', 'The language to use (en)', false, true );
@@ -51,10 +51,12 @@ class CommandLineInstaller extends Maintenance {
 		$this->addOption( 'dbport', 'The database port; only for PostgreSQL (5432)', false, true );
 		$this->addOption( 'dbname', 'The database name (my_wiki)', false, true );
 		$this->addOption( 'dbpath', 'The path for the SQLite DB (/var/data)', false, true );
+		$this->addOption( 'dbprefix', 'Optional database table name prefix', false, true );
 		$this->addOption( 'installdbuser', 'The user to use for installing (root)', false, true );
 		$this->addOption( 'installdbpass', 'The pasword for the DB user to install as.', false, true );
 		$this->addOption( 'dbuser', 'The user to use for normal operations (wikiuser)', false, true );
 		$this->addOption( 'dbpass', 'The pasword for the DB user for normal operations', false, true );
+		$this->addOption( 'dbpassfile', 'An alternative way to provide dbpass option, as the contents of this file', false, true );
 		$this->addOption( 'confpath', "Path to write LocalSettings.php to, default $IP", false, true );
 		/* $this->addOption( 'dbschema', 'The schema for the MediaWiki DB in pg (mediawiki)', false, true ); */
 		/* $this->addOption( 'namespace', 'The project namespace (same as the name)', false, true ); */
@@ -66,6 +68,17 @@ class CommandLineInstaller extends Maintenance {
 		$siteName = isset( $this->mArgs[0] ) ? $this->mArgs[0] : "Don't care"; // Will not be set if used with --env-checks
 		$adminName = isset( $this->mArgs[1] ) ? $this->mArgs[1] : null;
 		$wgTitle = Title::newFromText( 'Installer script' );
+
+		$dbpassfile = $this->getOption( 'dbpassfile', false );
+		if ( $dbpassfile !== false ) {
+			wfSuppressWarnings();
+			$dbpass = file_get_contents( $dbpassfile );
+			wfRestoreWarnings();
+			if ( $dbpass === false ) {
+				$this->error( "Couldn't open $dbpassfile", true );
+			}
+			$this->mOptions['dbpass'] = trim( $dbpass, "\r\n" );
+		}
 
 		$installer =
 			new CliInstaller( $siteName, $adminName, $this->mOptions );

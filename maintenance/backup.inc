@@ -47,11 +47,25 @@ class BackupDumper {
 	var $skipFooter = false; // don't output </mediawiki>
 	var $startId    = 0;
 	var $endId      = 0;
+	var $revStartId = 0;
+	var $revEndId   = 0;
 	var $sink       = null; // Output filters
 	var $stubText   = false; // include rev_text_id instead of text; for 2-pass dump
 	var $dumpUploads = false;
+	var $dumpUploadFileContents = false;
+	var $lastTime = 0;
+	var $pageCountLast = 0;
+	var $revCountLast = 0;
+	var $ID = 0;
 
-	function BackupDumper( $args ) {
+	var $outputTypes = array(), $filterTypes = array();
+
+	/**
+	 * @var LoadBalancer
+	 */
+	protected $lb;
+
+	function __construct( $args ) {
 		$this->stderr = fopen( "php://stderr", "wt" );
 
 		// Built-in output and filter plugins
@@ -119,18 +133,17 @@ class BackupDumper {
 						$sinks[] = $sink;
 					}
 					if ( !isset( $this->outputTypes[$val] ) ) {
-						wfDie( "Unrecognized output sink type '$val'\n" );
+						$this->fatalError( "Unrecognized output sink type '$val'" );
 					}
 					$type = $this->outputTypes[$val];
 					$sink = new $type( $param );
 					break;
 				case "filter":
 					if ( is_null( $sink ) ) {
-						$this->progress( "Warning: assuming stdout for filter output\n" );
 						$sink = new DumpOutput();
 					}
 					if ( !isset( $this->filterTypes[$val] ) ) {
-						wfDie( "Unrecognized filter type '$val'\n" );
+						$this->fatalError( "Unrecognized filter type '$val'" );
 					}
 					$type = $this->filterTypes[$val];
 					$filter = new $type( $sink, $param );
@@ -150,8 +163,8 @@ class BackupDumper {
 					if ( !function_exists( 'utf8_normalize' ) ) {
 						wfDl( "php_utfnormal.so" );
 						if ( !function_exists( 'utf8_normalize' ) ) {
-							wfDie( "Failed to load UTF-8 normalization extension. " .
-								"Install or remove --force-normal parameter to use slower code.\n" );
+							$this->fatalError( "Failed to load UTF-8 normalization extension. " .
+								"Install or remove --force-normal parameter to use slower code." );
 						}
 					}
 					break;
@@ -188,6 +201,7 @@ class BackupDumper {
 		$db = $this->backupDb();
 		$exporter = new WikiExporter( $db, $history, WikiExporter::STREAM, $text );
 		$exporter->dumpUploads = $this->dumpUploads;
+		$exporter->dumpUploadFileContents = $this->dumpUploadFileContents;
 
 		$wrapper = new ExportProgressFilter( $this->sink, $this );
 		$exporter->setOutputSink( $wrapper );
@@ -205,6 +219,8 @@ class BackupDumper {
 		} else if ( is_null( $this->pages ) ) {
 			if ( $this->startId || $this->endId ) {
 				$exporter->pagesByRange( $this->startId, $this->endId );
+			} elseif ( $this->revStartId || $this->revEndId ) {
+				$exporter->revsByRange( $this->revStartId, $this->revEndId );
 			} else {
 				$exporter->allPages();
 			}
@@ -232,12 +248,15 @@ class BackupDumper {
 		$dbr = wfGetDB( DB_SLAVE );
 		$this->maxCount = $dbr->selectField( $table, "MAX($field)", '', __METHOD__ );
 		$this->startTime = wfTime();
+		$this->lastTime = $this->startTime;
+		$this->ID = getmypid();
 	}
 
 	/**
 	 * @todo Fixme: the --server parameter is currently not respected, as it
 	 * doesn't seem terribly easy to ask the load balancer for a particular
 	 * connection by name.
+	 * @return DatabaseBase
 	 */
 	function backupDb() {
 		$this->lb = wfGetLBFactory()->newMainLB();
@@ -280,31 +299,50 @@ class BackupDumper {
 
 	function showReport() {
 		if ( $this->reporting ) {
-			$delta = wfTime() - $this->startTime;
 			$now = wfTimestamp( TS_DB );
-			if ( $delta ) {
-				$rate = $this->pageCount / $delta;
-				$revrate = $this->revCount / $delta;
+			$nowts = wfTime();
+			$deltaAll = wfTime() - $this->startTime;
+			$deltaPart = wfTime() - $this->lastTime;
+			$this->pageCountPart = $this->pageCount - $this->pageCountLast;
+			$this->revCountPart = $this->revCount - $this->revCountLast;
+
+			if ( $deltaAll ) {
 				$portion = $this->revCount / $this->maxCount;
-				$eta = $this->startTime + $delta / $portion;
+				$eta = $this->startTime + $deltaAll / $portion;
 				$etats = wfTimestamp( TS_DB, intval( $eta ) );
+				$pageRate = $this->pageCount / $deltaAll;
+				$revRate = $this->revCount / $deltaAll;
 			} else {
-				$rate = '-';
-				$revrate = '-';
+				$pageRate = '-';
+				$revRate = '-';
 				$etats = '-';
 			}
-			$this->progress( sprintf( "%s: %s %d pages (%0.3f/sec), %d revs (%0.3f/sec), ETA %s [max %d]",
-				$now, wfWikiID(), $this->pageCount, $rate, $this->revCount, $revrate, $etats, $this->maxCount ) );
+			if ( $deltaPart ) {
+				$pageRatePart = $this->pageCountPart / $deltaPart;
+				$revRatePart = $this->revCountPart / $deltaPart;
+			} else {
+				$pageRatePart = '-';
+				$revRatePart = '-';
+			}
+			$this->progress( sprintf( "%s: %s (ID %d) %d pages (%0.1f|%0.1f/sec all|curr), %d revs (%0.1f|%0.1f/sec all|curr), ETA %s [max %d]",
+					$now, wfWikiID(), $this->ID, $this->pageCount, $pageRate, $pageRatePart, $this->revCount, $revRate, $revRatePart, $etats, $this->maxCount ) );
+			$this->lastTime = $nowts;
+			$this->revCountLast = $this->revCount;
 		}
 	}
 
 	function progress( $string ) {
 		fwrite( $this->stderr, $string . "\n" );
 	}
+
+	function fatalError( $msg ) {
+		$this->progress( "$msg\n" );
+		die(1);
+	}
 }
 
 class ExportProgressFilter extends DumpFilter {
-	function ExportProgressFilter( &$sink, &$progress ) {
+	function __construct( &$sink, &$progress ) {
 		parent::__construct( $sink );
 		$this->progress = $progress;
 	}

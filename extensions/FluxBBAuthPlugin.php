@@ -4,13 +4,13 @@ $wgHooks['isValidPassword'][] = 'FluxBBAuthPlugin::isValidPassword';
 
 $wgExtensionCredits['other'][] = array(
 	'name' => 'FluxBBAuthPlugin',
-	'version' => '1.1',
+	'version' => '1.2',
 	'description' => 'Use FluxBB accounts in MediaWiki',
 	'author' => 'Pierre Schmitz',
-	'url' => 'https://users.archlinux.de/~pierre/'
+	'url' => 'https://pierre-schmitz.com/'
 );
 
-require_once('includes/AuthPlugin.php');
+require_once(__DIR__.'/../includes/AuthPlugin.php');
 
 
 class FluxBBAuthPlugin extends AuthPlugin {
@@ -91,6 +91,10 @@ public function allowPropChange( $prop = '' ) {
 	}
 }
 public function allowPasswordChange() {
+	return false;
+}
+
+public function allowSetLocalPassword() {
 	return false;
 }
 

@@ -210,7 +210,6 @@ $messages = array(
 'link_tip'      => 'Joaju hyepyguávandi',
 'extlink_tip'   => 'Joaju okapeguávandi (recuerde añadir el prefijo http://)',
 'headline_tip'  => 'Teraete mokõiha',
-'math_tip'      => 'Matemátika kuaareko (LaTeX)',
 'nowiki_tip'    => "Viki jehaireko ñembo'yke",
 'image_tip'     => "Ta'ãnga moĩngepyréva",
 'media_tip'     => "Joaju jehai'aty multimediaguándi",
@@ -430,9 +429,8 @@ Reomĩsérõ ta'ãnga peteĩ kuatiaroguépe, eipuru peteĩ joaju:
 'watch'       => 'Ñangareko',
 
 # Delete
-'deletedarticle' => 'oñembogue "[[$1]]"',
-'dellogpage'     => 'Ñemboguepyre ñonagatupy',
-'deletionlog'    => 'ñemboguepyre ñonagatupy',
+'dellogpage'  => 'Ñemboguepyre ñonagatupy',
+'deletionlog' => 'ñemboguepyre ñonagatupy',
 
 # Rollback
 'rollback_short' => 'Embojevy',
@@ -475,13 +473,12 @@ Reomĩsérõ ta'ãnga peteĩ kuatiaroguépe, eipuru peteĩ joaju:
 'ipblocklist-submit' => 'Heka',
 'blocklink'          => 'ejoko',
 'contribslink'       => "mba'emoĩmbyre",
-'blocklogtext'       => 'Esto es un registro de bloqueos y desbloqueos de usuarios. Las direcciones bloqueadas automáticamente no aparecen aquí. Consulte la [[Special:IPBlockList|IP mbohape rysýi imbotypyréva]] para ver la lista de prohibiciones y bloqueos actualmente vigente.',
+'blocklogtext'       => 'Esto es un registro de bloqueos y desbloqueos de usuarios. Las direcciones bloqueadas automáticamente no aparecen aquí. Consulte la [[Special:BlockList|IP mbohape rysýi imbotypyréva]] para ver la lista de prohibiciones y bloqueos actualmente vigente.',
 
 # Move page
 'movearticle'     => 'Guerova kuatiarogue',
 'move-watch'      => 'Toñeñangareko ko tembiapóre',
 'movepagebtn'     => 'Guerova kuatiarogue',
-'1movedto2'       => '[[$1]] oñembohasa [[$2]]-pe',
 'revertmove'      => 'embojevy',
 'delete_and_move' => "Mboje'o ha guerova",
 

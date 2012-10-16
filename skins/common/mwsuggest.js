@@ -30,8 +30,8 @@ window.os_mouse_moved = false;
 // delay between keypress and suggestion (in ms)
 window.os_search_timeout = 250;
 // these pairs of inputs/forms will be autoloaded at startup
-window.os_autoload_inputs = new Array('searchInput', 'searchInput2', 'powerSearchText', 'searchText');
-window.os_autoload_forms = new Array('searchform', 'searchform2', 'powersearch', 'search' );
+window.os_autoload_inputs = ['searchInput', 'searchInput2', 'powerSearchText', 'searchText'];
+window.os_autoload_forms = ['searchform', 'searchform2', 'powersearch', 'search'];
 // if we stopped the service
 window.os_is_stopped = false;
 // max lines to show in suggest table
@@ -50,15 +50,14 @@ window.os_animation_timer = null;
 window.os_enabled = true;
 
 /**
- * <datalist> is a new HTML5 element that allows you to manually supply
- * suggestion lists and have them rendered according to the right platform
- * conventions.  However, the only shipping browser as of early 2010 is Opera,
- * and that has a fatal problem: the suggestion lags behind what the user types
- * by one keypress.  (Reported as DSK-276870 to Opera's secret bug tracker.)
- * The code here otherwise seems to work, though, so this can be flipped on
- * (maybe with a UA check) when some browser has a better implementation.
+ * <datalist> is a new HTML5 element that allows you to manually
+ * supply suggestion lists and have them rendered according to the
+ * right platform conventions.  Opera as of version 11 has a fatal
+ * problem: the suggestion lags behind what the user types by one
+ * keypress.  (Reported as DSK-276870 to Opera's secret bug tracker.)
+ * There are also problems with other browsers, including Firefox and
+ * Safari: See bug 31602 for details.
  */
-// var os_use_datalist = 'list' in document.createElement( 'input' );
 window.os_use_datalist = false;
 
 /** Timeout timer class that will fetch the results */
@@ -424,7 +423,7 @@ window.os_setupDatalist = function( r, results ) {
 	}
 	s.setAttribute( 'list', r.container );
 
-	r.results = new Array();
+	r.results = [];
 	r.resultCount = results.length;
 	r.visible = true;
 	for ( i = 0; i < results.length; i++ ) {
@@ -437,7 +436,7 @@ window.os_setupDatalist = function( r, results ) {
 };
 
 /** Fetch namespaces from checkboxes or hidden fields in the search form,
-    if none defined use wgSearchNamespaces global */
+    if none defined use wgSearchNamespaces */
 window.os_getNamespaces = function( r ) {
 	var namespaces = '';
 	var elements = document.forms[r.searchform].elements;
@@ -456,7 +455,7 @@ window.os_getNamespaces = function( r ) {
 		}
 	}
 	if( namespaces == '' ) {
-		namespaces = wgSearchNamespaces.join('|');
+		namespaces = mw.config.get( 'wgSearchNamespaces' ).join('|');
 	}
 	return namespaces;
 };
@@ -479,7 +478,7 @@ window.os_delayedFetch = function() {
 	var query = os_timer.query;
 	os_timer = null;
 	var path = mw.config.get( 'wgMWSuggestTemplate' ).replace( "{namespaces}", os_getNamespaces( r ) )
-									.replace( "{dbname}", wgDBname )
+									.replace( "{dbname}", mw.config.get( 'wgDBname' ) )
 									.replace( "{searchTerms}", os_encodeQuery( query ) );
 
 	// try to get from cache, if not fetch using ajax
@@ -644,7 +643,7 @@ window.os_createResultTable = function( r, results ) {
 	var c = document.getElementById( r.container );
 	var width = c.offsetWidth - os_operaWidthFix( c.offsetWidth );
 	var html = '<table class="os-suggest-results" id="' + r.resultTable + '" style="width: ' + width + 'px;">';
-	r.results = new Array();
+	r.results = [];
 	r.resultCount = results.length;
 	for( i = 0; i < results.length; i++ ) {
 		var title = os_decodeValue( results[i] );
@@ -750,36 +749,28 @@ window.os_getElementPosition = function( elemID ) {
 };
 
 /** Create the container div that will hold the suggested titles */
-window.os_createContainer = function(r) {
-	var c = document.createElement('div');
-	var s = document.getElementById(r.searchbox);
-	var pos = os_getElementPosition(r.searchbox);
+window.os_createContainer = function( r ) {
+	var c = document.createElement( 'div' );
+	var s = document.getElementById( r.searchbox );
+	var pos = os_getElementPosition( r.searchbox );
 	var left = pos.left;
 	var top = pos.top + s.offsetHeight;
 	c.className = 'os-suggest';
-	c.setAttribute('id', r.container);
-	document.body.appendChild(c);
+	c.setAttribute( 'id', r.container );
+	document.body.appendChild( c );
 
 	// dynamically generated style params
 	// IE workaround, cannot explicitely set "style" attribute
-	c = document.getElementById(r.container);
+	c = document.getElementById( r.container );
 	c.style.top = top + 'px';
 	c.style.left = left + 'px';
 	c.style.width = s.offsetWidth + 'px';
 
 	// mouse event handlers
-	c.onmouseover = function(event) {
-		os_eventMouseover(r.searchbox, event);
-	};
-	c.onmousemove = function(event) {
-		os_eventMousemove(r.searchbox, event);
-	};
-	c.onmousedown = function(event) {
-		return os_eventMousedown(r.searchbox, event);
-	};
-	c.onmouseup = function(event) {
-		os_eventMouseup(r.searchbox, event);
-	};
+	c.onmouseover = function( event ) { os_eventMouseover( r.searchbox, event ); };
+	c.onmousemove = function( event ) { os_eventMousemove( r.searchbox, event ); };
+	c.onmousedown = function( event ) { return os_eventMousedown( r.searchbox, event ); };
+	c.onmouseup = function( event ) { os_eventMouseup( r.searchbox, event ); };
 	return c;
 };
 

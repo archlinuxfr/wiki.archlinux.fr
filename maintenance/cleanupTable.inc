@@ -43,7 +43,7 @@ class TableCleanup extends Maintenance {
 
 	public function execute() {
 		global $wgUser;
-		$wgUser->setName( 'Conversion script' );
+		$wgUser = User::newFromName( 'Conversion script' );
 		$this->dryrun = $this->hasOption( 'dry-run' );
 		if ( $this->dryrun ) {
 			$this->output( "Checking for bad titles...\n" );
@@ -101,7 +101,8 @@ class TableCleanup extends Maintenance {
 		}
 
 		$table = $params['table'];
-		$count = $dbr->selectField( $table, 'count(*)', $params['conds'], __METHOD__ );
+		// count(*) would melt the DB for huge tables, we can estimate here
+		$count = $dbr->estimateRowCount( $table, '*', '', __METHOD__ );
 		$this->init( $count, $table );
 		$this->output( "Processing $table...\n" );
 

@@ -246,7 +246,7 @@ Tana yiyuwa yana da harafi ko haruffa da ba su karɓuwa cikin kanu.",
 'createaccountreason'     => 'Dalili:',
 'mailmypassword'          => 'Aiken kalmar sirri ta Imel',
 
-# Password reset dialog
+# Change password dialog
 'resetpass-submit-cancel' => 'Soke',
 
 # Edit page toolbar
@@ -260,8 +260,6 @@ Tana yiyuwa yana da harafi ko haruffa da ba su karɓuwa cikin kanu.",
 'extlink_tip'     => 'Mahaɗi mai zuwa waje (a tuna da zagin http://)',
 'headline_sample' => 'Sunan kai',
 'headline_tip'    => 'Kan mataki na 2',
-'math_sample'     => 'Shigar da haɗi a nan',
-'math_tip'        => 'Haɗin lissafi (LaTeX)',
 'nowiki_sample'   => 'shigar da ɗanyen rubutu a nan',
 'nowiki_tip'      => 'Kawar da sufantawar Wiki',
 'image_tip'       => 'Ƙumsashen fayil',
@@ -490,8 +488,7 @@ Ku gwada tare da amfani da \"all:\" don bincikar duka shafunan (har da shafunan 
 'listusers-submit' => 'Nuna',
 
 # Special:Log/newusers
-'newuserlogpage'          => 'Rajistan sabbin akwantoci',
-'newuserlog-create-entry' => 'Sabon akwanti',
+'newuserlogpage' => 'Rajistan sabbin akwantoci',
 
 # Special:ListGroupRights
 'listgrouprights-members' => '(jerin mambobi)',
@@ -502,10 +499,8 @@ Ku gwada tare da amfani da \"all:\" don bincikar duka shafunan (har da shafunan 
 # Watchlist
 'watchlist'         => 'Jerina na bin sawu',
 'mywatchlist'       => 'Jerina na bin sawu',
-'addedwatch'        => 'An daɗa a cikin jerin bin sawu',
 'addedwatchtext'    => "An daɗa shafin \"[[:\$1]]\" a cikin [[Special:Watchlist|jerinku na bin sawu]].
 A nan ne kuma za a yi rajistan dukkan sauye-sauye ga shafin ko shafinsa na muhawara, kuma sunan shafin zai kasance '''mai gwaɓi''' a cikin [[Special:RecentChanges|jerin sauye-sauyen baya-bayan nan]] don sauƙin gani.",
-'removedwatch'      => 'An fitar daga cikin jerin bin sawu',
 'removedwatchtext'  => 'An fitar da shafin "[[:$1]]" daga [[Special:Watchlist|jerinku na bin sawu]].',
 'watch'             => 'Bin sawu',
 'watchthispage'     => 'Bin sawun wannan shafi',
@@ -523,9 +518,8 @@ A nan ne kuma za a yi rajistan dukkan sauye-sauye ga shafin ko shafinsa na muhaw
 'delete-legend'         => 'Soke',
 'confirmdeletetext'     => "Kuna kan hanyar soke wani shafi tare da duk tarihinsa. Ku tabbatar lalle kuna son yin hakan, tare da cewa kun fahimci sakamakon yin haka, kuma kuna yi ne da la'akari da [[{{MediaWiki:Policy-url}}|manufofi]].",
 'actioncomplete'        => 'Aiki cikakke',
-'deletedtext'           => 'An soke "<nowiki>$1</nowiki>".
+'deletedtext'           => 'An soke "$1".
 Ku duba $2 ku ga rajistan soke-soke na baya-bayan nan.',
-'deletedarticle'        => 'an soke "[[$1]]"',
 'dellogpage'            => 'Rajistan sauye-sauye',
 'deletecomment'         => 'Dalili:',
 'deleteotherreason'     => 'Wani dalilin:',
@@ -542,7 +536,7 @@ Ku duba $2 ku ga rajistan soke-soke na baya-bayan nan.',
 'protectexpiry'               => "Wa'adi:",
 'protect_expiry_invalid'      => "Lokacin wa'adi bai da tasiri.",
 'protect_expiry_old'          => "Lokacin wa'adi ya wuce.",
-'protect-text'                => "Kuna iya duba tare da sauya matakin kariya na shafin '''<nowiki>$1</nowiki>'''.",
+'protect-text'                => "Kuna iya duba tare da sauya matakin kariya na shafin '''$1'''.",
 'protect-locked-access'       => "Akwantinku bai da izinin sauya matakan kariya na shafuna.
 Ga dai matakan kariya na yanzu na shafin '''$1''':",
 'protect-cascadeon'           => 'A yanzu an kiyaye wannan shafi saboda yana cikin {{PLURAL:$1|wannan shafi mai|waɗannan shafuna masu}} kariya mai zuzzubowa.
@@ -566,7 +560,6 @@ Kuna iya sake wa wannan shafi matakin kariya, amma hakan ba zai yi tasiri ga kar
 # Undelete
 'undeletelink'           => 'duba/maido da',
 'undeletecomment'        => 'Dalili:',
-'undeletedarticle'       => 'an mayar da "[[$1]]"',
 'undelete-search-submit' => 'Nema',
 
 # Namespace form on various pages
@@ -651,8 +644,6 @@ Don Allah ku zaɓi wani suna.',
 Don Allah ku game su da hannu.'''",
 'movedto'          => 'an gusar zuwa',
 'movetalk'         => 'Gusar da shafin mahawara mai alaƙa',
-'1movedto2'        => 'an gusar da [[$1]] zuwa [[$2]]',
-'1movedto2_redir'  => 'an gusar da [[$1]] zuwa [[$2]] ta hanyar soke turawa',
 'movelogpage'      => 'Rajistan gushe-gushe',
 'movereason'       => 'Dalili:',
 'revertmove'       => 'koma',
@@ -725,11 +716,10 @@ Tana ba da damar bayyana dalilin soke gyaran.',
 'nextdiff'     => 'Gyaran gaba →',
 
 # Media information
-'file-info-size'       => 'pikisal $1 × $2, girman fayil: $3, irin MIME: $4',
-'file-nohires'         => '<small>Babu wata babbar saƙa.</small>',
-'svg-long-desc'        => 'Fayil kin SVG, saƙar fikisal $1 x $2, girman fayil: $3',
-'show-big-image'       => 'Cikakkar saƙa',
-'show-big-image-thumb' => '<small>Girman wanna rigya-gani: pikisal $1 × $2</small>',
+'file-info-size' => 'pikisal $1 × $2, girman fayil: $3, irin MIME: $4',
+'file-nohires'   => 'Babu wata babbar saƙa.',
+'svg-long-desc'  => 'Fayil kin SVG, saƙar fikisal $1 x $2, girman fayil: $3',
+'show-big-image' => 'Cikakkar saƙa',
 
 # Special:NewFiles
 'ilsubmit' => 'Nema',
@@ -755,18 +745,22 @@ Idan an sauya fayil kin, to wasu bayannan na ainahi ba za su fito ba sosai a cik
 * exposuretime
 * fnumber
 * isospeedratings
-* focallength',
+* focallength
+* artist
+* copyright
+* imagedescription
+* gpslatitude
+* gpslongitude
+* gpsaltitude',
 
 # External editor support
 'edit-externally'      => 'Gyara wannan fayil da wani safuwai daban',
-'edit-externally-help' => '(Duba [http://www.mediawiki.org/wiki/Manual:External_editors bayannan shimfiɗawa] don ƙarin bayani)',
+'edit-externally-help' => '(Duba [//www.mediawiki.org/wiki/Manual:External_editors bayannan shimfiɗawa] don ƙarin bayani)',
 
 # 'all' in various places, this might be different for inflected languages
-'recentchangesall' => 'duka',
-'imagelistall'     => 'duka',
-'watchlistall2'    => 'duka',
-'namespacesall'    => 'duka',
-'monthsall'        => 'duka',
+'watchlistall2' => 'duka',
+'namespacesall' => 'duka',
+'monthsall'     => 'duka',
 
 # Watchlist editing tools
 'watchlisttools-view' => 'Duba sauye-sauyen da suka dace',

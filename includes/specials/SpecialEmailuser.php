@@ -28,20 +28,19 @@
  */
 class SpecialEmailUser extends UnlistedSpecialPage {
 	protected $mTarget;
-	
-	public function __construct(){
+
+	public function __construct() {
 		parent::__construct( 'Emailuser' );
 	}
-	
-	protected function getFormFields(){
-		global $wgUser;
+
+	protected function getFormFields() {
 		return array(
 			'From' => array(
 				'type' => 'info',
 				'raw' => 1,
-				'default' => $wgUser->getSkin()->link( 
-					$wgUser->getUserPage(), 
-					htmlspecialchars( $wgUser->getName() ) 
+				'default' => Linker::link(
+					$this->getUser()->getUserPage(),
+					htmlspecialchars( $this->getUser()->getName() )
 				),
 				'label-message' => 'emailfrom',
 				'id' => 'mw-emailuser-sender',
@@ -49,8 +48,8 @@ class SpecialEmailUser extends UnlistedSpecialPage {
 			'To' => array(
 				'type' => 'info',
 				'raw' => 1,
-				'default' => $wgUser->getSkin()->link( 
-					$this->mTargetObj->getUserPage(), 
+				'default' => Linker::link(
+					$this->mTargetObj->getUserPage(),
 					htmlspecialchars( $this->mTargetObj->getName() )
 				),
 				'label-message' => 'emailto',
@@ -62,7 +61,7 @@ class SpecialEmailUser extends UnlistedSpecialPage {
 			),
 			'Subject' => array(
 				'type' => 'text',
-				'default' => wfMsgExt( 'defemailsubject', array( 'content', 'parsemag' ) ),
+				'default' => wfMsgExt( 'defemailsubject', array( 'content', 'parsemag' ), $this->getUser()->getName() ),
 				'label-message' => 'emailsubject',
 				'maxlength' => 200,
 				'size' => 60,
@@ -78,73 +77,71 @@ class SpecialEmailUser extends UnlistedSpecialPage {
 			'CCMe' => array(
 				'type' => 'check',
 				'label-message' => 'emailccme',
-				'default' => $wgUser->getBoolOption( 'ccmeonemails' ),
+				'default' => $this->getUser()->getBoolOption( 'ccmeonemails' ),
 			),
 		);
 	}
-	
-	public function execute( $par ) {
-		global $wgRequest, $wgOut, $wgUser;
 
+	public function execute( $par ) {
 		$this->setHeaders();
 		$this->outputHeader();
-
+		$out = $this->getOutput();
+		$out->addModuleStyles( 'mediawiki.special' );
 		$this->mTarget = is_null( $par )
-			? $wgRequest->getVal( 'wpTarget', $wgRequest->getVal( 'target', '' ) )
+			? $this->getRequest()->getVal( 'wpTarget', $this->getRequest()->getVal( 'target', '' ) )
 			: $par;
-			
-		$ret = self::getTarget( $this->mTarget );
-		if( $ret instanceof User ){
-			$this->mTargetObj = $ret;
-		} else {
-			$wgOut->showErrorPage( "{$ret}title", "{$ret}text" );
-			return false;
-		}
-	
-		$error = self::getPermissionsError( $wgUser, $wgRequest->getVal( 'wpEditToken' ) );
+		// error out if sending user cannot do this
+		$error = self::getPermissionsError( $this->getUser(), $this->getRequest()->getVal( 'wpEditToken' ) );
 		switch ( $error ) {
 			case null:
 				# Wahey!
 				break;
 			case 'badaccess':
-				$wgOut->permissionRequired( 'sendemail' );
-				return;
+				throw new PermissionsError( 'sendemail' );
 			case 'blockedemailuser':
-				$wgOut->blockedPage();
-				return;
+				throw new UserBlockedError( $this->getUser()->mBlock );
 			case 'actionthrottledtext':
-				$wgOut->rateLimited();
-				return;
+				throw new ThrottledError;
 			case 'mailnologin':
 			case 'usermaildisabled':
-				$wgOut->showErrorPage( $error, "{$error}text" );
-				return;
+				throw new  ErrorPageError( $error, "{$error}text" );
 			default:
 				# It's a hook error
 				list( $title, $msg, $params ) = $error;
-				$wgOut->showErrorPage( $title, $msg, $params );
-				return;
+				throw new  ErrorPageError( $title, $msg, $params );
 		}
-		
-		$form = new HTMLForm( $this->getFormFields() );
+		// Got a valid target user name? Else ask for one.
+		$ret = self::getTarget( $this->mTarget );
+		if( !$ret instanceof User ) {
+			if( $this->mTarget != '' ) {
+				$ret = ( $ret == 'notarget' ) ? 'emailnotarget' : ( $ret . 'text' );
+				$out->wrapWikiMsg( "<p class='error'>$1</p>", $ret );
+			}
+			$out->addHTML( $this->userForm( $this->mTarget ) );
+			return false;
+		}
+
+		$this->mTargetObj = $ret;
+
+		$form = new HTMLForm( $this->getFormFields(), $this->getContext() );
 		$form->addPreText( wfMsgExt( 'emailpagetext', 'parseinline' ) );
 		$form->setSubmitText( wfMsg( 'emailsend' ) );
 		$form->setTitle( $this->getTitle() );
 		$form->setSubmitCallback( array( __CLASS__, 'submit' ) );
 		$form->setWrapperLegend( wfMsgExt( 'email-legend', 'parsemag' ) );
 		$form->loadData();
-		
-		if( !wfRunHooks( 'EmailUserForm', array( &$form ) ) ){
+
+		if( !wfRunHooks( 'EmailUserForm', array( &$form ) ) ) {
 			return false;
 		}
-		
-		$wgOut->setPagetitle( wfMsg( 'emailpage' ) );
+
+		$out->setPageTitle( $this->msg( 'emailpage' ) );
 		$result = $form->show();
-		
-		if( $result === true || ( $result instanceof Status && $result->isGood() ) ){
-			$wgOut->setPagetitle( wfMsg( 'emailsent' ) );
-			$wgOut->addWikiMsg( 'emailsenttext' );
-			$wgOut->returnToMain( false, $this->mTargetObj->getUserPage() );
+
+		if( $result === true || ( $result instanceof Status && $result->isGood() ) ) {
+			$out->setPageTitle( $this->msg( 'emailsent' ) );
+			$out->addWikiMsg( 'emailsenttext' );
+			$out->returnToMain( false, $this->mTargetObj->getUserPage() );
 		}
 	}
 
@@ -159,15 +156,15 @@ class SpecialEmailUser extends UnlistedSpecialPage {
 			wfDebug( "Target is empty.\n" );
 			return 'notarget';
 		}
-		
+
 		$nu = User::newFromName( $target );
 		if( !$nu instanceof User || !$nu->getId() ) {
 			wfDebug( "Target is invalid user.\n" );
 			return 'notarget';
-		} else if ( !$nu->isEmailConfirmed() ) {
+		} elseif ( !$nu->isEmailConfirmed() ) {
 			wfDebug( "User has no valid email.\n" );
 			return 'noemail';
-		} else if ( !$nu->canReceiveEmail() ) {
+		} elseif ( !$nu->canReceiveEmail() ) {
 			wfDebug( "User does not allow user emails.\n" );
 			return 'nowikiemail';
 		}
@@ -184,15 +181,15 @@ class SpecialEmailUser extends UnlistedSpecialPage {
 	 */
 	public static function getPermissionsError( $user, $editToken ) {
 		global $wgEnableEmail, $wgEnableUserEmail;
-		if( !$wgEnableEmail || !$wgEnableUserEmail ){
+		if( !$wgEnableEmail || !$wgEnableUserEmail ) {
 			return 'usermaildisabled';
 		}
-		
+
 		if( !$user->isAllowed( 'sendemail' ) ) {
 			return 'badaccess';
 		}
-		
-		if( !$user->isEmailConfirmed() ){
+
+		if( !$user->isEmailConfirmed() ) {
 			return 'mailnologin';
 		}
 
@@ -217,8 +214,27 @@ class SpecialEmailUser extends UnlistedSpecialPage {
 	}
 
 	/**
+	 * Form to ask for target user name.
+	 *
+	 * @param $name String: user name submitted.
+	 * @return String: form asking for user name.
+	 */
+	protected function userForm( $name ) {
+		global $wgScript;
+		$string = Xml::openElement( 'form', array( 'method' => 'get', 'action' => $wgScript, 'id' => 'askusername' ) ) .
+			Html::hidden( 'title', $this->getTitle()->getPrefixedText() ) .
+			Xml::openElement( 'fieldset' ) .
+			Html::rawElement( 'legend', null, wfMessage( 'emailtarget' )->parse() ) .
+			Xml::inputLabel( wfMessage( 'emailusername' )->text(), 'target', 'emailusertarget', 30, $name ) . ' ' .
+			Xml::submitButton( wfMessage( 'emailusernamesubmit' )->text() ) .
+			Xml::closeElement( 'fieldset' ) .
+			Xml::closeElement( 'form' ) . "\n";
+		return $string;
+	}
+
+	/**
 	 * Really send a mail. Permissions should have been checked using
-	 * getPermissionsError(). It is probably also a good 
+	 * getPermissionsError(). It is probably also a good
 	 * idea to check the edit token and ping limiter in advance.
 	 *
 	 * @return Mixed: Status object, or potentially a String on error
@@ -228,7 +244,7 @@ class SpecialEmailUser extends UnlistedSpecialPage {
 		global $wgUser, $wgUserEmailUseReplyTo;
 
 		$target = self::getTarget( $data['Target'] );
-		if( !$target instanceof User ){
+		if( !$target instanceof User ) {
 			return wfMsgExt( $target . 'text', 'parse' );
 		}
 		$to = new MailAddress( $target );
@@ -238,17 +254,17 @@ class SpecialEmailUser extends UnlistedSpecialPage {
 
 		// Add a standard footer and trim up trailing newlines
 		$text = rtrim( $text ) . "\n\n-- \n";
-		$text .= wfMsgExt( 
+		$text .= wfMsgExt(
 			'emailuserfooter',
-			array( 'content', 'parsemag' ), 
-			array( $from->name, $to->name ) 
+			array( 'content', 'parsemag' ),
+			array( $from->name, $to->name )
 		);
 
 		$error = '';
 		if( !wfRunHooks( 'EmailUser', array( &$to, &$from, &$subject, &$text, &$error ) ) ) {
 			return $error;
 		}
-		
+
 		if( $wgUserEmailUseReplyTo ) {
 			// Put the generic wiki autogenerated address in the From:
 			// header and reserve the user for Reply-To.
@@ -283,12 +299,12 @@ class SpecialEmailUser extends UnlistedSpecialPage {
 			return $status;
 		} else {
 			// if the user requested a copy of this mail, do this now,
-			// unless they are emailing themselves, in which case one 
+			// unless they are emailing themselves, in which case one
 			// copy of the message is sufficient.
 			if ( $data['CCMe'] && $to != $from ) {
 				$cc_subject = wfMsg(
-					'emailccsubject', 
-					$target->getName(), 
+					'emailccsubject',
+					$target->getName(),
 					$subject
 				);
 				wfRunHooks( 'EmailUserCC', array( &$from, &$from, &$cc_subject, &$text ) );

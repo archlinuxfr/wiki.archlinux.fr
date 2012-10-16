@@ -1,5 +1,5 @@
 <?php
-/** Eastern Canadian (Unified Canadian Aboriginal Syllabics) (ᐃᓄᒃᑎᑐᑦ)
+/** Eastern Canadian (Aboriginal syllabics) (ᐃᓄᒃᑎᑐᑦ)
  *
  * See MessagesQqq.php for message documentation incl. usage of parameters
  * To improve a translation please visit http://translatewiki.net
@@ -339,8 +339,6 @@ $messages = array(
 'move-page-legend' => 'ᐅᐊᔪᖅ ᒪᑉᐱᑕᖅ',
 'movearticle'      => 'ᐅᐊᔪᖅ ᒪᑉᐱᑕᖅ',
 'movedto'          => 'ᐅᐊᔪᖅ',
-'1movedto2'        => '[[$1]] ᓱᕐᕋᒪᔪᖅ [[$2]]',
-'1movedto2_redir'  => '[[$1]] ᓱᕐᕋᒪᔪᖅ [[$2]] ᒥᓯᑉᐹ ᖃᓂᖓᓂ ᑲᒪᒋᔭᖅ ᐋᓯᑦ ᓇᑭᑦ',
 'movelogpage'      => 'ᐅᐊᔪᖅ ᓂᐱ',
 'movereason'       => 'ᐃᓱᒪᒃᓴᖅᓯᐅᕈᓐᓇᑦᑎᐊᕐᓂᖅ:',
 'delete_and_move'  => 'ᓂᐸᖅᑎᐹ  ᐊᒻᒪ ᐅᐊᔪᖅ',
@@ -365,10 +363,6 @@ $messages = array(
 # Attribution
 'anonymous' => 'ᐃᓕᓴᕐᓇᙱᑎᑦᑐᖅ ᖃᑕᙳᑎ ᓇᑭᑦ {{SITENAME}}',
 
-# Math errors
-'math_unknown_error'    => 'ᑐᓴᐅᒪᔭᐅᙱᑐᖅ ᑕᒻᒪᓇᖅᑐᖅ',
-'math_unknown_function' => 'ᑐᓴᐅᒪᔭᐅᙱᑐᖅ ᐃᓕᐅᕐᓂᖅ',
-
 # Image deletion
 'deletedrevision' => 'ᓂᐸᖅ ᐅᑐᖃᖅ ᑎᑎᕋᖅᑕᐅᒋᐊᕐᖓᕈᑦ $1',
 
@@ -379,6 +373,11 @@ $messages = array(
 # Special:NewFiles
 'ilsubmit' => 'ᐃᕚᖅᐳᖅ',
 'bydate'   => 'ᐱᑖᕈᑦᑐᖅ ᐃᓅᓕᕐᕕᒃ',
+
+# Variants for Inuktitut language
+'variantname-ike-cans' => 'ᑎᑎᕋᐅᓯᖅ ᓄᑖᖅ',
+'variantname-ike-latn' => 'ilisautik',
+'variantname-iu'       => 'disable',
 
 # EXIF tags
 'exif-imagelength'         => 'ᖁᑦᓯᖕᓂᖅ',

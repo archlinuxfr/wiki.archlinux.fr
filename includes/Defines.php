@@ -1,6 +1,11 @@
 <?php
 /**
- * A few constants that might be needed during LocalSettings.php
+ * A few constants that might be needed during LocalSettings.php.
+ *
+ * Note: these constants must all be resolvable at compile time by HipHop,
+ * since this file will not be executed during request startup for a compiled
+ * MediaWiki.
+ *
  * @file
  */
 
@@ -80,27 +85,6 @@ define( 'NS_IMAGE', NS_FILE );
 define( 'NS_IMAGE_TALK', NS_FILE_TALK );
 /**@}*/
 
-/**
- * Available feeds objects
- * Should probably only be defined when a page is syndicated ie when
- * $wgOut->isSyndicated() is true
- */
-$wgFeedClasses = array(
-	'rss' => 'RSSFeed',
-	'atom' => 'AtomFeed',
-);
-
-/**@{
- * Maths constants
- */
-define( 'MW_MATH_PNG',    0 );
-define( 'MW_MATH_SIMPLE', 1 );
-define( 'MW_MATH_HTML',   2 );
-define( 'MW_MATH_SOURCE', 3 );
-define( 'MW_MATH_MODERN', 4 );
-define( 'MW_MATH_MATHML', 5 );
-/**@}*/
-
 /**@{
  * Cache type
  */
@@ -108,13 +92,13 @@ define( 'CACHE_ANYTHING', -1 );  // Use anything, as long as it works
 define( 'CACHE_NONE', 0 );       // Do not cache
 define( 'CACHE_DB', 1 );         // Store cache objects in the DB
 define( 'CACHE_MEMCACHED', 2 );  // MemCached, must specify servers in $wgMemCacheServers
-define( 'CACHE_ACCEL', 3 );      // eAccelerator
+define( 'CACHE_ACCEL', 3 );      // APC, XCache or WinCache
 define( 'CACHE_DBA', 4 );        // Use PHP's DBA extension to store in a DBM-style database
 /**@}*/
 
 /**@{
  * Media types.
- * This defines constants for the value returned by Image::getMediaType()
+ * This defines constants for the value returned by File::getMediaType()
  */
 define( 'MEDIATYPE_UNKNOWN',    'UNKNOWN' );     // unknown format
 define( 'MEDIATYPE_BITMAP',     'BITMAP' );      // some bitmap image or image source (like psd, etc). Can't scale up.
@@ -165,13 +149,12 @@ define( 'MW_DATE_ISO', 'ISO 8601' );
 
 /**@{
  * RecentChange type identifiers
- * This may be obsolete; log items are now used for moves?
  */
 define( 'RC_EDIT', 0);
 define( 'RC_NEW', 1);
-define( 'RC_MOVE', 2);
+define( 'RC_MOVE', 2); // obsolete
 define( 'RC_LOG', 3);
-define( 'RC_MOVE_OVER_REDIRECT', 4);
+define( 'RC_MOVE_OVER_REDIRECT', 4); // obsolete
 /**@}*/
 
 /**@{
@@ -254,4 +237,15 @@ define( 'APCOND_ISIP', 5 );
 define( 'APCOND_IPINRANGE', 6 );
 define( 'APCOND_AGE_FROM_EDIT', 7 );
 define( 'APCOND_BLOCKED', 8 );
+define( 'APCOND_ISBOT', 9 );
 /**@}*/
+
+/**
+ * Protocol constants for wfExpandUrl()
+ */
+define( 'PROTO_HTTP', 'http://' );
+define( 'PROTO_HTTPS', 'https://' );
+define( 'PROTO_RELATIVE', '//' );
+define( 'PROTO_CURRENT', null );
+define( 'PROTO_CANONICAL', 1 );
+define( 'PROTO_INTERNAL', 2 );

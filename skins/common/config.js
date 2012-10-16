@@ -29,7 +29,7 @@
 		} );
 		
 		// Scroll to the bottom of upgrade log
-		$( "#config-update-log" ).each( function() { this.scrollTop = this.scrollHeight; } );
+		$( '#config-live-log' ).find( '> textarea' ).each( function() { this.scrollTop = this.scrollHeight; } );
 		
 		// Show/hide Creative Commons thingy
 		$( '.licenseRadio' ).click( function() {
@@ -67,9 +67,9 @@
 		$( '.enableForOther' ).click( function() {
 			var $textbox = $( '#' + $(this).attr( 'rel' ) );
 			if ( $(this).val() == 'other' ) { // FIXME: Ugh, this is ugly
-				$textbox.removeAttr( 'readonly' ).closest( '.config-block' ).slideDown( 'fast' );
+				$textbox.removeProp( 'readonly' ).closest( '.config-block' ).slideDown( 'fast' );
 			} else {
-				$textbox.attr( 'readonly', 'readonly' ).closest( '.config-block' ).slideUp( 'fast' );
+				$textbox.prop( 'readonly', true ).closest( '.config-block' ).slideUp( 'fast' );
 			}
 		} );
 		

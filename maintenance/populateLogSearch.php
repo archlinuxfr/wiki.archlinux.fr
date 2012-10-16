@@ -23,21 +23,28 @@
 
 require_once( dirname( __FILE__ ) . '/Maintenance.php' );
 
-class PopulateLogSearch extends Maintenance {
-
-	const LOG_SEARCH_BATCH_SIZE = 100;
-
+class PopulateLogSearch extends LoggedUpdateMaintenance {
 	static $tableMap = array( 'rev' => 'revision', 'fa' => 'filearchive', 'oi' => 'oldimage', 'ar' => 'archive' );
 
 	public function __construct() {
 		parent::__construct();
 		$this->mDescription = "Migrate log params to new table and index for searching";
+		$this->setBatchSize( 100 );
 	}
 
-	public function execute() {
-		$db = wfGetDB( DB_MASTER );
+	protected function getUpdateKey() {
+		return 'populate log_search';
+	}
+
+	protected function updateSkippedMessage() {
+		return 'log_search table already populated.';
+	}
+
+	protected function doDBUpdates() {
+		$db = $this->getDB( DB_MASTER );
 		if ( !$db->tableExists( 'log_search' ) ) {
-			$this->error( "log_search does not exist", true );
+			$this->error( "log_search does not exist" );
+			return false;
 		}
 		$start = $db->selectField( 'logging', 'MIN(log_id)', false, __FUNCTION__ );
 		if ( !$start ) {
@@ -47,9 +54,9 @@ class PopulateLogSearch extends Maintenance {
 		$end = $db->selectField( 'logging', 'MAX(log_id)', false, __FUNCTION__ );
 
 		# Do remaining chunk
-		$end += self::LOG_SEARCH_BATCH_SIZE - 1;
+		$end += $this->mBatchSize - 1;
 		$blockStart = $start;
-		$blockEnd = $start + self::LOG_SEARCH_BATCH_SIZE - 1;
+		$blockEnd = $start + $this->mBatchSize - 1;
 
 		$delTypes = array( 'delete', 'suppress' ); // revisiondelete types
 		while ( $blockEnd <= $end ) {
@@ -97,14 +104,14 @@ class PopulateLogSearch extends Maintenance {
 					foreach ( $sres as $srow ) {
 						if ( $srow->$userField > 0 )
 							$userIds[] = intval( $srow->$userField );
-						else if ( $srow->$userTextField != '' )
+						elseif ( $srow->$userTextField != '' )
 							$userIPs[] = $srow->$userTextField;
 					}
 					// Add item author relations...
 					$log->addRelations( 'target_author_id', $userIds, $row->log_id );
 					$log->addRelations( 'target_author_ip', $userIPs, $row->log_id );
 				// RevisionDelete logs - log events
-				} else if ( LogEventsList::typeAction( $row, $delTypes, 'event' ) ) {
+				} elseif ( LogEventsList::typeAction( $row, $delTypes, 'event' ) ) {
 					$params = LogPage::extractParams( $row->log_params );
 					// Param format: <item CSV> [<ofield> <nfield>]
 					if ( count( $params ) < 1 ) continue; // bad row
@@ -121,30 +128,19 @@ class PopulateLogSearch extends Maintenance {
 					foreach ( $sres as $srow ) {
 						if ( $srow->log_user > 0 )
 							$userIds[] = intval( $srow->log_user );
-						else if ( IP::isIPAddress( $srow->log_user_text ) )
+						elseif ( IP::isIPAddress( $srow->log_user_text ) )
 							$userIPs[] = $srow->log_user_text;
 					}
 					$log->addRelations( 'target_author_id', $userIds, $row->log_id );
 					$log->addRelations( 'target_author_ip', $userIPs, $row->log_id );
 				}
 			}
-			$blockStart += self::LOG_SEARCH_BATCH_SIZE;
-			$blockEnd += self::LOG_SEARCH_BATCH_SIZE;
-			wfWaitForSlaves( 5 );
+			$blockStart += $this->mBatchSize;
+			$blockEnd += $this->mBatchSize;
+			wfWaitForSlaves();
 		}
-		if ( $db->insert(
-				'updatelog',
-				array( 'ul_key' => 'populate log_search' ),
-				__FUNCTION__,
-				'IGNORE'
-			)
-		) {
-			$this->output( "log_search population complete.\n" );
-			return true;
-		} else {
-			$this->output( "Could not insert log_search population row.\n" );
-			return false;
-		}
+		$this->output( "Done populating log_search table.\n" );
+		return true;
 	}
 }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * API for MediaWiki 1.8+
+ *
  *
  * Created on Sep 19, 2006
  *
@@ -23,11 +23,6 @@
  *
  * @file
  */
-
-if ( !defined( 'MEDIAWIKI' ) ) {
-	// Eclipse helper - will be ignored in production
-	require_once( 'ApiFormatBase.php' );
-}
 
 /**
  * API JSON output formatter
@@ -97,6 +92,6 @@ class ApiFormatJson extends ApiFormatBase {
 	}
 
 	public function getVersion() {
-		return __CLASS__ . ': $Id: ApiFormatJson.php 70647 2010-08-07 19:59:42Z ialex $';
+		return __CLASS__ . ': $Id$';
 	}
 }

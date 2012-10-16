@@ -13,14 +13,47 @@
  * @since 1.17
  */
 class OracleUpdater extends DatabaseUpdater {
+
+	/**
+	 * Handle to the database subclass
+	 *
+	 * @var DatabaseOracle
+	 */
+	protected $db;
+
 	protected function getCoreUpdateList() {
 		return array(
-			// 1.16
+			// 1.17
 			array( 'doNamespaceDefaults' ),
 			array( 'doFKRenameDeferr' ),
 			array( 'doFunctions17' ),
 			array( 'doSchemaUpgrade17' ),
 			array( 'doInsertPage0' ),
+			array( 'doRemoveNotNullEmptyDefaults' ),
+			array( 'addTable', 'user_former_groups', 'patch-user_former_groups.sql' ),
+
+			//1.18
+			array( 'addIndex',	'user',          'i02',       'patch-user_email_index.sql' ),
+			array( 'modifyField', 'user_properties', 'up_property', 'patch-up_property.sql' ),
+			array( 'addTable', 'uploadstash', 'patch-uploadstash.sql' ),
+			array( 'doRecentchangesFK2Cascade' ),
+
+			//1.19
+			array( 'addIndex', 'logging',       'i05',      'patch-logging_type_action_index.sql'),
+			array( 'addField', 'revision', 'rev_sha1', 'patch-rev_sha1_field.sql' ),
+			array( 'addField', 'archive', 'ar_sha1', 'patch-ar_sha1_field.sql' ),
+			array( 'doRemoveNotNullEmptyDefaults2' ),
+			array( 'addIndex', 'page', 'i03', 'patch-page_redirect_namespace_len.sql' ),
+			array( 'modifyField', 'user_groups', 'ug_group', 'patch-ug_group-length-increase.sql' ),
+			array( 'addField', 'uploadstash', 'us_chunk_inx', 'patch-us_chunk_inx_field.sql' ),
+			array( 'addField', 'job', 'job_timestamp', 'patch-job_timestamp_field.sql' ),
+			array( 'addIndex', 'job', 'i02', 'patch-job_timestamp_index.sql' ),
+			array( 'doPageRestrictionsPKUKFix' ),
+			array( 'modifyField', 'user_former_groups', 'ufg_group', 'patch-ufg_group-length-increase.sql' ),
+
+			// KEEP THIS AT THE BOTTOM!!
+			array( 'doRebuildDuplicateFunction' ),
+
 		);
 	}
 
@@ -73,7 +106,7 @@ class OracleUpdater extends DatabaseUpdater {
 	protected function doSchemaUpgrade17() {
 		$this->output( "Updating schema to 17 ... " );
 		// check if iwlinks table exists which was added in 1.17
-		if ( $this->db->tableExists( $this->db->tableName( 'iwlinks' ) ) ) {
+		if ( $this->db->tableExists( 'iwlinks' ) ) {
 			$this->output( "schema seem to be up to date.\n" );
 			return;
 		}
@@ -89,7 +122,7 @@ class OracleUpdater extends DatabaseUpdater {
 		$row = array(
 			'page_id' => 0,
 			'page_namespace' => 0,
-  			'page_title' => ' ',
+			'page_title' => ' ',
 			'page_counter' => 0,
 			'page_is_redirect' => 0,
 			'page_is_new' => 0,
@@ -103,12 +136,94 @@ class OracleUpdater extends DatabaseUpdater {
 	}
 
 	/**
-	 * Overload: after this action field info table has to be rebuilt
+	 * Remove DEFAULT '' NOT NULL constraints from fields as '' is internally
+	 * converted to NULL in Oracle
 	 */
-	public function doUpdates( $what = array( 'core', 'extensions', 'purge' ) ) {
+	protected function doRemoveNotNullEmptyDefaults() {
+		$this->output( "Removing not null empty constraints ... " );
+		$meta = $this->db->fieldInfo( 'categorylinks' , 'cl_sortkey_prefix' );
+		if ( $meta->isNullable() ) {
+			$this->output( "constraints seem to be removed\n" );
+			return;
+		}
+		$this->applyPatch( 'patch_remove_not_null_empty_defs.sql', false );
+		$this->output( "ok\n" );
+	}
+	protected function doRemoveNotNullEmptyDefaults2() {
+		$this->output( "Removing not null empty constraints ... " );
+		$meta = $this->db->fieldInfo( 'ipblocks' , 'ipb_by_text' );
+		if ( $meta->isNullable() ) {
+			$this->output( "constraints seem to be removed\n" );
+			return;
+		}
+		$this->applyPatch( 'patch_remove_not_null_empty_defs2.sql', false );
+		$this->output( "ok\n" );
+	}
+
+	/**
+	 * Removed forcing of invalid state on recentchanges_fk2.
+	 * cascading taken in account in the deleting function
+	 */
+	protected function doRecentchangesFK2Cascade() {
+		$this->output( "Altering RECENTCHANGES_FK2 ... " );
+
+		$meta = $this->db->query( 'SELECT 1 FROM all_constraints WHERE owner = \''.strtoupper($this->db->getDBname()).'\' AND constraint_name = \''.$this->db->tablePrefix().'RECENTCHANGES_FK2\' AND delete_rule = \'CASCADE\'' );
+		$row = $meta->fetchRow();
+		if ( $row ) {
+			$this->output( "FK up to date\n" );
+			return;
+		}
+
+		$this->applyPatch( 'patch_recentchanges_fk2_cascade.sql', false );
+		$this->output( "ok\n" );
+	}
+
+	/**
+	 * Fixed wrong PK, UK definition
+	 */
+	protected function doPageRestrictionsPKUKFix() {
+		$this->output( "Altering PAGE_RESTRICTIONS keys ... " );
+
+		$meta = $this->db->query( 'SELECT column_name FROM all_cons_columns WHERE owner = \''.strtoupper($this->db->getDBname()).'\' AND constraint_name = \'MW_PAGE_RESTRICTIONS_PK\' AND rownum = 1' );
+		$row = $meta->fetchRow();
+		if ( $row['column_name'] == 'PR_ID' ) {
+			$this->output( "seems to be up to date.\n" );
+			return;
+		}
+
+		$this->applyPatch( 'patch-page_restrictions_pkuk_fix.sql', false );
+		$this->output( "ok\n" );
+	}
+
+	/**
+	 * rebuilding of the function that duplicates tables for tests
+	 */
+	protected function doRebuildDuplicateFunction() {
+		$this->output( "Rebuilding duplicate function ... " );
+		$this->applyPatch( 'patch_rebuild_dupfunc.sql', false );
+		$this->output( "ok\n" );
+	}
+
+	/**
+	 * Overload: after this action field info table has to be rebuilt
+	 *
+	 * @param $what array
+	 */
+	public function doUpdates( $what = array( 'core', 'extensions', 'purge', 'stats' ) ) {
 		parent::doUpdates( $what );
 
 		$this->db->query( 'BEGIN fill_wiki_info; END;' );
+	}
+
+	/**
+	 * Overload: because of the DDL_MODE tablename escaping is a bit dodgy
+	 */
+	protected function purgeCache() {
+		# We can't guarantee that the user will be able to use TRUNCATE,
+		# but we know that DELETE is available to us
+		$this->output( "Purging caches..." );
+		$this->db->delete( '/*Q*/'.$this->db->tableName( 'objectcache' ), '*', __METHOD__ );
+		$this->output( "done.\n" );
 	}
 
 }

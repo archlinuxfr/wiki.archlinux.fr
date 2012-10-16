@@ -1,5 +1,5 @@
 <?php
-/** Tatar (Latin) (Татарча/Tatarça (Latin))
+/** Tatar (Latin script) (tatarça)
  *
  * See MessagesQqq.php for message documentation incl. usage of parameters
  * To improve a translation please visit http://translatewiki.net
@@ -61,30 +61,30 @@ $dateFormats = array(
 );
 
 $magicWords = array(
-	'redirect'              => array( '0', '#yünältü', '#REDIRECT' ),
-	'notoc'                 => array( '0', '__ETYUQ__', '__NOTOC__' ),
-	'forcetoc'              => array( '0', '__ETTIQ__', '__FORCETOC__' ),
-	'toc'                   => array( '0', '__ET__', '__TOC__' ),
-	'noeditsection'         => array( '0', '__BÜLEMTÖZÄTÜYUQ__', '__NOEDITSECTION__' ),
-	'currentmonth'          => array( '1', 'AĞIMDAĞI_AY', 'CURRENTMONTH', 'CURRENTMONTH2' ),
-	'currentmonthname'      => array( '1', 'AĞIMDAĞI_AY_İSEME', 'CURRENTMONTHNAME' ),
-	'currentmonthnamegen'   => array( '1', 'AĞIMDAĞI_AY_İSEME_GEN', 'CURRENTMONTHNAMEGEN' ),
-	'currentday'            => array( '1', 'AĞIMDAĞI_KÖN', 'CURRENTDAY' ),
-	'currentdayname'        => array( '1', 'AĞIMDAĞI_KÖN_İSEME', 'CURRENTDAYNAME' ),
-	'currentyear'           => array( '1', 'AĞIMDAĞI_YIL', 'CURRENTYEAR' ),
-	'currenttime'           => array( '1', 'AĞIMDAĞI_WAQIT', 'CURRENTTIME' ),
-	'numberofarticles'      => array( '1', 'MÄQÄLÄ_SANI', 'NUMBEROFARTICLES' ),
-	'pagename'              => array( '1', 'BİTİSEME', 'PAGENAME' ),
-	'namespace'             => array( '1', 'İSEMARA', 'NAMESPACE' ),
-	'subst'                 => array( '0', 'TÖPÇEK:', 'SUBST:' ),
-	'img_right'             => array( '1', 'uñda', 'right' ),
-	'img_left'              => array( '1', 'sulda', 'left' ),
-	'img_none'              => array( '1', 'yuq', 'none' ),
-	'int'                   => array( '0', 'EÇKE:', 'INT:' ),
-	'sitename'              => array( '1', 'SÄXİFÄİSEME', 'SITENAME' ),
-	'ns'                    => array( '0', 'İA:', 'NS:' ),
-	'localurl'              => array( '0', 'URINLIURL:', 'LOCALURL:' ),
-	'localurle'             => array( '0', 'URINLIURLE:', 'LOCALURLE:' ),
+	'redirect'                => array( '0', '#YÜNÄLTÜ', '#REDIRECT' ),
+	'notoc'                   => array( '0', '__ETYUQ__', '__NOTOC__' ),
+	'forcetoc'                => array( '0', '__ETTIQ__', '__FORCETOC__' ),
+	'toc'                     => array( '0', '__ET__', '__TOC__' ),
+	'noeditsection'           => array( '0', '__BÜLEMTÖZÄTÜYUQ__', '__NOEDITSECTION__' ),
+	'currentmonth'            => array( '1', 'AĞIMDAĞI_AY', 'CURRENTMONTH', 'CURRENTMONTH2' ),
+	'currentmonthname'        => array( '1', 'AĞIMDAĞI_AY_İSEME', 'CURRENTMONTHNAME' ),
+	'currentmonthnamegen'     => array( '1', 'AĞIMDAĞI_AY_İSEME_GEN', 'CURRENTMONTHNAMEGEN' ),
+	'currentday'              => array( '1', 'AĞIMDAĞI_KÖN', 'CURRENTDAY' ),
+	'currentdayname'          => array( '1', 'AĞIMDAĞI_KÖN_İSEME', 'CURRENTDAYNAME' ),
+	'currentyear'             => array( '1', 'AĞIMDAĞI_YIL', 'CURRENTYEAR' ),
+	'currenttime'             => array( '1', 'AĞIMDAĞI_WAQIT', 'CURRENTTIME' ),
+	'numberofarticles'        => array( '1', 'MÄQÄLÄ_SANI', 'NUMBEROFARTICLES' ),
+	'pagename'                => array( '1', 'BİTİSEME', 'PAGENAME' ),
+	'namespace'               => array( '1', 'İSEMARA', 'NAMESPACE' ),
+	'subst'                   => array( '0', 'TÖPÇEK:', 'SUBST:' ),
+	'img_right'               => array( '1', 'uñda', 'right' ),
+	'img_left'                => array( '1', 'sulda', 'left' ),
+	'img_none'                => array( '1', 'yuq', 'none' ),
+	'int'                     => array( '0', 'EÇKE:', 'INT:' ),
+	'sitename'                => array( '1', 'SÄXİFÄİSEME', 'SITENAME' ),
+	'ns'                      => array( '0', 'İA:', 'NS:' ),
+	'localurl'                => array( '0', 'URINLIURL:', 'LOCALURL:' ),
+	'localurle'               => array( '0', 'URINLIURLE:', 'LOCALURLE:' ),
 );
 
 $fallback8bitEncoding = "windows-1254";
@@ -221,14 +221,7 @@ $messages = array(
 'index-category'                 => 'İndekslanğan bitlär',
 'noindex-category'               => 'İndekslanmağan bitlär',
 
-'linkprefix'        => '/^(.*?)([a-zA-Z\\x80-\\xff]+)$/sD',
-'mainpagetext'      => '«MediaWiki» uñışlı quyıldı.',
-'mainpagedocfooter' => "Bu wiki turında mäğlümatnı [http://meta.wikimedia.org/wiki/Yärdäm:Eçtälek biredä] tabıp bula.
-
-== Qayber faydalı resurslar ==
-* [http://www.mediawiki.org/wiki/Manual:Configuration_settings Köylänmälär isemlege (ing.)];
-* [http://www.mediawiki.org/wiki/Manual:FAQ MediaWiki turında yış birelgän sorawlar häm cawaplar (ing.)];
-* [https://lists.wikimedia.org/mailman/listinfo/mediawiki-announce MediaWiki'nıñ yaña versiäläre turında xäbärlär yazdırıp alu].",
+'linkprefix' => '/^(.*?)([a-zA-Z\\x80-\\xff]+)$/sD',
 
 'about'         => 'Taswirlama',
 'article'       => 'Mäqälä',
@@ -280,7 +273,6 @@ $messages = array(
 'history'           => 'Bitneñ tarixı',
 'history_short'     => 'Tarix',
 'updatedmarker'     => 'soñğı kerüemnän soñ yañartılğan',
-'info_short'        => 'Mäğlümat',
 'printableversion'  => 'Bastıru versiäse',
 'permalink'         => 'Daimi sıltama',
 'print'             => 'Bastıru',
@@ -458,25 +450,23 @@ Zinhar öçen, URLnı kürsätep, bu turıda [[Special:ListUsers/sysop|idaräçe
 'cannotdelete'         => '«$1» isemle bitne yäki faylnı beterep bulmıy. Anı bütän qullanuçı betergän bulırğa mömkin.',
 'badtitle'             => 'Yaraqsız isem',
 'badtitletext'         => 'Bitneñ soralğan iseme döres tügel, buş yäisä telara yäki interwiki iseme döres kürsätelmägän. İsemdä tıyılğan simvollar qullanılğan bulırğa mömkin.',
-'perfcached'           => 'Bu mäğlümatlar keştan alınğan, alarda soñğı üzgärtülär bulmasqa mömkin.',
-'perfcachedts'         => 'Bu mäğlümatlar keştan alınğan, ul soñğı tapqır $1 yañartıldı.',
+'perfcached'           => 'Bu mäğlümatlar keştan alınğan, alarda soñğı üzgärtülär bulmasqa mömkin. A maximum of {{PLURAL:$1|one result is|$1 results are}} available in the cache.',
+'perfcachedts'         => 'Bu mäğlümatlar keştan alınğan, ul soñğı tapqır $1 yañartıldı. A maximum of {{PLURAL:$4|one result is|$4 results are}} available in the cache.',
 'querypage-no-updates' => 'Xäzer bu bitne yañartıp bulmıy. Monda kürsätelgän mäğlümatlar qabul itelmäyäçäk.',
 'wrong_wfQuery_params' => 'wfQuery() funksiä öçen yaramağan parametrlar<br />
 Funksiä: $1<br />
 Soraw: $2',
 'viewsource'           => 'Qaraw',
-'viewsourcefor'        => '«$1» bite',
 'actionthrottled'      => 'Tizlek kimetelgän',
 'actionthrottledtext'  => 'Spamğa qarşı köräş öçen az waqıt eçendä bu ğämälne yış qullanu tıyılğan. Zinhar, soñaraq qabatlağız.',
 'protectedpagetext'    => 'Bu bit üzgärtü öçen yabıq.',
 'viewsourcetext'       => 'Sez bu bitneñ başlanğıç tekstın qarıy häm küçerä alasız:',
 'protectedinterface'   => 'Bu bittä programma interfeysı xäbärläre bar. Vandalizmğa qarşı köräş säbäple, bu bitne üzgärtü tıyıla.',
-'editinginterface'     => "'''İğtibar:''' Sez MediaWiki sistemasınıñ interfeys biten üzgärtäsez. Bu başqa qullanuçılarğa da tä'sir itäçäk. Tärcemä öçen [http://translatewiki.net/wiki/Main_Page?setlang=tt-latn translatewiki.net] lokalizatsiäläw proyektın qullanığız.",
+'editinginterface'     => "'''İğtibar:''' Sez MediaWiki sistemasınıñ interfeys biten üzgärtäsez. Bu başqa qullanuçılarğa da tä'sir itäçäk. Tärcemä öçen [//translatewiki.net/wiki/Main_Page?setlang=tt-latn translatewiki.net] lokalizatsiäläw proyektın qullanığız.",
 'sqlhidden'            => '(SQL-soraw yäşerelgän)',
 'cascadeprotected'     => 'Bu bit üzgärtülärdän saqlanğan, çönki ul kaskadlı saqlaw qabul itelgän {{PLURAL:$1|bitkä|bitlärgä}} östälgän:
 $2',
 'namespaceprotected'   => "'''$1''' isem kiñlegendäge bitlärne üzgärtü öçen sezneñ röxsätegez yuq.",
-'customcssjsprotected' => 'Sez bu bitne üzgärtä almıysız, çönki anda başqa qullanıçınıñ köylänmäläre bar.',
 'ns-specialprotected'  => 'Maxsus bitlärne üzgärtep bulmıy.',
 'titleprotected'       => "Bu isem belän bit yasaw [[User:$1|$1]] tarafınnan tıyılğan.
 Ul kürsätkän säbäp: ''$2''.",
@@ -529,7 +519,7 @@ Zinhar, başqa isem saylağız.',
 'nosuchuser'                 => '$1 isemle qullanuçı yuq.
 Qullanuçı isemeneñ döreslege registrğa bäyle.
 Yazılışığıznı tikşeregez yäki [[Special:UserLogin/signup|yaña xisap yazması tözegez]].',
-'nosuchusershort'            => '<nowiki>$1</nowiki> isemle qullanuçı yuq. Yazılışığıznı tikşeregez.',
+'nosuchusershort'            => '$1 isemle qullanuçı yuq. Yazılışığıznı tikşeregez.',
 'nouserspecified'            => 'Sez terkäw ismegezne kürsätergä tieşsez.',
 'login-userblocked'          => 'Bu qullanuçı tıyıldı. Kerü tıyılğan.',
 'wrongpassword'              => 'Yazılğan sersüz döres tügel. Tağın ber tapqır sınağız.',
@@ -568,7 +558,7 @@ Yañadan qabatlağançı beraz kötüegez sorala.',
 'loginlanguagelabel'         => 'Tel: $1',
 'suspicious-userlogout'      => 'Sezneñ eşçänlekne beterü sorawığız kire qağıldı, çönki ul yalğış brauzer yäisä keşlawçı proksi aşa cibärelerge mömkin.',
 
-# Password reset dialog
+# Change password dialog
 'resetpass'                 => 'Sersüzne üzgärtü',
 'resetpass_announce'        => 'Sez elektron poçta aşa waqıtlıça birelgän sersüz yärdämendä kerdegez. Sistemağa kerüne tögälläw öçen yaña sersüz tözegez.',
 'resetpass_text'            => '<!-- Monda tekst östägez -->',
@@ -597,8 +587,6 @@ Sez sersüzegezne üzgärtkän yäisä yaña waqıtlı sersüz soratqan bulırğ
 'extlink_tip'     => 'Tışqı sıltama (http:// alquşımçası turında onıtmağız)',
 'headline_sample' => 'Başisem',
 'headline_tip'    => '2 nçe däräcäle isem',
-'math_sample'     => 'Formulanı monda östägez',
-'math_tip'        => 'Matematik formula (LaTeX formatı)',
 'nowiki_sample'   => 'Formatlanmağan tekstnı monda östägez',
 'nowiki_tip'      => 'Wiki-formatlawnı isäpkä almaw',
 'image_sample'    => 'Misal.jpg',
@@ -654,9 +642,6 @@ Sez $1 yäki başqa [[{{MediaWiki:Grouppage-sysop}}|idaräçegä]] tıyu buyın�
 Sezneñ IP adresı — $3, tıyu identifikatorı — #$5.
 Xatlarda bu mäğlümatnı kürsätergä onıtmağız.",
 'blockednoreason'                  => 'säbäp kürsätelmägän',
-'blockedoriginalsource'            => "Asta '''$1''' biteneñ tekstı kürsätelgän.",
-'blockededitsource'                => "Asta '''$1''' biteneñ '''sez üzgärtkän''' tekstı kürsätelgän.",
-'whitelistedittitle'               => 'Üzgärtü öçen üz isemegez belän kerergä kiräk',
 'whitelistedittext'                => 'Sez bitlärne üzgärtü öçen $1 tieş.',
 'confirmedittext'                  => 'Bitlärne üzgärtü aldınnan sez elektron poçta adresığıznı dälillärgä tieş.
 Sez monı [[Special:Preferences|köyläwlär bitendä]] başqara alasız.',
@@ -684,7 +669,7 @@ yäki '''[{{fullurl:{{FULLPAGENAME}}|action=edit}} şuşındıy isemle yaña bit
 'noarticletext-nopermission'       => 'Xäzerge waqıtta bu bittä tekst yuq.
 Sez [[Special:Search/{{PAGENAME}}|bu isem kergän başqa mäqälälärne]],
 <span class="plainlinks">[{{fullurl:{{#Special:Log}}|page={{FULLPAGENAMEE}}}} köndäleklärdäge yazmalarnı] taba alasız.</span>',
-'userpage-userdoesnotexist'        => '«$1» isemle xisap yazması yuq. Sez çınlap ta bu bitne yasarğa yäisä üzgärtergä telisezme?',
+'userpage-userdoesnotexist'        => '«<nowiki>$1</nowiki>» isemle xisap yazması yuq. Sez çınlap ta bu bitne yasarğa yäisä üzgärtergä telisezme?',
 'userpage-userdoesnotexist-view'   => '"$1" isemle xisap yazması yuq.',
 'blocked-notice-logextract'        => 'Bu qullanuçı xäzergä tıyıldı.
 Tübändä tıyu köndälegeneñ soñğı yazu birelgän:',
@@ -882,12 +867,6 @@ Sez idaräçe bulu säbäple, [$1 yäşerelgän yuramanı qarıy alasız]",
 'revdel-restore-visible'      => 'kürsätelgän yuramalar',
 'pagehist'                    => 'bitneñ tarixı',
 'deletedhist'                 => 'Beterülär tarixı',
-'revdelete-content'           => 'eçtälek',
-'revdelete-summary'           => 'üzgärtülär taswirlaması',
-'revdelete-uname'             => 'qullanuçı iseme',
-'revdelete-restricted'        => 'çikläwlär idaräçelärgä dä qullanıla',
-'revdelete-hid'               => ' $1 yäşerelgän',
-'revdelete-unhid'             => '$1 açılğan',
 'revdelete-reasonotherlist'   => 'Başqa säbäp',
 'revdelete-edit-reasonlist'   => 'Säbäplär isemlegen üzgärtü',
 'revdelete-offender'          => 'Älege yuramalı bitneñ avtorı:',
@@ -988,14 +967,13 @@ Barlıq alannarda (bäxäs bitläre, ürnäklär, h.b.) ezläw öçen ''all'' s�
 'changepassword'                => 'Sersüzne üzgärtü',
 'prefs-skin'                    => 'Küreneş',
 'skin-preview'                  => 'Aldan qaraw',
-'prefs-math'                    => 'Formulalar',
 'datedefault'                   => 'Baştağı köylänmälär',
 'prefs-datetime'                => 'Data häm waqıt',
 'prefs-personal'                => 'Şäxsi mäğlümatlar',
 'prefs-rc'                      => 'Soñğı üzgärtülär',
 'prefs-watchlist'               => 'Küzätü isemlege',
 'prefs-watchlist-days'          => 'Küzätü isemlegendä kürsätelgän kön sanı:',
-'prefs-watchlist-days-max'      => '7 könnän artıq tügel',
+'prefs-watchlist-days-max'      => 'Maximum $1 {{PLURAL:$1|day|days}}',
 'prefs-watchlist-edits'         => 'Kiñäytelgän küzätü isemlegendä üzgärtülärneñ iñ yuğarı isäbe:',
 'prefs-watchlist-edits-max'     => 'Maksimum san: 1000',
 'prefs-watchlist-token'         => 'Küzätü isemlege toqenı:',
@@ -1012,8 +990,6 @@ Barlıq alannarda (bäxäs bitläre, ürnäklär, h.b.) ezläw öçen ''all'' s�
 'columns'                       => 'Bağanalar:',
 'searchresultshead'             => 'Ezläw',
 'resultsperpage'                => 'Ber bitkä turı kilgän tabıldıqlar:',
-'contextlines'                  => 'Härber tabıldıqta kürsätelüçe yullar sanı:',
-'contextchars'                  => 'Ber yulğa turı kilgän tamğalar:',
 'stub-threshold'                => '<a href="#" class="stub">Yasalma sıltamalarnıñ</a> bizäleşe buyınça çikläwlär (baytlarda):',
 'stub-threshold-disabled'       => 'Yabılğan',
 'recentchangesdays'             => 'Soñğı üzgärtülärne kürsätüçe könnär sanı:',
@@ -1195,7 +1171,6 @@ Ul $1 {{PLURAL:$1|xäreftän}} kübräk bulırğa tieş tügel.',
 'recentchangeslinked-feed'     => 'Bäyläneşle üzgärtülär',
 'recentchangeslinked-toolbox'  => 'Bäyläneşle üzgärtülär',
 'recentchangeslinked-title'    => '"$1" bitenä bäyläneşle üzgärtülär',
-'recentchangeslinked-backlink' => '← $1',
 'recentchangeslinked-noresult' => 'Kürsätelgän waqıtta sıltaşqan bitlärneñ üzgärtelmäläre yuq ide.',
 'recentchangeslinked-summary'  => "Bu kürsätelgän bit belän sıltalğan (yä kürsätelgän törkemgä kertkän) bitlärneñ üzgärtelmäläre isemlege.
 [[Special:Watchlist|Küzätü isemlegegezgä]] kerä torğan bitlär '''qalın'''.",
@@ -1216,9 +1191,9 @@ Ul $1 {{PLURAL:$1|xäreftän}} kübräk bulırğa tieş tügel.',
 'uploadtext'                 => "Bu formanı qullanıp serverğa fayllar yökli alasız. Elegräk yöklänelgän fayllarnı qaraw öçen [[Special:FileList|Yöklänelgän fayllar isemlegenä]] märäcäğät itegez. Şulay uq ul [[Special:Log/upload|yöklänmälär isemlegenä]] häm [[Special:Log/delete|beterelgän fayllar]] isemlegenä dä yazıla.
 
 Faylnı mäqälägä yökläw öçen Sez menä bu ürnäklärne qullana alasız:
-* '''<tt><nowiki>[[</nowiki>{{ns:file}}<nowiki>:Räsem.jpg]]</nowiki></tt>''' faylnıñ tulı yuramasın quyu öçen;
-* '''<tt><nowiki>[[</nowiki>{{ns:file}}<nowiki>:Räsem.png|200px|thumb|left|taswirlaması]]</nowiki></tt>'''  200 pikselğa qädär kiñlektäge  häm tekstnıñ sul yağında, taswirlaması belän;
-* '''<tt><nowiki>[[</nowiki>{{ns:media}}<nowiki>:File.ogg]]</nowiki></tt>'''bittä faylnı sürätlämiçä, barı tik sıltamasın ğına quyu.",
+* '''<code><nowiki>[[</nowiki>{{ns:file}}<nowiki>:Räsem.jpg]]</nowiki></code>''' faylnıñ tulı yuramasın quyu öçen;
+* '''<code><nowiki>[[</nowiki>{{ns:file}}<nowiki>:Räsem.png|200px|thumb|left|taswirlaması]]</nowiki></code>'''  200 pikselğa qädär kiñlektäge  häm tekstnıñ sul yağında, taswirlaması belän;
+* '''<code><nowiki>[[</nowiki>{{ns:media}}<nowiki>:File.ogg]]</nowiki></code>'''bittä faylnı sürätlämiçä, barı tik sıltamasın ğına quyu.",
 'upload-permitted'           => 'Röxsät itelgän fayl törläre:$1',
 'upload-preferred'           => 'Mömkin bulğan fayl törläre:$1',
 'upload-prohibited'          => 'Tıyılğan fayl törläre:$1',
@@ -1268,10 +1243,6 @@ Faylnı mäqälägä yökläw öçen Sez menä bu ürnäklärne qullana alasız:
 'upload-options'             => 'Yökläw parametrları',
 'watchthisupload'            => 'Bu faylnı küzätü',
 'filewasdeleted'             => 'Mondıy isemle fayl beterelgän bulğan inde. Zinhar,yañadan yökläw aldınnan $1 qarağız',
-'upload-wasdeleted'          => "'''İğtibar: Sez beterelgän fayl urınına yañasın yöklämäkçe bulasız.'''
-
-Sezgä çınnan da bu faylnı yökläw kiräkme?
-Tübändä faylnıñ beterü köndälege kiterelä:",
 'filename-bad-prefix'        => "Faylnıñ iseme '''«$1»''' dip başlana. Zinhar, faylnı taswirlawçı isem biregez.",
 'filename-prefix-blacklist'  => ' #<!-- niçek bar şulay qaldırığız --> <pre>
 # Sintaksis töbändägeçä:
@@ -1503,10 +1474,8 @@ Asta [[Special:UnusedCategories|qullanılmağan törkemnär]] kärsätelgän.
 'activeusers-noresult'   => 'Qullanuçılar tabılmadı.',
 
 # Special:Log/newusers
-'newuserlogpage'          => 'Qullanuçılarnı terkäw köndälege',
-'newuserlogpagetext'      => 'Yaña terkälgän qullanuçılar isemlege',
-'newuserlog-byemail'      => 'sersüz elektron poçta aşa cibärelde',
-'newuserlog-create-entry' => 'Yaña qullanuçı',
+'newuserlogpage'     => 'Qullanuçılarnı terkäw köndälege',
+'newuserlogpagetext' => 'Yaña terkälgän qullanuçılar isemlege',
 
 # Special:ListGroupRights
 'listgrouprights'          => 'Qullanuçı törkemnäreneñ xoquqları',
@@ -1536,10 +1505,8 @@ Asta [[Special:UnusedCategories|qullanılmağan törkemnär]] kärsätelgän.
 'nowatchlist'       => 'Küzätü isemlegegezdä bitlär yuq.',
 'watchnologin'      => 'Kermädegez',
 'watchnologintext'  => 'Küzätü isemlegegezne üzgärtü öçen, sez [[Special:UserLogin|kerergä]] tieşsez.',
-'addedwatch'        => 'Küzätü isemlegenä östägän',
 'addedwatchtext'    => "\"[[:\$1]]\" bite [[Special:Watchlist|küzätü isemlegegezgä]] östälde.
 Bu bittä häm anıñ bäxäslegendä barlıq bulaçaq üzgärtülär şunda kürsäteler, häm, [[Special:RecentChanges|soñğı üzgärtülär]] isemlegendä bu bitne ciñelräk tabu öçen, ul '''qalın mäten''' belän kürsäteler.",
-'removedwatch'      => 'Küzätü isemlegennän beterelgän',
 'removedwatchtext'  => '«[[:$1]]» bite [[Special:Watchlist|sezneñ küzätü isemlegennän]] beterelde.',
 'watch'             => 'Küzätü',
 'watchthispage'     => 'Bu bitne küzätü',
@@ -1577,13 +1544,13 @@ Bu bitkä kermäsägez, anıñ başqa üzgärtüläre turında xat cibärelmäy�
 
 --
 Küzätü isemlege köyläwlären üzgärtü:
-{{fullurl:{{#special:Watchlist}}/edit}}
+{{canonicalurl:{{#special:EditWatchlist}}}}
 
 Bitne sezneñ küzätü isemlegezdän beterü:
 $UNWATCHURL
 
 Elemtä häm yärdäm:
-{{fullurl:{{MediaWiki:Helppage}}}}',
+{{canonicalurl:{{MediaWiki:Helppage}}}}',
 
 # Delete
 'deletepage'             => 'Bitne beterü',
@@ -1597,9 +1564,8 @@ Elemtä häm yärdäm:
 'confirmdeletetext'      => 'Sez bu bitneñ (yäki räsemneñ) tulısınça beterelüen soradığız.
 Zinhar, monı çınnan da eşlärgä telägänegezne, monıñ näticälären añlağanığıznı häm [[{{MediaWiki:Policy-url}}]] bülegendäge qäğeydälär buyınça eşlägänegezne raslağız.',
 'actioncomplete'         => 'Ğämäl başqarğan',
-'deletedtext'            => '«<nowiki>$1</nowiki>» beterelgän inde.<br />
+'deletedtext'            => '«$1» beterelgän inde.<br />
 Soñğı beterelgän bitlärne kürer öçen, $2 qarağız.',
-'deletedarticle'         => '«[[$1]]» beterelde',
 'dellogpage'             => 'Beterü köndälege',
 'deletionlog'            => 'beterü köndälege',
 'reverted'               => 'Aldağı yuramanı qaytart',
@@ -1626,14 +1592,13 @@ Soñğı beterelgän bitlärne kürer öçen, $2 qarağız.',
 'movedarticleprotection'      => 'yaqlaw köylänmälären «[[$2]]» bitennän «[[$1]]» bitenä küçerde',
 'protect-title'               => '«$1» öçen yaqlaw däräcäsen bilgeläw',
 'prot_1movedto2'              => '«[[$1]]» bite «[[$2]]» bitenä küçerelde',
-'protect-backlink'            => '← $1',
 'protect-legend'              => 'Bitne yaqlaw turında raslağız',
 'protectcomment'              => 'Säbäp:',
 'protectexpiry'               => 'Betä:',
 'protect_expiry_invalid'      => 'Yaqlaw betü waqıtı döres tügel.',
 'protect_expiry_old'          => 'Yaqlaw betü köne uzğan köngä quyılğan.',
 'protect-unchain-permissions' => 'Östämä yaqlaw çaraların açu',
-'protect-text'                => "Biredä sez '''<nowiki>$1</nowiki>''' bite öçen yaqlaw däräcäsene qarıy häm üzgärä alasız.",
+'protect-text'                => "Biredä sez '''$1''' bite öçen yaqlaw däräcäsene qarıy häm üzgärä alasız.",
 'protect-locked-access'       => "Xisap yazmağızğa bitlärneñ yaqlaw däräcäsen üzgärtü öçen xaq citmi. '''$1''' biteneñ xäzerge köyläwläre:",
 'protect-cascadeon'           => 'Bu bit yaqlanğan, çönki ul älege kaskadlı yaqlawlı {{PLURAL:$1|bitkä|bitlärgä}} kerä. Sez bu bitneñ yaqlaw däräcäsen üzgärtä alasız, ämma kaskadlı yaqlaw üzgärmäyäçäk.',
 'protect-default'             => 'Yaqlawsız',
@@ -1679,7 +1644,6 @@ Beterelüdän soñ şundıy uq isemle bit tözelgän bulsa, torğızılğan üzg
 'undeletereset'             => 'Taşlatu',
 'undeleteinvert'            => 'Kiresen saylaw',
 'undeletecomment'           => 'Säbäp:',
-'undeletedarticle'          => '«[[$1]]» torğızıldı',
 'undelete-search-submit'    => 'Ezläw',
 'undelete-error-long'       => 'Faylnı torğızu waqıtında xatalar çıqtı:
 
@@ -1731,7 +1695,6 @@ $1',
 'blockip'                    => 'Qullanuçını tıyu',
 'blockip-title'              => 'Qullanuçını tıyu',
 'blockip-legend'             => 'Qullanuçını tıyu',
-'ipaddress'                  => 'IP adresı:',
 'ipadressorusername'         => 'IP adresı yäki qullanuçı iseme:',
 'ipbexpiry'                  => 'Betä:',
 'ipbreason'                  => 'Säbäp:',
@@ -1756,7 +1719,6 @@ $1',
 'unblockip'                  => 'Qullanuçını tıyudan azat itü',
 'ipusubmit'                  => 'Bu tıyunı tuqtatu',
 'ipblocklist'                => 'Tıyılğan IP adresları häm qullanuçı isemnäre',
-'ipblocklist-username'       => 'qullanuçı iseme yäki IP adresı:',
 'ipblocklist-submit'         => 'Ezläw',
 'infiniteblock'              => 'bilgele ber waqıtsız',
 'blocklink'                  => 'tıyu',
@@ -1820,9 +1782,6 @@ Zinhar başqa isem saylağız.',
 'talkexists'                => "'''Bitneñ üze küçerelde, ämma bäxäs bite küçerelmi qaldı, çönki şundıy isemle bit bar inde. Zinhar, alarnı üzegez quşığız.'''",
 'movedto'                   => 'küçerelgän:',
 'movetalk'                  => 'Bäyläneşle bäxäs biten küçerü',
-'1movedto2'                 => '«[[$1]]» bite «[[$2]]» bitenä küçerelde',
-'1movedto2_redir'           => '[[$1]] bite [[$2]] bitenä yünältü östennän küçte',
-'move-redirect-suppressed'  => 'yünältü tıyıldı',
 'movelogpage'               => 'Küçerü köndälege',
 'movereason'                => 'Säbäp:',
 'revertmove'                => 'kire qaytu',
@@ -1844,7 +1803,7 @@ Zinhar başqa isem saylağız.',
 'allmessagesdefault'            => 'Töpcay yazma',
 'allmessagescurrent'            => 'Eligi yazma',
 'allmessagestext'               => 'Bu isemlek MediaWiki isemnär mäydanında bulğan sistema xäbärläreneñ isemlege.
-Ğomumi MediaWiki lokalizatsiäsendä qatnaşırğa teläsägez, zinhar [http://www.mediawiki.org/wiki/Localisation MediaWiki Lokalizatsiäse] häm [http://translatewiki.net translatewiki.net] säxifälärne qullanığız.',
+Ğomumi MediaWiki lokalizatsiäsendä qatnaşırğa teläsägez, zinhar [//www.mediawiki.org/wiki/Localisation MediaWiki Lokalizatsiäse] häm [//translatewiki.net translatewiki.net] säxifälärne qullanığız.',
 'allmessages-filter-legend'     => 'Filtr',
 'allmessages-filter-unmodified' => 'Üzgärtelmägän',
 'allmessages-filter-all'        => 'Barısı',
@@ -1947,9 +1906,6 @@ Zinhar başqa isem saylağız.',
 # Spam protection
 'spamprotectiontitle' => 'Spam filtrı',
 
-# Info page
-'infosubtitle' => 'Bit turında',
-
 # Skin names
 'skinname-standard'    => 'Klassik',
 'skinname-nostalgia'   => 'İskä alu',
@@ -1961,21 +1917,6 @@ Zinhar başqa isem saylağız.',
 'skinname-modern'      => 'Zamana',
 'skinname-vector'      => 'Sızımlı',
 
-# Math options
-'mw_math_png'    => 'Härwaqıt PNG belän bäyläw',
-'mw_math_simple' => 'Ğädi oçraqlarda HTML, yäisä PNG qullanılsın',
-'mw_math_html'   => 'Mömkin bulsa HTML, yäisä PNG qullanılsın',
-'mw_math_source' => 'TeX bilgeläneşendä qaldırılsın (tekstlı brauzerlar öçen)',
-'mw_math_modern' => 'Bügenge brauzerlar öçen qullanılsın',
-'mw_math_mathml' => 'Mömkin bulsa MathML qullanılsın (eksperimental)',
-
-# Math errors
-'math_failure'          => 'Uqıy almadım',
-'math_unknown_error'    => 'belenmägän xata',
-'math_unknown_function' => 'bilgesez funksiä',
-'math_lexing_error'     => 'leksik xata',
-'math_syntax_error'     => 'sintaksik xata',
-
 # Patrolling
 'markaspatrolledtext'   => 'Bu mäqäläne tikşerelgän dip tamğalaw',
 'markedaspatrolled'     => 'Tikşerelgän dip tamğalandı',
@@ -1984,9 +1925,6 @@ Zinhar başqa isem saylağız.',
 # Patrol log
 'patrol-log-page'      => 'Tikşerü köndälege',
 'patrol-log-header'    => 'Bu tikşerelgän bitlärneñ köndälege.',
-'patrol-log-line'      => '$2 $3 bitennän $1nı tikşerde',
-'patrol-log-auto'      => '(avtomatik räweştä)',
-'patrol-log-diff'      => '$1 yurama',
 'log-show-hide-patrol' => '$1 tikşerü köndälege',
 
 # Image deletion
@@ -2002,16 +1940,15 @@ $1',
 'nextdiff'     => 'Çirattağı üzgärtü →',
 
 # Media information
-'imagemaxsize'         => "Räsemneñ zurlığına çikläwlär:<br />''(taswirlaw bite öçen)''",
-'thumbsize'            => 'Räsemneñ keçeräytelgän yuraması öçen:',
-'widthheight'          => '$1 × $2',
-'widthheightpage'      => '$1 × $2, $3{{PLURAL:$1|bit|bitlär}}',
-'file-info'            => 'fayl zurlığı: $1, MIME-tip: $2',
-'file-info-size'       => '$1 × $2 noqta, faylnıñ zurlığı: $3, MIME tibı: $4',
-'file-nohires'         => '<small>Yuğarı açıqlıq belän yurama yuq.</small>',
-'svg-long-desc'        => 'SVG faylı, şartlı $1 × $2 noqta, faylnıñ zurlığı: $3',
-'show-big-image'       => 'Tulı açıqlıq',
-'show-big-image-thumb' => '<small>Aldan qaraw zurlığı: $1 × $2 noqta</small>',
+'imagemaxsize'    => "Räsemneñ zurlığına çikläwlär:<br />''(taswirlaw bite öçen)''",
+'thumbsize'       => 'Räsemneñ keçeräytelgän yuraması öçen:',
+'widthheight'     => '$1 × $2',
+'widthheightpage' => '$1 × $2, $3{{PLURAL:$1|bit|bitlär}}',
+'file-info'       => 'fayl zurlığı: $1, MIME-tip: $2',
+'file-info-size'  => '$1 × $2 noqta, faylnıñ zurlığı: $3, MIME tibı: $4',
+'file-nohires'    => 'Yuğarı açıqlıq belän yurama yuq.',
+'svg-long-desc'   => 'SVG faylı, şartlı $1 × $2 noqta, faylnıñ zurlığı: $3',
+'show-big-image'  => 'Tulı açıqlıq',
 
 # Special:NewFiles
 'newimages'        => 'Yaña sürätlär cıyılması',
@@ -2039,7 +1976,13 @@ Yulnıñ berençe sıltaması quyma öçen tıyılğan räsemgä sıltama bulır
 * exposuretime
 * fnumber
 * isospeedratings
-* focallength',
+* focallength
+* artist
+* copyright
+* imagedescription
+* gpslatitude
+* gpslongitude
+* gpsaltitude',
 
 # EXIF tags
 'exif-imagewidth'               => 'Kiñlek',
@@ -2057,7 +2000,6 @@ Yulnıñ berençe sıltaması quyma öçen tıyılğan räsemgä sıltama bulır
 'exif-compressedbitsperpixel'   => 'Qısıludan soñ tösneñ tiränlege',
 'exif-pixelydimension'          => 'Räsemneñ tulı bieklege',
 'exif-pixelxdimension'          => 'Räsemneñ tulı kiñlege',
-'exif-makernote'                => 'Citeşterüçe turında östämä mäğlümatlar',
 'exif-usercomment'              => 'Östämä cawap',
 'exif-relatedsoundfile'         => 'Tawış faylı cawabı',
 'exif-datetimeoriginal'         => 'Çın waqıtı',
@@ -2072,7 +2014,6 @@ Yulnıñ berençe sıltaması quyma öçen tıyılğan räsemgä sıltama bulır
 'exif-exposureprogram'          => 'Ekspozitsiä programması',
 'exif-spectralsensitivity'      => 'Spektral sizüçänlek',
 'exif-isospeedratings'          => 'ISO yaqtılıq sizüçänlege',
-'exif-oecf'                     => 'OECF (optoelektrik küçerü koeffitsientı)',
 'exif-shutterspeedvalue'        => 'Saqlaw',
 'exif-aperturevalue'            => 'Diafragma',
 'exif-brightnessvalue'          => 'Yaqtılıq',
@@ -2086,7 +2027,6 @@ Yulnıñ berençe sıltaması quyma öçen tıyılğan räsemgä sıltama bulır
 'exif-focallength-format'       => '$1 mm',
 'exif-subjectarea'              => 'Töşerü cisemeneñ urnaşuı häm mäydanı',
 'exif-flashenergy'              => 'Yaqtılıq energiäse',
-'exif-spatialfrequencyresponse' => 'Tirälek tırışı',
 'exif-focalplanexresolution'    => 'X foqäl yassılıq kiñäytelüe',
 'exif-focalplaneyresolution'    => 'Y foqäl yassılıq kiñäytelüe',
 'exif-focalplaneresolutionunit' => 'Foqäl yassılıq kiñäytelüen isäpläw berämlege',
@@ -2095,7 +2035,6 @@ Yulnıñ berençe sıltaması quyma öçen tıyılğan räsemgä sıltama bulır
 'exif-sensingmethod'            => 'Sensor töre',
 'exif-filesource'               => 'Faylnıñ çığanağı',
 'exif-scenetype'                => 'Tirälekneñ töre',
-'exif-cfapattern'               => 'Tös filtrınıñ töre',
 'exif-customrendered'           => 'Östämä üzgärtü',
 'exif-exposuremode'             => 'Ekspozitsiä saylaw rejimı',
 'exif-whitebalance'             => 'Aq tösneñ balansı',
@@ -2154,15 +2093,13 @@ Yulnıñ berençe sıltaması quyma öçen tıyılğan räsemgä sıltama bulır
 
 # External editor support
 'edit-externally'      => 'Bu faylnı tışqı quşımtanı qullanıp üzgärtü',
-'edit-externally-help' => '(tulıraq mäğlümat öçen [http://www.mediawiki.org/wiki/Manual:External_editors setup instructions] biten qarağız)',
+'edit-externally-help' => '(tulıraq mäğlümat öçen [//www.mediawiki.org/wiki/Manual:External_editors setup instructions] biten qarağız)',
 
 # 'all' in various places, this might be different for inflected languages
-'recentchangesall' => 'Barlıq',
-'imagelistall'     => 'barlıq',
-'watchlistall2'    => 'barlıq',
-'namespacesall'    => 'barlıq',
-'monthsall'        => 'barlıq',
-'limitall'         => 'barlıq',
+'watchlistall2' => 'barlıq',
+'namespacesall' => 'barlıq',
+'monthsall'     => 'barlıq',
+'limitall'      => 'barlıq',
 
 # Delete conflict
 'recreate' => 'Yañadan yasaw',
@@ -2260,5 +2197,9 @@ Yulnıñ berençe sıltaması quyma öçen tıyılğan räsemgä sıltama bulır
 'htmlform-submit'              => 'Cibärü',
 'htmlform-reset'               => 'Üzgärtülärne kire qaytaru',
 'htmlform-selectorother-other' => 'Başqa',
+
+# New logging system
+'revdelete-restricted' => 'çikläwlär idaräçelärgä dä qullanıla',
+'newuserlog-byemail'   => 'sersüz elektron poçta aşa cibärelde',
 
 );

@@ -1,4 +1,25 @@
 <?php
+/**
+ * Helper class for checkLanguage.php script.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ * http://www.gnu.org/copyleft/gpl.html
+ *
+ * @file
+ * @ingroup MaintenanceLanguage
+ */
 
 /**
  * @ingroup MaintenanceLanguage
@@ -97,7 +118,7 @@ class CheckLanguageCLI {
 
 	/**
 	 * Get the checks that can easily be treated by non-speakers of the language.
-	 * @return A list of the easy checks.
+	 * @return Array A list of the easy checks.
 	 */
 	protected function easyChecks() {
 		return array(
@@ -283,17 +304,17 @@ ENDS;
 
 	/**
 	 * Check a language.
-	 * @param $code The language code.
-	 * @return The results.
+	 * @param $code string The language code.
+	 * @return array The results.
 	 */
 	protected function checkLanguage( $code ) {
 		# Syntax check only
+		$results = array();
 		if ( $this->level === 0 ) {
 			$this->L->getMessages( $code );
-			return;
+			return $results;
 		}
 
-		$results = array();
 		$checkFunctions = $this->getChecks();
 		$checkBlacklist = $this->getCheckBlacklist();
 		foreach ( $this->checks as $check ) {
@@ -622,7 +643,7 @@ ENDS;
 
 	/**
 	 * Check a language and show the results.
-	 * @param $code The language code.
+	 * @param $code string The language code.
 	 */
 	protected function checkLanguage( $code ) {
 		foreach( $this->extensions as $extension ) {

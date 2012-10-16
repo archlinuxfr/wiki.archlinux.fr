@@ -1,5 +1,5 @@
 <?php
-/** Albanian (Shqip)
+/** Albanian (shqip)
  *
  * See MessagesQqq.php for message documentation incl. usage of parameters
  * To improve a translation please visit http://translatewiki.net
@@ -9,9 +9,15 @@
  *
  * @author Andejkendej
  * @author Cradel
+ * @author Dashohoxha
+ * @author Dasius
  * @author Dori
  * @author Eagleal
  * @author Ergon
+ * @author Euriditi
+ * @author FatosMorina
+ * @author Kaganer
+ * @author Marinari
  * @author Mdupont
  * @author MicroBoy
  * @author Mikullovci11
@@ -20,6 +26,7 @@
  * @author Techlik
  * @author The Evil IP address
  * @author Urhixidur
+ * @author Vinie007
  * @author לערי ריינהארט
  */
 
@@ -52,127 +59,127 @@ $namespaceAliases = array(
 );
 
 $specialPageAliases = array(
-	'Userlogin'                 => array( 'HyrjePërdoruesi' ),
-	'Userlogout'                => array( 'DaljePërdoruesi' ),
-	'CreateAccount'             => array( 'HapLlogari' ),
-	'Preferences'               => array( 'Preferencat' ),
-	'Recentchanges'             => array( 'NdryshimeSëFundmi' ),
-	'Upload'                    => array( 'Ngarko' ),
-	'Listfiles'                 => array( 'ListaSkedave' ),
-	'Newimages'                 => array( 'SkedaTëReja' ),
-	'Listusers'                 => array( 'RreshtoPërdoruesit' ),
-	'Statistics'                => array( 'Statistika' ),
-	'Randompage'                => array( 'Rastësishme', 'FaqeRastësishme' ),
-	'Uncategorizedpages'        => array( 'FaqeTëpakategorizuara' ),
-	'Uncategorizedcategories'   => array( 'KategoriTëpakategorizuara' ),
-	'Uncategorizedimages'       => array( 'SkedaTëpakategorizuara' ),
-	'Uncategorizedtemplates'    => array( 'StampaTëpakategorizuara' ),
-	'Unusedcategories'          => array( 'KategoriTëpapërdorura' ),
-	'Unusedimages'              => array( 'SkedaTëpapërdorura' ),
-	'Wantedpages'               => array( 'FaqeteDëshiruara' ),
-	'Wantedcategories'          => array( 'KaetgoritëeDëshiruara' ),
-	'Wantedfiles'               => array( 'SkedateDëshiruara' ),
-	'Wantedtemplates'           => array( 'StampateDëshiruara' ),
-	'Shortpages'                => array( 'FasheteShkurta' ),
-	'Longpages'                 => array( 'FaqeteGjata' ),
-	'Newpages'                  => array( 'FaqeteReja' ),
-	'Ancientpages'              => array( 'FaqetAntike' ),
-	'Protectedpages'            => array( 'FaqeteMbrojtura' ),
-	'Protectedtitles'           => array( 'TitujteMbrojtur' ),
+	'Allmessages'               => array( 'TëgjithaMesazhet' ),
 	'Allpages'                  => array( 'TëgjithaFaqet' ),
-	'Unblock'                   => array( 'Zhblloko' ),
-	'Specialpages'              => array( 'FaqetSpeciale' ),
-	'Contributions'             => array( 'Kontributet' ),
-	'Emailuser'                 => array( 'EmailPërdoruesit' ),
-	'Confirmemail'              => array( 'KonfirmoEmail' ),
-	'Whatlinkshere'             => array( 'LidhjetKëtu' ),
-	'Movepage'                  => array( 'LëvizFaqe' ),
+	'Ancientpages'              => array( 'FaqetAntike' ),
+	'Blankpage'                 => array( 'FaqeBosh' ),
+	'Block'                     => array( 'BllokoIP' ),
 	'Blockme'                   => array( 'BllokomMua' ),
 	'Booksources'               => array( 'BurimeteLibrave' ),
 	'Categories'                => array( 'Kategori' ),
+	'ChangePassword'            => array( 'NdryshoFjalëkalimin' ),
+	'Confirmemail'              => array( 'KonfirmoEmail' ),
+	'Contributions'             => array( 'Kontributet' ),
+	'CreateAccount'             => array( 'HapLlogari' ),
+	'DeletedContributions'      => array( 'GrisKontributet' ),
+	'Emailuser'                 => array( 'EmailPërdoruesit' ),
 	'Export'                    => array( 'Eksporto' ),
-	'Version'                   => array( 'Verzioni' ),
-	'Allmessages'               => array( 'TëgjithaMesazhet' ),
-	'Blockip'                   => array( 'BllokoIP' ),
-	'Undelete'                  => array( 'Rikthe' ),
 	'Import'                    => array( 'Importo' ),
-	'Lockdb'                    => array( 'MbyllDB' ),
-	'Unlockdb'                  => array( 'HapDB' ),
-	'Mypage'                    => array( 'FaqjaIme' ),
-	'Mytalk'                    => array( 'DiskutimiImë' ),
-	'Mycontributions'           => array( 'KontributetëMiat' ),
-	'Myuploads'                 => array( 'NgarkimeteMia' ),
 	'Listadmins'                => array( 'RreshtoAdmin' ),
 	'Listbots'                  => array( 'RreshtoBotët' ),
+	'Listfiles'                 => array( 'ListaSkedave' ),
+	'Listusers'                 => array( 'RreshtoPërdoruesit' ),
+	'Lockdb'                    => array( 'MbyllDB' ),
+	'Longpages'                 => array( 'FaqeteGjata' ),
+	'Movepage'                  => array( 'LëvizFaqe' ),
+	'Mycontributions'           => array( 'KontributetëMiat' ),
+	'Mypage'                    => array( 'FaqjaIme' ),
+	'Mytalk'                    => array( 'DiskutimiImë' ),
+	'Myuploads'                 => array( 'NgarkimeteMia' ),
+	'Newimages'                 => array( 'SkedaTëReja' ),
+	'Newpages'                  => array( 'FaqeteReja' ),
 	'Popularpages'              => array( 'FaqetëFamshme' ),
+	'Preferences'               => array( 'Preferencat' ),
+	'Protectedpages'            => array( 'FaqeteMbrojtura' ),
+	'Protectedtitles'           => array( 'TitujteMbrojtur' ),
+	'Randompage'                => array( 'Rastësishme', 'FaqeRastësishme' ),
+	'Recentchanges'             => array( 'NdryshimeSëFundmi' ),
 	'Search'                    => array( 'Kërkim' ),
-	'Resetpass'                 => array( 'NdryshoFjalëkalimin' ),
+	'Shortpages'                => array( 'FasheteShkurta' ),
+	'Specialpages'              => array( 'FaqetSpeciale' ),
+	'Statistics'                => array( 'Statistika' ),
+	'Unblock'                   => array( 'Zhblloko' ),
+	'Uncategorizedcategories'   => array( 'KategoriTëpakategorizuara' ),
+	'Uncategorizedimages'       => array( 'SkedaTëpakategorizuara' ),
+	'Uncategorizedpages'        => array( 'FaqeTëpakategorizuara' ),
+	'Uncategorizedtemplates'    => array( 'StampaTëpakategorizuara' ),
+	'Undelete'                  => array( 'Rikthe' ),
+	'Unlockdb'                  => array( 'HapDB' ),
+	'Unusedcategories'          => array( 'KategoriTëpapërdorura' ),
+	'Unusedimages'              => array( 'SkedaTëpapërdorura' ),
+	'Upload'                    => array( 'Ngarko' ),
+	'Userlogin'                 => array( 'HyrjePërdoruesi' ),
+	'Userlogout'                => array( 'DaljePërdoruesi' ),
+	'Version'                   => array( 'Verzioni' ),
+	'Wantedcategories'          => array( 'KaetgoritëeDëshiruara' ),
+	'Wantedfiles'               => array( 'SkedateDëshiruara' ),
+	'Wantedpages'               => array( 'FaqeteDëshiruara' ),
+	'Wantedtemplates'           => array( 'StampateDëshiruara' ),
+	'Whatlinkshere'             => array( 'LidhjetKëtu' ),
 	'Withoutinterwiki'          => array( 'PaInterwiki' ),
-	'Blankpage'                 => array( 'FaqeBosh' ),
-	'DeletedContributions'      => array( 'GrisKontributet' ),
 );
 
 $magicWords = array(
-	'redirect'              => array( '0', '#RIDREJTO', '#REDIRECT' ),
-	'currentmonth'          => array( '1', 'MUAJIMOMENTAL', 'MUAJIMOMENTAL2', 'CURRENTMONTH', 'CURRENTMONTH2' ),
-	'currentmonth1'         => array( '1', 'MUAJIMOMENTAL1', 'CURRENTMONTH1' ),
-	'currentmonthname'      => array( '1', 'EMRIIMUAJITMOMENTAL', 'CURRENTMONTHNAME' ),
-	'currentday'            => array( '1', 'DITASOT', 'CURRENTDAY' ),
-	'currentday2'           => array( '1', 'DITASOT2', 'CURRENTDAY2' ),
-	'currentdayname'        => array( '1', 'EMRIIDITËSOT', 'CURRENTDAYNAME' ),
-	'currentyear'           => array( '1', 'SIVJET', 'CURRENTYEAR' ),
-	'currenttime'           => array( '1', 'KOHATANI', 'CURRENTTIME' ),
-	'currenthour'           => array( '1', 'ORATANI', 'CURRENTHOUR' ),
-	'localmonth'            => array( '1', 'MUAJILOKAL', 'LOCALMONTH', 'LOCALMONTH2' ),
-	'localmonthname'        => array( '1', 'EMRIIMUAJITLOKAL', 'LOCALMONTHNAME' ),
-	'localday'              => array( '1', 'DITALOKALE', 'LOCALDAY' ),
-	'localday2'             => array( '1', 'DITALOKALE2', 'LOCALDAY2' ),
-	'localdayname'          => array( '1', 'EMRIIDITËSLOKALE', 'LOCALDAYNAME' ),
-	'localyear'             => array( '1', 'VITILOKAL', 'LOCALYEAR' ),
-	'localtime'             => array( '1', 'KOHALOKALE', 'LOCALTIME' ),
-	'localhour'             => array( '1', 'ORALOKALE', 'LOCALHOUR' ),
-	'numberofpages'         => array( '1', 'NUMRIFAQEVE', 'NUMBEROFPAGES' ),
-	'numberofarticles'      => array( '1', 'NUMRIIARTIKUJVE', 'NUMBEROFARTICLES' ),
-	'numberoffiles'         => array( '1', 'NUMRIISKEDAVE', 'NUMBEROFFILES' ),
-	'numberofusers'         => array( '1', 'NUMRIPËRDORUESVE', 'NUMBEROFUSERS' ),
-	'numberofedits'         => array( '1', 'NUMRIREDAKTIMEVE', 'NUMBEROFEDITS' ),
-	'numberofviews'         => array( '1', 'NUMRIISHIKIMEVE', 'NUMBEROFVIEWS' ),
-	'pagename'              => array( '1', 'EMRIFAQES', 'PAGENAME' ),
-	'fullpagename'          => array( '1', 'EMRIIPLOTËIFAQES', 'FULLPAGENAME' ),
-	'fullpagenamee'         => array( '1', 'EMRIIPLOTËIFAQESE', 'FULLPAGENAMEE' ),
-	'subpagename'           => array( '1', 'EMRIINËNFAQES', 'SUBPAGENAME' ),
-	'subpagenamee'          => array( '1', 'EMRIINËNFAQESE', 'SUBPAGENAMEE' ),
-	'basepagename'          => array( '1', 'EMRIIFAQESBAZË', 'BASEPAGENAME' ),
-	'basepagenamee'         => array( '1', 'EMRIIFAQESBAZËE', 'BASEPAGENAMEE' ),
-	'talkpagename'          => array( '1', 'EMRIIFAQESSËDISKUTIMIT', 'TALKPAGENAME' ),
-	'talkpagenamee'         => array( '1', 'EMRIIFAQESSËDISKUTIMITE', 'TALKPAGENAMEE' ),
-	'subst'                 => array( '0', 'ZËVN', 'SUBST:' ),
-	'img_thumbnail'         => array( '1', 'parapamje', 'pamje', 'thumbnail', 'thumb' ),
-	'img_manualthumb'       => array( '1', 'parapamje=$1', 'pamje=$1', 'thumbnail=$1', 'thumb=$1' ),
-	'img_right'             => array( '1', 'djathtas', 'right' ),
-	'img_left'              => array( '1', 'majtas', 'left' ),
-	'img_none'              => array( '1', 's\'ka', 'none' ),
-	'img_center'            => array( '1', 'qëndër', 'qëndrore', 'center', 'centre' ),
-	'img_framed'            => array( '1', 'i kornizuar', 'pa kornizë', 'kornizë', 'framed', 'enframed', 'frame' ),
-	'img_page'              => array( '1', 'faqja=$1', 'faqja $1', 'page=$1', 'page $1' ),
-	'img_upright'           => array( '1', 'lartdjathtas', 'lartdjathtas=$1', 'lartdjathtas $1', 'upright', 'upright=$1', 'upright $1' ),
-	'img_border'            => array( '1', 'kufi', 'border' ),
-	'img_baseline'          => array( '1', 'linjabazë', 'baseline' ),
-	'img_sub'               => array( '1', 'nën', 'sub' ),
-	'img_text_top'          => array( '1', 'tekst-top', 'text-top' ),
-	'img_middle'            => array( '1', 'mes', 'middle' ),
-	'img_bottom'            => array( '1', 'fund', 'bottom' ),
-	'img_text_bottom'       => array( '1', 'tekst-fund', 'text-bottom' ),
-	'img_link'              => array( '1', 'lidhje=$1', 'link=$1' ),
-	'sitename'              => array( '1', 'EMRIIFAQES', 'SITENAME' ),
-	'localurl'              => array( '0', 'URLLOKALE', 'LOCALURL:' ),
-	'server'                => array( '0', 'SERVERI', 'SERVER' ),
-	'servername'            => array( '0', 'EMRIISERVERIT', 'SERVERNAME' ),
-	'grammar'               => array( '0', 'GRAMATIKA:', 'GRAMMAR:' ),
-	'currentweek'           => array( '1', 'JAVAMOMENTALE', 'CURRENTWEEK' ),
-	'plural'                => array( '0', 'SHUMËS:', 'PLURAL:' ),
-	'language'              => array( '0', '#GJUHA:', '#LANGUAGE:' ),
-	'special'               => array( '0', 'speciale', 'special' ),
+	'redirect'                => array( '0', '#RIDREJTO', '#REDIRECT' ),
+	'currentmonth'            => array( '1', 'MUAJIMOMENTAL', 'MUAJIMOMENTAL2', 'CURRENTMONTH', 'CURRENTMONTH2' ),
+	'currentmonth1'           => array( '1', 'MUAJIMOMENTAL1', 'CURRENTMONTH1' ),
+	'currentmonthname'        => array( '1', 'EMRIIMUAJITMOMENTAL', 'CURRENTMONTHNAME' ),
+	'currentday'              => array( '1', 'DITASOT', 'CURRENTDAY' ),
+	'currentday2'             => array( '1', 'DITASOT2', 'CURRENTDAY2' ),
+	'currentdayname'          => array( '1', 'EMRIIDITËSOT', 'CURRENTDAYNAME' ),
+	'currentyear'             => array( '1', 'SIVJET', 'CURRENTYEAR' ),
+	'currenttime'             => array( '1', 'KOHATANI', 'CURRENTTIME' ),
+	'currenthour'             => array( '1', 'ORATANI', 'CURRENTHOUR' ),
+	'localmonth'              => array( '1', 'MUAJILOKAL', 'LOCALMONTH', 'LOCALMONTH2' ),
+	'localmonthname'          => array( '1', 'EMRIIMUAJITLOKAL', 'LOCALMONTHNAME' ),
+	'localday'                => array( '1', 'DITALOKALE', 'LOCALDAY' ),
+	'localday2'               => array( '1', 'DITALOKALE2', 'LOCALDAY2' ),
+	'localdayname'            => array( '1', 'EMRIIDITËSLOKALE', 'LOCALDAYNAME' ),
+	'localyear'               => array( '1', 'VITILOKAL', 'LOCALYEAR' ),
+	'localtime'               => array( '1', 'KOHALOKALE', 'LOCALTIME' ),
+	'localhour'               => array( '1', 'ORALOKALE', 'LOCALHOUR' ),
+	'numberofpages'           => array( '1', 'NUMRIFAQEVE', 'NUMBEROFPAGES' ),
+	'numberofarticles'        => array( '1', 'NUMRIIARTIKUJVE', 'NUMBEROFARTICLES' ),
+	'numberoffiles'           => array( '1', 'NUMRIISKEDAVE', 'NUMBEROFFILES' ),
+	'numberofusers'           => array( '1', 'NUMRIPËRDORUESVE', 'NUMBEROFUSERS' ),
+	'numberofedits'           => array( '1', 'NUMRIREDAKTIMEVE', 'NUMBEROFEDITS' ),
+	'numberofviews'           => array( '1', 'NUMRIISHIKIMEVE', 'NUMBEROFVIEWS' ),
+	'pagename'                => array( '1', 'EMRIFAQES', 'PAGENAME' ),
+	'fullpagename'            => array( '1', 'EMRIIPLOTËIFAQES', 'FULLPAGENAME' ),
+	'fullpagenamee'           => array( '1', 'EMRIIPLOTËIFAQESE', 'FULLPAGENAMEE' ),
+	'subpagename'             => array( '1', 'EMRIINËNFAQES', 'SUBPAGENAME' ),
+	'subpagenamee'            => array( '1', 'EMRIINËNFAQESE', 'SUBPAGENAMEE' ),
+	'basepagename'            => array( '1', 'EMRIIFAQESBAZË', 'BASEPAGENAME' ),
+	'basepagenamee'           => array( '1', 'EMRIIFAQESBAZËE', 'BASEPAGENAMEE' ),
+	'talkpagename'            => array( '1', 'EMRIIFAQESSËDISKUTIMIT', 'TALKPAGENAME' ),
+	'talkpagenamee'           => array( '1', 'EMRIIFAQESSËDISKUTIMITE', 'TALKPAGENAMEE' ),
+	'subst'                   => array( '0', 'ZËVN', 'SUBST:' ),
+	'img_thumbnail'           => array( '1', 'parapamje', 'pamje', 'thumbnail', 'thumb' ),
+	'img_manualthumb'         => array( '1', 'parapamje=$1', 'pamje=$1', 'thumbnail=$1', 'thumb=$1' ),
+	'img_right'               => array( '1', 'djathtas', 'right' ),
+	'img_left'                => array( '1', 'majtas', 'left' ),
+	'img_none'                => array( '1', 's\'ka', 'none' ),
+	'img_center'              => array( '1', 'qëndër', 'qëndrore', 'center', 'centre' ),
+	'img_framed'              => array( '1', 'i_kornizuar', 'pa_kornizë', 'kornizë', 'framed', 'enframed', 'frame' ),
+	'img_page'                => array( '1', 'faqja=$1', 'faqja $1', 'page=$1', 'page $1' ),
+	'img_upright'             => array( '1', 'lartdjathtas', 'lartdjathtas=$1', 'lartdjathtas $1', 'upright', 'upright=$1', 'upright $1' ),
+	'img_border'              => array( '1', 'kufi', 'border' ),
+	'img_baseline'            => array( '1', 'linjabazë', 'baseline' ),
+	'img_sub'                 => array( '1', 'nën', 'sub' ),
+	'img_text_top'            => array( '1', 'tekst-top', 'text-top' ),
+	'img_middle'              => array( '1', 'mes', 'middle' ),
+	'img_bottom'              => array( '1', 'fund', 'bottom' ),
+	'img_text_bottom'         => array( '1', 'tekst-fund', 'text-bottom' ),
+	'img_link'                => array( '1', 'lidhje=$1', 'link=$1' ),
+	'sitename'                => array( '1', 'EMRIIFAQES', 'SITENAME' ),
+	'localurl'                => array( '0', 'URLLOKALE', 'LOCALURL:' ),
+	'server'                  => array( '0', 'SERVERI', 'SERVER' ),
+	'servername'              => array( '0', 'EMRIISERVERIT', 'SERVERNAME' ),
+	'grammar'                 => array( '0', 'GRAMATIKA:', 'GRAMMAR:' ),
+	'currentweek'             => array( '1', 'JAVAMOMENTALE', 'CURRENTWEEK' ),
+	'plural'                  => array( '0', 'SHUMËS:', 'PLURAL:' ),
+	'language'                => array( '0', '#GJUHA:', '#LANGUAGE:' ),
+	'special'                 => array( '0', 'speciale', 'special' ),
 );
 
 $datePreferences = array(
@@ -191,62 +198,62 @@ $separatorTransformTable = array( ',' => '.', '.' => ',' );
 
 $messages = array(
 # User preference toggles
-'tog-underline'               => 'Nënvizo lidhjet',
-'tog-highlightbroken'         => 'Formato lidhjet e prishura <a href="" class="new">si kjo </a> (zgjedhore: si kjo<a href="" class="internal">?</a>).',
+'tog-underline'               => 'Nënvizo lidhjet:',
+'tog-highlightbroken'         => 'Formato lidhjet e prishura <a href="" class="new">si kjo</a> (zgjedhore: si kjo<a href="" class="internal">?</a>).',
 'tog-justify'                 => 'Rregullo paragrafët',
 'tog-hideminor'               => 'Fshih redaktimet e vogla në ndryshimet e fundit',
 'tog-hidepatrolled'           => 'Fshih redaktimet e vrojtuara në ndryshimet e fundit',
 'tog-newpageshidepatrolled'   => 'Fshih faqet e vrojtuara nga lista e faqeve të reja',
-'tog-extendwatchlist'         => 'Zgjero listën mbikqyrëse të tregojë të tëra ndryshimet përkatëse',
-'tog-usenewrc'                => 'Tregoji me formatin e ri (jo për të gjithë shfletuesit)',
-'tog-numberheadings'          => 'Numëro automatikish mbishkrimet',
-'tog-showtoolbar'             => 'Trego butonat e redaktimit',
-'tog-editondblclick'          => 'Redakto faqet me dopjo-shtypje (JavaScript)',
-'tog-editsection'             => 'Lejo redaktimin e seksioneve me [redakto] lidhje',
-'tog-editsectiononrightclick' => 'Lejo redaktimin e seksioneve me djathtas-shtypje<br /> mbi emrin e seksionit (JavaScript)',
-'tog-showtoc'                 => 'Trego tabelën e përmbajtjeve<br />(për faqet me më shume se 3 tituj)',
-'tog-rememberpassword'        => 'Mbaj mënd fjalëkalimin për vizitën e ardhshme (më së shumti për $1 {{PLURAL:$1|ditë|ditë}})',
-'tog-watchcreations'          => 'Shto faqet që krijoj tek lista mbikqyrëse',
-'tog-watchdefault'            => 'Shto faqet që redaktoj tek lista mbikqyrëse',
-'tog-watchmoves'              => 'Shto faqet që zhvendos tek lista mbikqyrëse',
-'tog-watchdeletion'           => 'Shto faqet që gris tek lista mbikqyrëse',
-'tog-minordefault'            => 'Shëno të gjitha redaktimet si të vogla paraprakisht',
-'tog-previewontop'            => 'Trego parapamjen përpara kutisë redaktuese, jo mbas saj',
-'tog-previewonfirst'          => 'Trego parapamje në redaktim të parë',
-'tog-nocache'                 => 'Mos ruaj kopje te faqeve',
-'tog-enotifwatchlistpages'    => 'Më ço email kur ndryshojnë faqet nga lista ime mbikqyrëse',
-'tog-enotifusertalkpages'     => 'Më ço email kur ndryshon faqja ime e diskutimit',
-'tog-enotifminoredits'        => 'Më ço email kur ka redaktime të vogla të faqeve',
-'tog-enotifrevealaddr'        => 'Trego adresën time në email-et njoftuese',
-'tog-shownumberswatching'     => 'Trego numrin e përdoruesve mbikqyrës',
-'tog-oldsig'                  => 'Pamje e nënshkrimit ekzistues:',
-'tog-fancysig'                => 'Mos e përpuno nënshkrimin për formatim',
-'tog-externaleditor'          => 'Përdor program të jashtëm për redaktime',
-'tog-externaldiff'            => 'Përdor program të jashtëm për të treguar ndryshimet',
-'tog-showjumplinks'           => 'Lejo lidhjet e afrueshmërisë "kapërce tek"',
-'tog-uselivepreview'          => 'Trego parapamjen e menjëhershme (JavaScript) (Eksperimentale)',
-'tog-forceeditsummary'        => 'Më pyet kur e le përmbledhjen e redaktimit bosh',
-'tog-watchlisthideown'        => 'Fshih redaktimet e mia nga lista mbikqyrëse',
-'tog-watchlisthidebots'       => 'Fshih redaktimet e robotëve nga lista mbikqyrëse',
-'tog-watchlisthideminor'      => 'Fshih redaktimet e vogla nga lista mbikqyrëse',
-'tog-watchlisthideliu'        => 'Fshih redaktimet e përdoruesve nga lista e vëzhgimit',
-'tog-watchlisthideanons'      => 'Fshih redaktimet e anonimëve nga lista e vëzhgimit',
-'tog-watchlisthidepatrolled'  => 'Fshih redaktimet e vrojtuara nga lista e vrojtimit',
+'tog-extendwatchlist'         => "Zgjero listën e faqeve të vëzhguara që t'i tregojë të gjitha ndryshimet, jo vetëm më të fundit.",
+'tog-usenewrc'                => 'Përdor ndryshimet e fundit në mënyrë të zgjeruar (kërkon JavaScript)',
+'tog-numberheadings'          => 'Numëro automatikish titujt',
+'tog-showtoolbar'             => 'Trego mjetet e redaktimit (kërkon JavaScript)',
+'tog-editondblclick'          => 'Redakto faqet me dopio-klik (kërkon JavaScript)',
+'tog-editsection'             => 'Lejo redaktimin e seksioneve me anë të lidhjeve [redakto]',
+'tog-editsectiononrightclick' => 'Lejo redaktimin e seksioneve duke klikuar me të djathtën mbi titullin e seksionit (kërkon JavaScript)',
+'tog-showtoc'                 => 'Trego tabelën e përmbajtjes (për faqet me më shume se 3 tituj)',
+'tog-rememberpassword'        => 'Mbaj mend fjalëkalimin tim në këtë shfletues (më së shumti për $1 {{PLURAL:$1|ditë|ditë}})',
+'tog-watchcreations'          => 'Shtoi faqet e krijuara prej meje tek lista e faqeve që unë vëzhgoj',
+'tog-watchdefault'            => 'Shto faqet e redaktuara prej meje tek lista e faqeve që unë vëzhgoj',
+'tog-watchmoves'              => 'Shto faqet e zhvendosura prej meje tek lista e faqeve që unë vëzhgoj',
+'tog-watchdeletion'           => 'Shto faqet e fshira prej meje tek lista e faqeve që unë vëzhgoj',
+'tog-minordefault'            => 'Shëno të gjitha redaktimet si të vogla automatikisht',
+'tog-previewontop'            => 'Vendose kutinë e bocetit sipër kutisë së redaktimeve',
+'tog-previewonfirst'          => 'Tregoje bocetin në redaktimin e parë',
+'tog-nocache'                 => "Ç'aktivizo ruajtjen e faqeve të vizituara",
+'tog-enotifwatchlistpages'    => 'Më njofto me e-mail kur ndryshohet një faqe nga lista ime e faqeve të vëzhguara',
+'tog-enotifusertalkpages'     => 'Më njofto me e-mail kur faqja ime e dikutimeve të përdoruesit ndryshohet',
+'tog-enotifminoredits'        => 'Më njofto me e-mail edhe kur ka redaktime të vogla në faqe',
+'tog-enotifrevealaddr'        => 'Tregoje adresën time të e-mail-it në e-mail-et njoftuese',
+'tog-shownumberswatching'     => 'Trego numrin e përdoruesve që vëzhgojnë këtë faqe',
+'tog-oldsig'                  => 'Nënshkrimi ekzistues:',
+'tog-fancysig'                => 'Mbaje nënshkrimin si wikitekst (pa lidhje automatike)',
+'tog-externaleditor'          => 'Përdor si rregull program të jashtëm redaktimi (vetëm për ekspertë, kërkon regjistrime speciale të kompjuterit. [//www.mediawiki.org/wiki/Manual:External_editors More information.])',
+'tog-externaldiff'            => 'Përdor si rregull program të jashtëm diff (vetëm për ekspertë, kërkon regjistrime speciale të kompjuterit. [//www.mediawiki.org/wiki/Manual:External_editors More information.])',
+'tog-showjumplinks'           => 'Lejo lidhje "shko tek"',
+'tog-uselivepreview'          => 'Trego bocetin në mënyrë të drejtëpërdrejtë (kërkon JavaScript) (eksperimentale)',
+'tog-forceeditsummary'        => 'Më njofto kur e lë përmbledhjen e redaktimit bosh',
+'tog-watchlisthideown'        => 'Fshih redaktimet e mia nga lista e faqeve të vëzhguara',
+'tog-watchlisthidebots'       => 'Fshih redaktimet e robotëve nga lista e faqeve të vëzhguara',
+'tog-watchlisthideminor'      => 'Fshih redaktimet e vogla nga lista e faqeve të vëzhguara',
+'tog-watchlisthideliu'        => 'Fshih redaktimet e përdoruesve nga lista e faqeve të vëzhguara',
+'tog-watchlisthideanons'      => 'Fshih redaktimet përdoruesve anonim nga lista e faqeve të vëzhguara',
+'tog-watchlisthidepatrolled'  => 'Fshih redaktimet e vrojtuara nga lista e faqeve të vëzhguara',
 'tog-ccmeonemails'            => 'Më dërgo kopje të mesazheve që u dërgoj të tjerëve',
-'tog-diffonly'                => 'Mos trego përmbajtjen e faqes nën ndryshimin',
+'tog-diffonly'                => 'Mos trego përmbajtjen e faqes nën diff-e',
 'tog-showhiddencats'          => 'Trego kategoritë e fshehura',
 'tog-norollbackdiff'          => 'Ndryshimi pas rikthimit do të fshihet',
 
-'underline-always'  => 'gjithmonë',
-'underline-never'   => 'asnjëherë',
-'underline-default' => 'sipas shfletuesit',
+'underline-always'  => 'Gjithmonë',
+'underline-never'   => 'Asnjëherë',
+'underline-default' => 'Sipas rregullit në shfletues',
 
 # Font style option in Special:Preferences
-'editfont-style'     => 'Stili i shkrimit në faqen redaktuese:',
-'editfont-default'   => 'Sipas shfletuesit',
-'editfont-monospace' => 'Shkrim me gjerësi fikse',
-'editfont-sansserif' => 'Shkrim pa serifa',
-'editfont-serif'     => 'Stili shkrimit me dhëmbëza',
+'editfont-style'     => 'Zgjidh stilin e gërmave të hapsirës:',
+'editfont-default'   => 'Sipas rregullit në shfletues',
+'editfont-monospace' => 'Gërma monospace',
+'editfont-sansserif' => 'Germa Sans-serif',
+'editfont-serif'     => 'Gërma serif',
 
 # Dates
 'sunday'        => 'E diel',
@@ -256,13 +263,13 @@ $messages = array(
 'thursday'      => 'E enjte',
 'friday'        => 'E premte',
 'saturday'      => 'E shtunë',
-'sun'           => 'Dje',
-'mon'           => 'Hën',
-'tue'           => 'Mar',
-'wed'           => 'Mër',
+'sun'           => 'Di',
+'mon'           => 'Hë',
+'tue'           => 'Ma',
+'wed'           => 'Më',
 'thu'           => 'Enj',
-'fri'           => 'Pre',
-'sat'           => 'Shtu',
+'fri'           => 'Pr',
+'sat'           => 'Sht',
 'january'       => 'janar',
 'february'      => 'shkurt',
 'march'         => 'mars',
@@ -317,14 +324,7 @@ $messages = array(
 'listingcontinuesabbrev'         => 'vazh.',
 'index-category'                 => 'Faqe të indeksuara',
 'noindex-category'               => 'Faqe jo të indeksuara',
-
-'mainpagetext'      => "'''MediaWiki software u instalua me sukses.'''",
-'mainpagedocfooter' => 'Për më shumë informata rreth përdorimit të softwerit wiki , ju lutem shikoni [http://meta.wikimedia.org/wiki/Help:Contents dokumentacionin përkatës].
-
-== Sa për fillim==
-* [http://www.mediawiki.org/wiki/Help:Configuration_settings Parazgjedhjet e MediaWiki-t]
-* [http://www.mediawiki.org/wiki/Help:FAQ Pyetjet e shpeshta rreth MediaWiki-t]
-* [https://lists.wikimedia.org/mailman/listinfo/mediawiki-announce Njoftime rreth MediaWiki-t]',
+'broken-file-category'           => 'Faqet me lidhjet file thyer',
 
 'about'         => 'Rreth',
 'article'       => 'Artikulli',
@@ -341,32 +341,32 @@ $messages = array(
 'qbfind'         => 'Kërko',
 'qbbrowse'       => 'Shfletoni',
 'qbedit'         => 'Redaktoni',
-'qbpageoptions'  => 'Opsionet e faqes',
-'qbpageinfo'     => 'Informacion mbi faqen',
-'qbmyoptions'    => 'Opsionet e mia',
+'qbpageoptions'  => 'Kjo faqe',
+'qbpageinfo'     => 'Kontekst',
+'qbmyoptions'    => 'Faqet e mia',
 'qbspecialpages' => 'Faqet speciale',
-'faq'            => 'Pyetje e Përgjigje',
-'faqpage'        => 'Project:Pyetje e Përgjigje',
+'faq'            => 'Pyetje që bëhen shpesh',
+'faqpage'        => 'Project: Pyetje që bëhen shpesh',
 
 # Vector skin
-'vector-action-addsection'       => 'Fillo një temë të re',
+'vector-action-addsection'       => 'Shto një temë',
 'vector-action-delete'           => 'Grise',
 'vector-action-move'             => 'Zhvendose',
 'vector-action-protect'          => 'Mbroje',
-'vector-action-undelete'         => 'Jo e grisur',
-'vector-action-unprotect'        => 'Liroje',
-'vector-simplesearch-preference' => 'Aktivizoni kërkim të avancuar (vetëm për Vektor)',
+'vector-action-undelete'         => 'Anullo fshirjen',
+'vector-action-unprotect'        => 'Ndrysho mbrojtjen',
+'vector-simplesearch-preference' => 'Aktivizo kërkimin e zgjeruar (vetëm për veshjen Vector)',
 'vector-view-create'             => 'Krijo',
 'vector-view-edit'               => 'Redakto',
 'vector-view-history'            => 'Shiko historikun',
-'vector-view-view'               => 'Lexoni',
-'vector-view-viewsource'         => 'Shikoni tekstin',
+'vector-view-view'               => 'Lexo',
+'vector-view-viewsource'         => 'Shiko tekstin',
 'actions'                        => 'Veprimet',
-'namespaces'                     => 'Emri i hapësirës',
+'namespaces'                     => 'Hapsirat e emrit',
 'variants'                       => 'Variante',
 
 'errorpagetitle'    => 'Gabim',
-'returnto'          => 'Kthehu tek $1.',
+'returnto'          => 'Kthehuni tek $1',
 'tagline'           => 'Nga {{SITENAME}}',
 'help'              => 'Ndihmë',
 'search'            => 'Kërko',
@@ -375,138 +375,144 @@ $messages = array(
 'searcharticle'     => 'Shko',
 'history'           => 'Historiku i faqes',
 'history_short'     => 'Historiku',
-'updatedmarker'     => 'ndryshuar nga vizita e fundit',
-'info_short'        => 'Informacion',
-'printableversion'  => 'Version shtypi',
-'permalink'         => 'Lidhja e përhershme',
-'print'             => 'Shtype',
-'edit'              => 'Redaktoni',
+'updatedmarker'     => 'përditësuar që nga vizita ime e fundit',
+'printableversion'  => 'Version për printer',
+'permalink'         => 'Lidhje e përhershme',
+'print'             => 'Printo',
+'view'              => 'Shiko',
+'edit'              => 'Redakto',
 'create'            => 'Krijo',
-'editthispage'      => 'Redaktoni faqen',
-'create-this-page'  => 'Filloje këtë faqe',
-'delete'            => 'grise',
-'deletethispage'    => 'Grise faqen',
-'undelete_short'    => 'Restauro {{PLURAL:$1|një redaktim|$1 redaktime}}',
+'editthispage'      => 'Redakto këtë faqe',
+'create-this-page'  => 'Krijoje këtë faqe',
+'delete'            => 'Grise',
+'deletethispage'    => 'Grise këtë faqe',
+'undelete_short'    => 'Anullo fshirjen {{PLURAL:$1|një redaktim|$1 redaktime}}',
+'viewdeleted_short' => 'Shiko {{PLURAL:$1|një redaktim të fshirë|$1 redaktime të fshira}}',
 'protect'           => 'Mbroje',
 'protect_change'    => 'ndrysho',
-'protectthispage'   => 'Mbroje faqen',
-'unprotect'         => 'Liroje',
-'unprotectthispage' => 'Liroje faqen',
+'protectthispage'   => 'Mbroje këtë faqe',
+'unprotect'         => 'Ndrysho mbrojtjen',
+'unprotectthispage' => 'Ndrysho mbrojtjen e kësaj faqeje',
 'newpage'           => 'Faqe e re',
-'talkpage'          => 'Diskutoni faqen',
+'talkpage'          => 'Diskuto rreth kësaj faqeje',
 'talkpagelinktext'  => 'Diskuto',
 'specialpage'       => 'Faqe speciale',
-'personaltools'     => 'Mjete vetjake',
-'postcomment'       => 'Shtoni koment',
-'articlepage'       => 'Shikoni artikullin',
+'personaltools'     => 'Mjetet e mia',
+'postcomment'       => 'Seksion i ri',
+'articlepage'       => 'Shiko faqen me përmbajtje',
 'talk'              => 'Diskutimet',
 'views'             => 'Shikime',
 'toolbox'           => 'Mjete',
-'userpage'          => 'Shikoni faqen',
-'projectpage'       => 'Shikoni projekt-faqen',
-'imagepage'         => 'Shikoni faqen e figurës',
-'mediawikipage'     => 'Shikoni faqen e mesazhit',
-'templatepage'      => 'Shiko faqen e stampës',
+'userpage'          => 'Shiko faqen e përdoruesit',
+'projectpage'       => 'Shiko projekt-faqen',
+'imagepage'         => 'Shikoni faqen e skedës',
+'mediawikipage'     => 'Shiko faqen e mesazhit',
+'templatepage'      => 'Shiko faqen e shabllonit',
 'viewhelppage'      => 'Shiko faqen për ndihmë',
-'categorypage'      => 'Shiko faqen e kategorisë',
-'viewtalkpage'      => 'Shikoni diskutimet',
+'categorypage'      => 'Shiko faqen e kategorive',
+'viewtalkpage'      => 'Shiko diskutimet',
 'otherlanguages'    => 'Në gjuhë të tjera',
 'redirectedfrom'    => '(Përcjellë nga $1)',
 'redirectpagesub'   => 'Faqe përcjellëse',
-'lastmodifiedat'    => 'Kjo faqe është ndryshuar për herë te fundit më $2, $1.',
-'viewcount'         => 'Kjo faqe është parë {{PLURAL:$1|një|$1}} herë.',
+'lastmodifiedat'    => 'Kjo faqe është ndryshuar për herë te fundit më $1, në orën $2.',
+'viewcount'         => 'Kjo faqe është shikuar {{PLURAL:$1|një|$1 herë}} .',
 'protectedpage'     => 'Faqe e mbrojtur',
-'jumpto'            => 'Shko te:',
-'jumptonavigation'  => 'navigacion',
+'jumpto'            => 'Shko tek:',
+'jumptonavigation'  => 'lundrim',
 'jumptosearch'      => 'kërko',
-'view-pool-error'   => 'Ju kërkojmë falje, serverët janë të mbingarkuar momentalisht.
-Shumë përdorues po përpiqen të shikojnë këtë faqe.
-Ju lutemi prisni pak para se të hapni sërish këtë faqe.
+'view-pool-error'   => "Ju kërkojmë ndjesë, serverët janë të mbingarkuar për momentin.
+Këtë faqe po përpiqen t'i shikojnë më shumë njerëz nga ç'është e mundur.
+Ju lutemi prisni pak para se ta hapni sërish këtë faqe.
 
-$1',
-'pool-timeout'      => 'Koha duke pritur për të bllokoet',
-'pool-queuefull'    => 'Radhja është e plotë',
+$1",
+'pool-timeout'      => 'Mbaroi koha duke pritur për kyçin',
+'pool-queuefull'    => 'Radha e proceseve është mbushur',
 'pool-errorunknown' => 'Gabim i panjohur',
 
 # All link text and link target definitions of links into project namespace that get used by other message strings, with the exception of user group pages (see grouppage) and the disambiguation template definition (see disambiguations).
 'aboutsite'            => 'Rreth {{SITENAME}}',
 'aboutpage'            => 'Project:Rreth',
 'copyright'            => 'Përmbajtja është në disponim nëpërmjet licencës $1.',
-'copyrightpage'        => '{{ns:project}}:Të drejta autori',
-'currentevents'        => 'Ngjarjet e tanishme',
-'currentevents-url'    => 'Project:Ngjarjet e tanishme',
+'copyrightpage'        => '{{ns:project}}:Të drejtat e autorit',
+'currentevents'        => 'Ngjarjet aktuale',
+'currentevents-url'    => 'Project:Ngjarjet aktuale',
 'disclaimers'          => 'Shfajësimet',
 'disclaimerpage'       => 'Project:Shfajësimet e përgjithshme',
 'edithelp'             => 'Ndihmë për redaktim',
-'edithelppage'         => 'Help:Si redaktohet një faqe',
-'helppage'             => 'Help:Ndihmë',
+'edithelppage'         => 'Help:Redaktimi',
+'helppage'             => 'Help:Përmbajtje',
 'mainpage'             => 'Faqja kryesore',
 'mainpage-description' => 'Faqja kryesore',
-'policy-url'           => 'Project:Rregullat',
-'portal'               => 'Wikiportal',
-'portal-url'           => 'Project:Wikiportal',
-'privacy'              => 'Rreth të dhënave vetjake',
-'privacypage'          => 'Project:Politika vetjake',
+'policy-url'           => 'Project:Politika e rregullave',
+'portal'               => 'Portali i komunitetit',
+'portal-url'           => 'Project:Portali i komunitetit',
+'privacy'              => 'Politika e anonimitetit',
+'privacypage'          => 'Project:Politika e anonimitetit',
 
-'badaccess'        => 'Gabim leje',
+'badaccess'        => 'Leje: gabim',
 'badaccess-group0' => 'Nuk ju lejohet veprimi i kërkuar',
 'badaccess-groups' => 'Veprimi që kërkuat lejohet vetëm nga përdorues të {{PLURAL:$2|grupit|grupeve}}: $1.',
 
 'versionrequired'     => 'Nevojitet versioni $1 i MediaWiki-it',
 'versionrequiredtext' => 'Nevojitet versioni $1 i MediaWiki-it për përdorimin e kësaj faqeje. Shikoni [[Special:Version|versionin]] tuaj.',
 
-'ok'                      => 'Shkoni',
+'ok'                      => 'Ok',
 'retrievedfrom'           => 'Marrë nga "$1"',
-'youhavenewmessages'      => 'Keni $1 ($2).',
+'youhavenewmessages'      => 'Ju keni $1 ($2).',
 'newmessageslink'         => 'mesazhe të reja',
 'newmessagesdifflink'     => 'ndryshimi i fundit',
-'youhavenewmessagesmulti' => 'Ju keni mesazh të ri në $1',
-'editsection'             => 'redaktoni',
+'youhavenewmessagesmulti' => 'Ju keni mesazhe të reja në $1',
+'editsection'             => 'redakto',
 'editold'                 => 'redaktoni',
-'viewsourceold'           => 'shikoni burimin',
+'viewsourceold'           => 'Shiko tekstin',
 'editlink'                => 'redakto',
-'viewsourcelink'          => 'shih burimin',
+'viewsourcelink'          => 'Shiko tekstin',
 'editsectionhint'         => 'Redaktoni seksionin:
 Edit section: $1',
-'toc'                     => 'Tabela e përmbajtjeve',
+'toc'                     => 'Përmbajtje',
 'showtoc'                 => 'trego',
 'hidetoc'                 => 'fshih',
-'thisisdeleted'           => 'Shikoni ose restauroni $1?',
+'collapsible-collapse'    => 'Ngushtoje',
+'collapsible-expand'      => 'Zgjeroje',
+'thisisdeleted'           => 'Shiko ose rikthe $1?',
 'viewdeleted'             => 'Do ta shikosh $1?',
-'restorelink'             => '{{PLURAL:$1|një redaktim i grisur|$1 redaktime të grisura}}',
-'feedlinks'               => 'Ushqyes:',
-'feed-invalid'            => 'Lloji i burimit të pajtimit është i pavlefshëm.',
-'feed-unavailable'        => 'Këso RSS nuk janë të lejuara',
+'restorelink'             => '{{PLURAL:$1|një redaktim i fshirë|$1 redaktime të fshira}}',
+'feedlinks'               => 'Feed:',
+'feed-invalid'            => 'Tipi i feed-it është i pavlefshëm.',
+'feed-unavailable'        => 'Syndication feeds nuk janë të mundshme',
 'site-rss-feed'           => '$1 RSS Feed',
-'site-atom-feed'          => '$1 Atom Feed',
-'page-rss-feed'           => '"$1" RSS Feed',
-'page-atom-feed'          => '"$1" Burim Atom',
+'site-atom-feed'          => '$1 Atom feed',
+'page-rss-feed'           => '"$1" RSS feed',
+'page-atom-feed'          => '"$1" Atom feed',
 'red-link-title'          => '$1 (faqja nuk ekziston)',
+'sort-descending'         => 'Radhit në zbritje',
+'sort-ascending'          => 'Radhit në ngjitje',
 
 # Short words for each namespace, by default used in the namespace tab in monobook
 'nstab-main'      => 'Artikulli',
-'nstab-user'      => 'Përdoruesi',
+'nstab-user'      => 'Faqja e përdoruesit',
 'nstab-media'     => 'Media-faqe',
 'nstab-special'   => 'Faqe speciale',
 'nstab-project'   => 'Projekt-faqe',
-'nstab-image'     => 'Figura',
-'nstab-mediawiki' => 'Porosia',
+'nstab-image'     => 'Skedë',
+'nstab-mediawiki' => 'Mesazh',
 'nstab-template'  => 'Stampa',
 'nstab-help'      => 'Ndihmë',
 'nstab-category'  => 'Kategoria',
 
 # Main script and global functions
 'nosuchaction'      => 'Nuk ekziston ky veprim',
-'nosuchactiontext'  => 'Veprimi i caktuar nga URL nuk
-njihet nga wiki software',
-'nosuchspecialpage' => 'Nuk ekziston kjo faqe',
+'nosuchactiontext'  => 'Veprimi i specifikuar nga URL është i pavlefshëm.
+Ju mund të keni bërë një gabim në shkrimin e URL-së, ose keni ndjekur një lidhje të pasaktë.
+Kjo mund të vijë edhe si rezultat i një gabimi në programin e përdorur nga {{SITENAME}}.',
+'nosuchspecialpage' => 'Nuk ekziston kjo faqe speciale',
 'nospecialpagetext' => '<strong>Ju keni kërkuar një faqe speciale të pavlefshme.</strong> 
 
- Një listë e faqeve të vlefshme të veçanta mund të gjenden në [[Special:SpecialPages|{{int: specialpages }}]].',
+ Një listë e faqeve speciale të vlefshme mund të gjendet në [[Special:SpecialPages|{{int: specialpages }}]].',
 
 # General errors
 'error'                => 'Gabim',
-'databaseerror'        => 'Gabim regjistri',
+'databaseerror'        => 'Gabim në databazë',
 'dberrortext'          => 'Ka ndodhur një gabim me pyetjen e regjistrit.
 Kjo mund të ndodhi n.q.s. pyetja nuk është e vlehshme,
 ose mund të jetë një yçkël e softuerit.
@@ -514,80 +520,86 @@ Pyetja e fundit që i keni bërë regjistrit ishte:
 <blockquote><tt>$1</tt></blockquote>
 nga funksioni "<tt>$2</tt>".
 MySQL kthehu gabimin "<tt>$3: $4</tt>".',
-'dberrortextcl'        => 'Ka ndodhur një gabim me formatin e pyetjes së regjistrit. Pyetja e fundit qe i keni bërë regjistrit ishte:
+'dberrortextcl'        => 'Ka ndodhur një gabim me sintaksën query në databazë. 
+Query e fundit që i keni bërë regjistrit ishte:
 "$1"
 nga funksioni "$2".
 MySQL kthehu gabimin "$3: $4".',
-'laggedslavemode'      => 'Kujdes: Kjo faqe mund të mos jetë përtërirë nga shërbyesi kryesorë dhe mund të ketë informacion të vjetër',
-'readonly'             => 'Regjistri i bllokuar',
-'enterlockreason'      => 'Fusni një arsye për bllokimin, gjithashtu fusni edhe kohën se kur pritet të çbllokohet',
-'readonlytext'         => 'Regjistri i {{SITENAME}}-s është i bllokuar dhe nuk lejon redaktime dhe
-artikuj të rinj. Ka mundësi të jetë bllokuar për mirëmbajtje,
-dhe do të kthehet në gjëndje normale mbas mirëmbajtjes.
+'laggedslavemode'      => "'''Kujdes:''' Kjo faqe nuk mund të ketë përditësime të kohëve të fundit.",
+'readonly'             => 'Databaza e kyçur',
+'enterlockreason'      => 'Shëno arsyen e kyçjes, gjithashtu shëno se kur mund të hapet.',
+'readonlytext'         => 'Databaza është për momentin e kyçur, nuk lejohen ndryshime ose modifikime, ndoshta për shkak të rutinës së mirëmbajtjes. Pas përfundimit të mirëmbajtjes databaza do të hapet përsëri.
 
-Mirëmbajtësi i cili e bllokoi dha këtë arsye: $1',
-'missing-article'      => 'Baza e të dhënave se gjeti dot tekstin që duhet të faqes, të emëruar "$1" $2.
+Administratori që e kyçi dha këtë arsye: $1',
+'missing-article'      => 'Databaza nuk gjeti dot tekstin e faqes që duhet të kishte gjetur me emër "$1" $2.
 
-Kjo zakonisht shkaktohet nga përcjellja e një ndyshimi të vjetëruar ose të një nyje të historisë së faqes që është grisur.
+Kjo zakonisht vjen si rezultat i një diff-i të vjetëruar ose të ndonjë lidhjeje në historikun e një faqeje që është fshirë.
 
-Nëse nuk është kështu, mund të keni gjetur gabim në softuer. Ju lutemi, njoftoni një [[Special:ListUsers/sysop|administrues]], pëër këtë, duke shtuar URL-në.',
-'missingarticle-rev'   => '(versioni#: $1)',
-'missingarticle-diff'  => '(Ndryshimi: $1, $2)',
-'readonly_lag'         => "Regjistri është bllokuar automatikisht për t'i dhënë kohë shërbyesve skllevër për të arritur kryesorin. Ju lutemi provojeni përsëri më vonë.",
+Nëse nuk është kjo arsyeja, ateherë ju mund të keni gjetur një gabim në program. Ju lutemi, njoftoni një [[Special:ListUsers/sysop|administrator]], tregojini URL-në problematike.',
+'missingarticle-rev'   => '(rishikim#: $1)',
+'missingarticle-diff'  => '(Diff: $1, $2)',
+'readonly_lag'         => "Databaza është kyçur automatikisht për t'i dhënë kohë serverëve databazë slave që të arrijnë në një nivel me serverin databazë master",
 'internalerror'        => 'Gabim i brendshëm',
 'internalerror_info'   => 'Gabim i brendshëm: $1',
-'fileappenderrorread'  => 'I pamundur leximi "$1" gjatë bashkangjitëjes.',
-'fileappenderror'      => 'Nuk munda të shtoj "$1" tek "$2.',
-'filecopyerror'        => 'Nuk munda të kopjojë skedën "$1" tek "$2".',
-'filerenameerror'      => 'Nuk munda të ndërrojë emrin e skedës "$1" në "$2".',
-'filedeleteerror'      => 'Nuk munda të gris skedën "$1".',
-'directorycreateerror' => 'S\'munda të krijoj skedarin "$1".',
-'filenotfound'         => 'Nuk munda të gjejë skedën "$1".',
-'fileexistserror'      => 'Skeda "$1" nuk mund të shkruhet : skeda ekziston',
+'fileappenderrorread'  => 'I pamundur leximi "$1" gjatë procesit append.',
+'fileappenderror'      => 'E pamundur kryerja e procesit append "$1" tek "$2.',
+'filecopyerror'        => 'I pamundur kopjimi i skedës "$1" tek "$2".',
+'filerenameerror'      => 'I pamundur riemërtimi i skedës "$1" në "$2".',
+'filedeleteerror'      => 'E pamundur fshirja e skedës "$1".',
+'directorycreateerror' => 'I pamundur krijimi i direktorisë "$1".',
+'filenotfound'         => 'E pamundur gjetja e skedës "$1".',
+'fileexistserror'      => 'Skeda "$1" nuk mund të shkruhet : Skeda ekziston.',
 'unexpected'           => 'Vlerë e papritur: "$1"="$2".',
-'formerror'            => 'Gabim: nuk mund të dërgohej formulari',
+'formerror'            => 'Gabim: Formulari nuk mund të dërgohet.',
 'badarticleerror'      => 'Ky veprim nuk mund të bëhet në këtë faqe.',
-'cannotdelete'         => 'Faqja ose skedari $1 nuk u fshi.
+'cannotdelete'         => 'Faqja ose skeda $1 nuk mund të fshihej.
 Mund të jetë fshirë nga dikush tjetër.',
+'cannotdelete-title'   => 'Faqja "$1" nuk mund të fshihet',
 'badtitle'             => 'Titull i pasaktë',
-'badtitletext'         => 'Titulli i faqes që kërkuat nuk ishte i saktë, ishte bosh, ose ishte një lidhje gabim me një titull wiki internacional.',
-'perfcached'           => 'Informacioni i mëposhtëm është kopje e ruajtur dhe mund të mos jetë i freskët:',
-'perfcachedts'         => 'Informacioni i mëposhtëm është një kopje e rifreskuar më $1.',
-'querypage-no-updates' => 'Rifreskimi i kësaj faqeje tani për tani është ndaluar, prandaj dhe informacioni i mëposhtëm mund të jetë i vjetërsuar.',
-'wrong_wfQuery_params' => 'Parametra gabim tek wfQuery()<br />
+'badtitletext'         => 'Titulli i faqes që kërkuat nuk ishte i saktë, ishte bosh, ose ishte një titull ndër-gjuhësor/inter-wiki me lidhje të pasaktë.
+Mund të përmbajë një ose më shumë germa, të cilat nuk mund të përdoren në tituj.',
+'perfcached'           => 'nformacioni i mëposhtëm është kopje e ruajtur dhe mund të mos jetë i përditësuar. E shumta  {{PLURAL:$1|një rezultat është|$1 rezultate janë}} ruajtur në kopje.',
+'perfcachedts'         => 'Informacioni i mëposhtëm është një kopje e rifreskuar më $1. E shumta  {{PLURAL:$4|një rezultat është|$4 rezultate janë}} ruajtur në kopje.',
+'querypage-no-updates' => "Përditësimet për këtë faqe për momentin janë të ç'aktivizuara.
+Këtu informacioni nuk do të jetë i përditësuar.",
+'wrong_wfQuery_params' => 'Parametrat gabim tek wfQuery()<br />
 Funksioni: $1<br />
-Pyetja: $2',
-'viewsource'           => 'Shikoni tekstin',
-'viewsourcefor'        => 'e $1',
-'actionthrottled'      => 'Veprim i kufizuar',
-'actionthrottledtext'  => 'Për tu ruajtur nga redaktime automatike "spam" të padëshiruara na duhet të kufizojmë veprimet tuaja pasi janë të shumta në një kohë të shkurtër.
-Ju lutem provojeni përsëri pas disa minutash.',
-'protectedpagetext'    => 'Kjo faqe është mbyllur për të ndaluar redaktimin.',
-'viewsourcetext'       => 'Ju mund të shikoni dhe kopjoni tekstin burimor të kësaj faqe:',
-'protectedinterface'   => 'Kjo faqe përmban tekst për pamjen gjuhësorë të softuerit dhe është e mbrojtur për të penguar keqpërdorimet.',
-'editinginterface'     => "'''Kujdes:''' Po redaktoni një faqe që përdoret për tekstin ose pamjen e softuerit. Ndryshimet e kësaj faqeje do të prekin tekstin ose pamjen për të gjithë përdoruesit e tjerë. Për përkthime, ju lutem konsideroni përdorimin e [http://translatewiki.net/wiki/Main_Page?setlang=en translatewiki.net], projektit të përkthimit të MediaWiki-it.",
-'sqlhidden'            => '(Pyetje SQL e fshehur)',
-'cascadeprotected'     => 'Kjo faqe është mbrojtur nga redaktimi pasi është përfshirë në {{PLURAL:$1|faqen|faqet}} e mëposhtme që {{PLURAL:$1|është|janë}} mbrojtur sipas metodës "ujëvarë":
+Query: $2',
+'viewsource'           => 'Shiko tekstin',
+'viewsource-title'     => 'Shiko tekstin për $1',
+'actionthrottled'      => 'Veprim u ndalua',
+'actionthrottledtext'  => 'Si masë sigurie anti-spam, është e ndaluar kryerja e shpeshtë e një veprimi brenda një hapësire kohore shumë të shkurtër. Ju kryet shumë herë të njëjtin veprim brenda një kohe shumë të shkurtër.
+Ju lutemi, provojeni përsëri pas disa minutash.',
+'protectedpagetext'    => 'Kjo faqe është e mbrojtur dhe nuk mund të redaktohet.',
+'viewsourcetext'       => 'Ju mund të shikoni dhe kopjoni tekstin e kësaj faqeje:',
+'viewyourtext'         => "Ju mund të shikoni dhe të kopjoni tekstin e '''ndryshimeve tuaja''' tek kjo faqe:",
+'protectedinterface'   => 'Kjo faqe përmban tekstin e dritares së programit, për këtë arsye mbrohet për të shmangur abuzimet.',
+'editinginterface'     => "'''Kujdes:''' Po redaktoni një faqe që përdoret për tekstin dritares së programit. 
+Ndryshimet në këtë faqe do të ndikojnë pamjen e dritares për përdoruesit e tjerë.
+Për përkthime, ju lutem konsideroni përdorimin e [//translatewiki.net/wiki/Main_Page?setlang=en translatewiki.net], projektin e lokalizimit MediaWiki.",
+'sqlhidden'            => '(Query SQL e fshehur)',
+'cascadeprotected'     => 'Kjo faqe është mbrojtur nga redaktimi pasi është përfshirë në {{PLURAL:$1|faqen|faqet}} e mëposhtme që {{PLURAL:$1|është|janë}} mbrojtur sipas metodës "cascading":
 $2',
-'namespaceprotected'   => "Nuk ju lejohet redaktimi i faqeve të hapësirës '''$1'''.",
-'customcssjsprotected' => 'Nuk keni leje ta ndryshoni këtë faqe sepse përmban informata personale të një përdoruesi tjetër',
-'ns-specialprotected'  => "Faqet speciale s'mund të redaktohen.",
-'titleprotected'       => "Ky titull është mbrojtur nga [[User:$1|$1]] dhe s'mund të krijohet një faqe nën të.
+'namespaceprotected'   => "Nuk ju lejohet redaktimi i faqeve në hapsirën '''$1'''.",
+'customcssprotected'   => "Ju nuk keni leje për të redaktuar këtë faqe CSS, sepse ai përmban cilësimet personale tjetër user's.",
+'customjsprotected'    => "Ju nuk keni leje për të redaktuar këtë faqe JavaScript, sepse ai përmban cilësimet personale tjetër user's.",
+'ns-specialprotected'  => 'Faqet speciale nuk mund të redaktohen.',
+'titleprotected'       => "Ky titull është mbrojtur nga [[User:$1|$1]] dhe nuk mund të krijohet.
 Arsyeja e dhënë është ''$2''.",
 
 # Virus scanner
-'virus-badscanner'     => "Konfigurim i keq: skanues i panjohur virusesh: ''$1''",
-'virus-scanfailed'     => 'Hetimi dështoi (code $1)',
+'virus-badscanner'     => "Konfiguracion i parregullt: Skaner i panjohur virusesh: ''$1''",
+'virus-scanfailed'     => 'skani dështoi (code $1)',
 'virus-unknownscanner' => 'antivirus i pa njohur:',
 
 # Login and logout pages
-'logouttext'                 => "'''Ju jeni tashmë jashtë.''' 
+'logouttext'                 => "'''Ju keni dalë jashtë.''' 
 
- Ju mund të vazhdoni të përdorni {{SITENAME}} anonimisht, ose mund të [[Special:UserLogin|hyni brënda përsëri]] si përdoruesi i mëparshëm ose si një përdorues tjetër. 
- Vini re se disa faqe mund të shfaqen sikur ju të ishit identifikuar derisa të fshini ''cache''-in e shfletuesit tuaj.",
+ Ju mund të vazhdoni të përdorni {{SITENAME}} në mënyrë anonime, ose mund të [[Special:UserLogin|identifikoheni përsëri]] si përdoruesi i mëparshëm ose si një përdorues tjetër. 
+ Kini parasysh që disa faqe mund të shfaqen sikur të ishit i identifikuar derisa të fshini ''cache''-in e shfletuesit tuaj.",
 'welcomecreation'            => '== Mirësevini, $1! == 
  Llogaria juaj është krijuar. 
- Mos harroni të ndryshoni [[Special:Preferences|{{SITENAME}} preferencat]].',
+ Mos harroni të ndryshoni [[Special:Preferences|{{SITENAME}} preferencat]] tuaja.',
 'yourname'                   => 'Fusni nofkën tuaj',
 'yourpassword'               => 'Fusni fjalëkalimin tuaj',
 'yourpasswordagain'          => 'Fusni fjalëkalimin përsëri',
@@ -597,7 +609,7 @@ Arsyeja e dhënë është ''$2''.",
 'externaldberror'            => 'Ose kishte një gabim tek regjistri i identifikimit të jashtëm, ose nuk ju lejohet të përtërini llogarinë tuaje të jashtme.',
 'login'                      => 'Hyni',
 'nav-login-createaccount'    => 'Hyni ose hapni një llogari',
-'loginprompt'                => 'Duhet të pranoni "biskota" për të hyrë brënda në {{SITENAME}}.',
+'loginprompt'                => 'Ju duhet të mundësoni lejimin e "cookies" për të hyrë brënda në {{SITENAME}}.',
 'userlogin'                  => 'Hyni / hapni llogari',
 'userloginnocreate'          => 'Hyni',
 'logout'                     => 'Dalje',
@@ -608,20 +620,29 @@ Arsyeja e dhënë është ''$2''.",
 'createaccount'              => 'Hap një llogari',
 'gotaccount'                 => "Keni një llogari? '''$1'''.",
 'gotaccountlink'             => 'Hyni',
+'userlogin-resetlink'        => 'Keni harruar të dhënat tuaja të identifikimit?',
 'createaccountmail'          => 'me email',
 'createaccountreason'        => 'Arsyeja:',
 'badretype'                  => 'Fjalëkalimet nuk janë njësoj.',
-'userexists'                 => 'Nofka që kërkuat është në përdorim. Zgjidhni një nofkë tjetër.',
-'loginerror'                 => 'Gabim hyrje',
-'createaccounterror'         => 'Nuk mund të hapni një llogari: $1',
-'nocookiesnew'               => 'Llogaria e përdoruesit u hap, por nuk keni hyrë brenda akoma. {{SITENAME}} përdor "biskota" për të futur brenda përdoruesit. Prandaj, duhet të pranoni biskota dhe të provoni përsëri me nofkën dhe fjalëkalimin tuaj.',
-'nocookieslogin'             => '{{SITENAME}} përdor "biskota" për të futur brenda përdoruesit. Prandaj, duhet të pranoni "biskota" dhe të provoni përsëri.',
-'noname'                     => 'Nuk keni dhënë një emër të pranueshëm.',
-'loginsuccesstitle'          => 'Hyrje me sukses',
-'loginsuccess'               => 'Keni hyrë brënda në {{SITENAME}} si "$1".',
+'userexists'                 => 'Emri i përdoruesit që kërkuat është në përdorim. 
+Zgjidhni një emër tjetër.',
+'loginerror'                 => 'Gabim gjatë identifikimit',
+'createaccounterror'         => 'I pamundur krijimi i llogarisë: $1',
+'nocookiesnew'               => 'Llogaria e përdoruesit u krijua por ju nuk jeni identifikuar ende.
+{{SITENAME}} shfrytëzon "cookies" për të identifikuar përdoruesit.
+Ju nuk mundësoni lejimin e "cookies".
+Ju lutemi, mundësojini ato, pastaj identifikohuni me anë të të dhënave tuaja të reja: emri i përdoruesit dhe fjalëkalimi.',
+'nocookieslogin'             => '{{SITENAME}} shfrytëzon "cookies" për identifikimin e përdoruesve.
+You nuk lejoni shfrytëzimin e "cookies".
+Ju lutemi, lejoni shfrytëzimin e "cookies" dhe provojeni përsëri.',
+'nocookiesfornew'            => 'Llogaria e përdoruesit nuk u krijua, pasi ne nuk mund të konfirmojmë burimin e tij.
+Sigurohuni që ju lejoni shfrytëzimin e "cookies", rifreskoni këtë faqe dhe provojen përsëri.',
+'noname'                     => 'Nuk keni dhënë një emër përdoruesi të pranueshëm.',
+'loginsuccesstitle'          => 'Identifikim i suksesshëm',
+'loginsuccess'               => "'''Ju tani jeni identifikuar tek {{SITENAME}} si \"\$1\".'''",
 'nosuchuser'                 => 'Nuk ka ndonjë përdorues me emrin "$1".
 Kontrolloni shkrimin ose [[Special:UserLogin/signup|hapni një llogari të re]].',
-'nosuchusershort'            => 'Nuk ka asnjë përdorues me emrin "<nowiki>$1</nowiki>".',
+'nosuchusershort'            => 'Nuk ka asnjë përdorues me emrin "$1".',
 'nouserspecified'            => 'Ju duhet të jepni një nofkë',
 'login-userblocked'          => 'Ky përdorues është bllokuar. Identifikimi nuk lejohet.',
 'wrongpassword'              => 'Fjalëkalimi që futët nuk është i saktë. Provoni përsëri!',
@@ -649,6 +670,7 @@ Ju lutemi ndiqni këshillat në eMailin e pranuar.',
 'noemailprefs'               => 'Detyrohet një adresë email-i për të përdorur këtë mjet.',
 'emailconfirmlink'           => 'Vërtetoni adresën tuaj',
 'invalidemailaddress'        => 'Posta elektronike nuk mund të pranohet kështu si është pasi ka format jo valid. Ju lutemi, vendoni një postë mirë të formatuar, ose zbrazeni fushën.',
+'cannotchangeemail'          => 'Adresat e-mail të llogarive nuk mund të ndryshohen në këtë wiki.',
 'accountcreated'             => 'Llogarija e Përdoruesit u krijua',
 'accountcreatedtext'         => 'Llogarija e Përdoruesit për $1 u krijua',
 'createaccount-title'        => 'Hapja e llogarive për {{SITENAME}}',
@@ -656,13 +678,15 @@ Ju lutemi ndiqni këshillat në eMailin e pranuar.',
 Duhet të hyni brenda dhe të ndërroni fjalëkalimin tani nëse ky person jeni ju. Përndryshe shpërfilleni këtë mesazh.',
 'usernamehasherror'          => 'Emri i përdoruesit nuk mund të përmbajë karaktere',
 'login-throttled'            => 'Keni bërë shumë tentime të njëpasnjëshme në fjalëkalimin e kësaj llogarie. Ju lutemi prisni para tentimit përsëri.',
+'login-abort-generic'        => 'login juaj ishte i pasuksesshëm - Ndërpre',
 'loginlanguagelabel'         => 'Gjuha: $1',
 'suspicious-userlogout'      => 'Kërkesa juaj për të shkëputet u mohua sepse duket sikur është dërguar nga një shfletues të thyer ose caching proxy.',
 
 # E-mail sending
 'php-mail-error-unknown' => 'Gabim i panjohur në funksionin e postës PHP ()',
+'user-mail-no-addy'      => 'Provuat të dërgoni një korrespondencë pa adresë elektronike',
 
-# Password reset dialog
+# Change password dialog
 'resetpass'                 => 'Ndrysho fjalëkalimin',
 'resetpass_announce'        => 'Ju keni hyrë me një kod të përkohshëm.
 Për të hyrë tërësisht duhet të vendosni një fjalëkalim të ri këtu:',
@@ -679,19 +703,60 @@ Për të hyrë tërësisht duhet të vendosni një fjalëkalim të ri këtu:',
 'resetpass-wrong-oldpass'   => 'Fjalëkalimi momental ose i përkohshëm nuk është i vlefshëm. Ndoshta tanimë me sukses keni ndërruar fjalëkalimin, ose keni kërkuar fjalëkalim të përkohshëm.',
 'resetpass-temp-password'   => 'Fjalëkalimi i përkohshëm:',
 
+# Special:PasswordReset
+'passwordreset'                    => 'Ndrysho fjalkalimin',
+'passwordreset-text'               => 'Plotësoni këtë formular për të marrë një këshillë e-mail të dhënat e llogarisë suaj.',
+'passwordreset-legend'             => 'Ndrysho fjalkalimin',
+'passwordreset-disabled'           => 'Rivendosja e fjalëkalimit është deaktivizuar në këtë wiki.',
+'passwordreset-pretext'            => '{{PLURAL:$1| | Shkruani një nga pjesët e të dhënave më poshtë}}',
+'passwordreset-username'           => 'Nofka:',
+'passwordreset-domain'             => 'Domain:',
+'passwordreset-capture'            => 'Dëshiron të shikosh e-mail-in që rezulton?',
+'passwordreset-capture-help'       => "Nëse shënoni këtë kuti, e-mail-i (dhe fjalekalimi i përkohshëm) që do t'i dërgohen përdoruesit, do të të tregohen edhe ty.",
+'passwordreset-email'              => 'Posta elektronike',
+'passwordreset-emailtitle'         => 'Detajet e llogarisë në {{SITENAME}}',
+'passwordreset-emailtext-ip'       => 'Dikush (ndoshta ju, nga IP adresa $1) kërkoi një kujtesë për 
+detajet e llogarisë suaj {{SITENAME}} ($4).Përdoruesi në vijim {{PLURAL:$3|llogari është|llogaritë janë}} të lidhur me këtë postë elektronike:
+
+$2
+
+{{PLURAL:$3|Ky fjalëkalim i përkohshëm|Këto fjalëkalime të përkohshme}} do të përfundojë për {{PLURAL:$5|një ditë|$5 ditë}}.
+
+Ju duhet të kyçeni dhe të zgjidhni një fjalëkalim të ri tani. Nëse dikush tjetër e ka bërë këtë kërkesës, ose në qoftë se ju mbani mend fjalëkalimin tuaj origjinal, dhe ju nuk dëshirojni të ndryshoni atë, ju mund të injoroni këtë mesazh dhe do të vazhdoni përdorimin e fjalëkalimit tuaj të vjetër.',
+'passwordreset-emailtext-user'     => 'Përdoruesi  $1 në {{SITENAME }} ka kërkuar një kujtesë për të dhënat e llogarisë suaj për {{SITENAME }} ($4). Përdoruesi në vijim {{PLURAL: $3 | llogaria është | llogaritë janë}} të lidhur me këtë postë elektronike: 
+
+$2
+
+{{PLURAL: $3 | Ky fjalëkalim i përkohshëm | Këto fjalëkalime të përkohshme}} do të përfundojë në {{PLURAL: $5 | një ditë | $5 ditë}}.
+Ju duhet të kyçeni dhe të zgjidhni një fjalëkalim të ri tani. Nëse dikush tjetër e ka bërë këtë kërkesës, ose në qoftë se ju mbani mend fjalëkalimin tuaj origjinal, dhe ju nuk dëshirojni të ndryshoni atë, ju mund të injoroni këtë mesazh dhe do të vazhdoni përdorimin e fjalëkalimit tuaj të vjetër.',
+'passwordreset-emailelement'       => 'Nofka: $1
+Fjalëkalimi i përkohshëm: $2',
+'passwordreset-emailsent'          => 'Një korrespondencë kujtese është dërguar',
+'passwordreset-emailsent-capture'  => 'U dërgua një e-mail kujtesë, i cili tregohet më poshtë.',
+'passwordreset-emailerror-capture' => 'U dërgua një e-mail kujtesë, i cili tregohet më poshtë, por dërgesa për tek përdoruesi qe e pamundur: $1',
+
+# Special:ChangeEmail
+'changeemail'          => 'Ndrysho postën elektronike',
+'changeemail-header'   => 'Ndrysho llogarinë e adresës së postës elektronike',
+'changeemail-text'     => 'Plotësoni këtë formular për të ndryshuar adresën tuaj të postës elektronike. Ju duhet të shkruani fjalëkalimin tuaj për të konfirmuar këtë ndryshim.',
+'changeemail-no-info'  => 'Ju duhet të identifikoheni në mënyrë që të keni të drejtë hyrjeje në këtë faqe.',
+'changeemail-oldemail' => 'Posta elektronike e aktuale:',
+'changeemail-newemail' => 'Posta elektronike e re:',
+'changeemail-none'     => '(asgjë)',
+'changeemail-submit'   => 'Ndrysho postën elektronike',
+'changeemail-cancel'   => 'Anulo',
+
 # Edit page toolbar
-'bold_sample'     => 'Tekst i trashë',
-'bold_tip'        => 'Tekst i trashë',
+'bold_sample'     => 'Stil i theksuar i tekstit',
+'bold_tip'        => 'Stil i theksuar i tekstit',
 'italic_sample'   => 'Tekst i pjerrët',
 'italic_tip'      => 'Tekst i pjerrët',
 'link_sample'     => 'Titulli i lidhjes',
 'link_tip'        => 'Lidhje e brendshme',
-'extlink_sample'  => 'http://www.example.com Titulli i lidhjes',
+'extlink_sample'  => 'http://www.example.com titulli i lidhjes',
 'extlink_tip'     => 'Lidhje e jashtme (most harro prefiksin http://)',
-'headline_sample' => 'Titull shembull',
+'headline_sample' => 'Titulli',
 'headline_tip'    => 'Titull i nivelit 2',
-'math_sample'     => 'Vendos formulen ketu',
-'math_tip'        => 'Formulë matematike (LaTeX)',
 'nowiki_sample'   => 'Vendos tekst që nuk duhet të formatohet',
 'nowiki_tip'      => 'Mos përdor format wiki',
 'image_sample'    => 'Shembull.jpg',
@@ -703,25 +768,26 @@ Për të hyrë tërësisht duhet të vendosni një fjalëkalim të ri këtu:',
 
 # Edit pages
 'summary'                          => 'Përmbledhje:',
-'subject'                          => 'Subjekt/Titull:',
+'subject'                          => 'Subjekt/titull:',
 'minoredit'                        => 'Ky është një redaktim i vogël',
-'watchthis'                        => 'Mbikqyre këtë faqe',
+'watchthis'                        => 'Vëzhgoje këtë faqe',
 'savearticle'                      => 'Kryej ndryshimet',
-'preview'                          => 'Parapamje',
-'showpreview'                      => 'Trego parapamjen',
-'showlivepreview'                  => 'Parapamje e menjëhershme',
+'preview'                          => 'Shqyrto',
+'showpreview'                      => 'Shfaq për shqyrtim',
+'showlivepreview'                  => 'Shqyrtim i menjëhershëm',
 'showdiff'                         => 'Trego ndryshimet',
-'anoneditwarning'                  => "Ju nuk jeni regjistruar. IP adresa juaj do të regjistrohet në historinë e redaktimeve të kësaj faqe.
-You are not logged in. Your IP address will be recorded in this page's edit history.",
-'anonpreviewwarning'               => 'Nuk jeni futur me emrin tuaj duke u inçizuar të dhënat IP adresën tuaj në këtë faqe dhe është ndryshuar historia.',
-'missingsummary'                   => "'''Vërejtje:'''  Ju nuk keni shtuar një përmbledhje për redaktimet.",
-'missingcommenttext'               => 'Ju lutemi shtoni një koment në vazhdim.',
+'anoneditwarning'                  => "'''Kujdes:''' Ju nuk jeni identifikuar. 
+Adresa juaj IP do të regjistrohet në historinë e redaktimeve të kësaj faqeje.",
+'anonpreviewwarning'               => '"Ju nuk jeni identifikuar. Ruajtja e ndryshimeve do të bëjë që adresa juaj IP të regjistrohet në historikun e redaktimeve të kësaj faqeje."',
+'missingsummary'                   => "'''Vërejtje:''' Ju nuk keni lënë shënim për redaktimet e kryera.
+Nëse klikoni \"{{int:savearticle}}\" përsëri, redaktimet tuaja do të ruhen pa shënim.",
+'missingcommenttext'               => 'Ju lutemi bëni një koment më poshtë.',
 'missingcommentheader'             => "'''Kujdes:''' Ju nuk keni dhënë një titull për këtë koment.
 Nëse kryeni ndryshimet redaktimi juaj do të ruhet pa titull.",
-'summary-preview'                  => 'Parapamja e përmbledhjes:',
-'subject-preview'                  => 'Parapamja e titullit:',
+'summary-preview'                  => 'Shqyrto përmbledhjen:',
+'subject-preview'                  => 'Shqyrto titullin/subjektin:',
 'blockedtitle'                     => 'Përdoruesi është bllokuar',
-'blockedtext'                      => "'''Llogaria juaj ose adresa e IP-së është bllokuar'''
+'blockedtext'                      => "'''Llogaria juaj ose adresa e IP është bllokuar'''
 
 Bllokimi u bë nga $1 dhe arsyeja e dhënë ishte '''$2'''.
 
@@ -749,89 +815,106 @@ Vini re : që nuk mund ta përdorni mundësinë "dërgo porosi elektronike" për
 
 IP adresa juaj e tanishme është $3 dhe ID e bllokimit është #$5.
 Ju lutemi përfshini këto detaje në të gjitha kërkesat që i bëni.',
-'blockednoreason'                  => 'nuk ka arsye',
-'blockedoriginalsource'            => "Më poshtë tregohet burimi i '''$1''':",
-'blockededitsource'                => "Më poshtë tregohet teksti i '''redaktimeve tuaja''' të '''$1''':",
-'whitelistedittitle'               => 'Duhet të hyni brënda për të redaktuar',
-'whitelistedittext'                => 'Duhet të $1 për të redaktuar artikuj.',
+'blockednoreason'                  => 'nuk është dhënë ësnje arsye',
+'whitelistedittext'                => 'Ju duhet të $1 për të redaktuar faqet.',
 'confirmedittext'                  => 'Ju duhet së pari ta vërtetoni e-mail adresen para se të redaktoni. Ju lutem plotësoni dhe vërtetoni e-mailin tuaj  te [[Special:Preferences|parapëlqimet]] e juaja.',
-'nosuchsectiontitle'               => '!Asnjë seksion i tillë nuk ekziston',
-'nosuchsectiontext'                => "Keni provuar të redaktoni një seksion që s'ekziston.",
-'loginreqtitle'                    => 'Detyrohet hyrja',
-'loginreqlink'                     => 'hyni',
-'loginreqpagetext'                 => 'Ju duhet $1 për të parë faqe e tjera.',
+'nosuchsectiontitle'               => 'Paragrafi nuk mund të gjendet',
+'nosuchsectiontext'                => 'Ju po kërkoni të redaktoni një paragraf që nuk ekziston.
+Mund të jetë zhvendosur ose fshirë ndërkohë që ju ishit duke parë këtë faqe.',
+'loginreqtitle'                    => 'Kërkohet identifikim',
+'loginreqlink'                     => 'Identifikohuni',
+'loginreqpagetext'                 => 'Ju duhet $1 për të parë faqet e tjera.',
 'accmailtitle'                     => 'Fjalëkalimi u dërgua.',
-'accmailtext'                      => "Nji fjalëkalim i krijuem rastësisht për [[User talk:$1|$1]] u dërgue në $2.
+'accmailtext'                      => "Një fjalëkalim i krijuar në mënyrë të rastësishme për [[User talk:$1|$1]] u dërgua në $2.
 
-Fjalëkalimi për këtë llogari mundet me u ndryshue në faqen ''[[Special:ChangePassword|ndrysho fjalëkalimin]]'' mbas kyçjes.",
-'newarticle'                       => '(I Ri)',
-'newarticletext'                   => "Keni përcjellë nji vegëz te nji faqe që nuk ekziston.
-Për me krijue këtë faqe, shkrueni në kutinë mâ poshtë (shih [[{{MediaWiki:Helppage}}|faqja e ndihmës]] për mâ shumë informata).
-Nëse keni hy këtu gabimisht klikoni butonin '''mbrapa''' të shfletuesit.",
-'anontalkpagetext'                 => "----'' Kjo është një faqe diskutimi për një përdorues anonim i cili nuk ka krijuar akoma një account, ose të cilët nuk e përdorin atë. 
- Prandaj, ne duhet të përdorim adresën IP numerike për të identifikuar tij / saj. 
- Të tillë një adresë IP mund të ndahet nga disa përdorues. 
- Në qoftë se jeni një përdorues anonim dhe mendoni se komente të parëndësishme janë drejtuar ndaj jush, ju lutem [[Special:UserLogin/signup|krijoni një llogari]] ose [[Special:UserLogin|hyni brënda]] për të shmangur konfuzionin e ardhshme me përdorues të tjerë anonim .''",
+Fjalëkalimi për këtë llogari mund të ndryshohet në faqen ''[[Special:ChangePassword|ndrysho fjalëkalimin]]'' pasi të jeni identifikuar.",
+'newarticle'                       => '(I ri)',
+'newarticletext'                   => "Ju keni ndjekur nje lidhje drejt një faqeje që nuk ekziston.
+Për ta krijuar këtë faqe ju mund të shkruani në kutinë e mëposhtme (shih [[{{MediaWiki:Helppage}}|faqen e ndihmës]] për më shumë informacion).
+Nëse ju keni mbërritur këtu gabimisht, atëherë klikoni butonin '''pas''' të shfletuesit tuaj.",
+'anontalkpagetext'                 => "----'' Kjo është një faqe diskutimi për një përdorues anonim i cili nuk ka krijuar akoma një llogari, ose qe nuk e përdor atë. 
+ Prandaj, ne duhet të përdorim adresën IP numerike për identifikimin e tij. 
+Kjo adresë IP mund të përdoret nga disa përdorues.
+ Në qoftë se jeni një përdorues anonim dhe mendoni se ndaj jush janë bërë komente të parëndësishme, ju lutem [[Special:UserLogin/signup|krijoni një llogari]] ose [[Special:UserLogin|identifikohuni]] për të shmangur konfuzionin në të ardhmen me përdorues të tjerë anonim .''",
 'noarticletext'                    => 'Momentalisht nuk ka tekst në këtë faqe.
-Ju mundeni [[Special:Search/{{PAGENAME}}|me kërkue këtë titull]] në faqe tjera,
-<span class="plainlinks">[{{fullurl:{{#Special:Log}}|page={{FULLPAGENAMEE}}}} me kërkue në regjistrat tematikisht të afërm],
-apo [{{fullurl:{{FULLPAGENAME}}|action=edit}} me redaktue këtë faqe]</span>.',
+Ju mund [[Special:Search/{{PAGENAME}}|ta kërkoni këtë titull]] në faqe tjera,
+<span class="plainlinks">[{{fullurl:{{#Special:Log}}|page={{FULLPAGENAMEE}}}} të kërkoni ngjarjet e ngjashme në regjistër],
+ose [{{fullurl:{{FULLPAGENAME}}|action=edit}} të redaktoni këtë faqe]</span>.',
 'noarticletext-nopermission'       => 'Momentalisht nuk ka tekst në këtë faqe.
 Ju mundeni [[Special:Search/{{PAGENAME}}|me kërku këtë titull]] në faqe tjera,
 <span class="plainlinks">[{{fullurl:{{#Special:Log}}|page={{FULLPAGENAMEE}}}} me kërku në regjistrat tematikisht të afërm],
 apo [{{fullurl:{{FULLPAGENAME}}|action=edit}} me redaktu këtë faqe]</span>.',
-'userpage-userdoesnotexist'        => 'Llogaria e përdoruesit "$1" nuk është hapur. Ju lutem mendohuni mirë nëse dëshironi të krijoni/redaktoni këtë faqe.',
-'userpage-userdoesnotexist-view'   => 'Profili i përdoruesit "$1" nuk është i regjistruar.',
-'blocked-notice-logextract'        => 'Ky përdorues është bllokuar aktualisht.
-Regjistri i bllokuar hyrjen e fundit është më poshtë, për referencë:',
-'clearyourcache'                   => "'''Shënim:''' Pasi të ruani parapëlqimet ose pasi të kryeni ndryshimet, duhet të pastroni ''cache''-në e shfletuesit tuaj për të parë ndryshimet: për '''Mozilla/Safari/Konqueror''' shtypni ''Ctrl+Shift+Reload'' (ose ''ctrl+shift+r''), për '''IE''' ''Ctrl+f5'', '''Opera''': ''F5''.",
-'usercssyoucanpreview'             => "'''Këshillë:''' Përdorni butonin 'Trego parapamjen' për të provuar ndryshimet tuaja të faqeve css/js përpara se të kryeni ndryshimet.",
-'userjsyoucanpreview'              => "'''Këshillë:''' Përdorni butonin 'Trego parapamjen' për të provuar ndryshimet tuaja të faqeve css/js përpara se të kryeni ndryshimet.",
-'usercsspreview'                   => "'''Vini re! Kjo është vetëm një parapamje e faqes suaj CSS. Akoma nuk është ruajtur!'''",
+'userpage-userdoesnotexist'        => 'Llogaria e përdoruesit "<nowiki>$1</nowiki>" nuk është e regjistruar. 
+Ju lutem kontrolloni nëse dëshironi të krijoni/redaktoni këtë faqe.',
+'userpage-userdoesnotexist-view'   => 'Llogaria i përdoruesit "$1" nuk është e regjistruar.',
+'blocked-notice-logextract'        => "Ky përdorues është  aktualisht i bllokuar.
+Më poshtë mund t'i referoheni shënimit të regjistruar për bllokimin e fundit:",
+'clearyourcache'                   => "''Shënim:''' Pas ruajtjes, juve mund t'iu duhet të anashkaloni \"cache-in\" e shfletuesit tuaj për të parë ndryshimet. 
+* '''Firefox / Safari:''' Mbaj të shtypur ''Shift'' ndërkohë që klikon ''Reload'', ose shtyp ''Ctrl-F5'' ose ''Ctrl-R'' (''⌘-R'' në Mac)
+* '''Google Chrome:''' Shtyp ''Ctrl-Shift-R'' (''''⌘-R'''' në Mac)
+* '''Internet Explorer:''' Mbaj të shtypur ''Ctrl''  ndërkohë që klikon ''Refresh'', ose shtyp ''Ctrl-F5''
+* '''Konqueror:''' Kliko ''Reload'' ose shtyp ''F5''
+* '''Opera:''' Zbrazni \"cache-in\" tek ''Tools → Preferences''",
+'usercssyoucanpreview'             => "'''Këshillë:''' Përdorni butonin '{{int:showpreview}}' për të testuar CSS-në e re para se të ruani ndryshimet e kryera.",
+'userjsyoucanpreview'              => "'''Këshillë:''' Përdorni butonin '{{int:showpreview}}' për të testuar JavaScripting e ri para se të ruani ndryshimet e kryera.",
+'usercsspreview'                   => "'''Vini re! Ju jeni duke inspektuar CSS-në si përdorues!'''
+'''Nuk është ruajtur ende!'''",
 'userjspreview'                    => "'''Vini re se kjo është vetëm një provë ose parapamje e faqes tuaj JavaScript, ajo nuk është ruajtur akoma!'''",
-'sitecsspreview'                   => "'''Vini re! Kjo është vetëm një parapamje e faqes suaj CSS.'''
-'''Akoma nuk është ruajtur!'''",
-'sitejspreview'                    => "'''Vini re se kjo është vetëm një provë ose parapamje e faqes tuaj JavaScript.''' 
-'''Nuk është ruajtur akoma!'''",
+'sitecsspreview'                   => "'''Vini re! Ju jeni duke inspektuar CSS-në !'''
+'''Nuk është ruajtur ende!'''",
+'sitejspreview'                    => "'''Vini re! Ju jeni duke inspektuar këtë kod JavaScript.''' 
+'''Nuk është ruajtur ende!'''",
 'userinvalidcssjstitle'            => "'''Kujdes:''' Nuk ka pamje të quajtur \"\$1\". Vini re se faqet .css dhe .js përdorin titull me gërma të vogla, p.sh. {{ns:user}}:Foo/vector.css, jo {{ns:user}}:Foo/Vector.css.",
 'updated'                          => '(E ndryshuar)',
 'note'                             => "'''Shënim:'''",
-'previewnote'                      => "'''Kini kujdes se kjo është vetëm një parapamje, nuk është ruajtur akoma!'''",
+'previewnote'                      => "'''Vini re! Kjo faqe është vetëm për shqyrtim.'''
+Ndryshimet tuaja nuk janë ruajtur ende!",
 'previewconflict'                  => 'Kjo parapamje reflekton tekstin sipër kutisë së redaktimit siç do të duket kur të kryeni ndryshimin.',
-'session_fail_preview'             => "'''Ju kërkoj ndjesë. Nuk munda të kryej redaktimin tuaj sepse humba disa të dhëna. Provojeni përsëri dhe nëse nuk punon provoni të dilni dhe të hyni përsëri.'''",
-'session_fail_preview_html'        => "'''Ju kërkoj ndjesë! Nuk munda të ruaj redaktimin tuaj për shkaqe teknike.'''
-
-''{{SITENAME}} ka ndaluar përfshirjen e tekstit HTML të papërpunuar, parapamja s'është treguar për t'ju mbrojtur nga sulme të mundshme në JavaScript''
-
-'''Nëse ky është një redaktim i vlefshëm, ju lutem provojeni përsëri. Nëse s'punon përsëri atëherë provoni të dilni dhe të hyni përsëri nga llogaria juaj.'''",
-'token_suffix_mismatch'            => "'''Redaktimi s'është pranuar pasi shfletuesi juaj ka prishur përmbajtjen e shkronjave. Redaktimi është shpërfilluar për të ruajtur përmbajtjen e tekstit.
-Kjo ndodh ndonjëherë kur përdoren shërbime ndërjmetësash anonim.'''",
+'session_fail_preview'             => "'''Ju kërkojmë ndjesë! Redaktimi juaj nuk mund të perpunohej për shkak të humbjes së të dhënave të seancës.'''
+Ju lutemi, provojeni përsëri.
+Nëse përsëri nuk punon, provoni të [[Special:UserLogout|dilni nga faqja]] dhe të identifikoheni serish.",
+'session_fail_preview_html'        => "'''Ju kërkojmë ndjesë! I pamundur përpunimi i redaktimeve tuaja për shkak të humbjes së të dhënave të seancës.'''
+'' Për shkak se {{SITENAME}} ka të aktivizuar përdorimin e HTML-së së papërpunuar, teksti për shqyrtim është fshehur si masë parandaluese kundër sulmeve JavaScript.''
+'''Nëse kjo është një përpjekje e sinqertë për redaktim, ju lutemi, provojeni përsëri.'''
+Nëse përsëri nuk funksiono, provoni [[Special:UserLogout|të dilni nga faqja]] dhe të identifikoheni sërish.",
+'token_suffix_mismatch'            => "'''Redaktimi juaj nuk u pranuar pasi shërbimi juaj server  ka keqinterpretuar shenjat e pikësimit të simbolikës së redaktimit.'''
+Redaktimi nuk u pranua për të parandaluar korruptimin e tekstit në faqe.
+Kjo ndodh ndonjëherë kur përdoret server anonim dytësor me gabime.",
+'edit_form_incomplete'             => "'''Disa pjesë të formularit të redaktimit nuk arritën në server; kontrolloni edhe një herë nëse redaktimet tuaja janë të paprekura dhe provojeni përsëri.'''",
 'editing'                          => 'Duke redaktuar $1',
-'editingsection'                   => 'Duke redaktuar $1 (seksion)',
-'editingcomment'                   => 'Duke redaktuar (sekcionin e ri) $1',
+'editingsection'                   => 'Duke redaktuar $1 (paragraf)',
+'editingcomment'                   => 'Duke redaktuar (paragraf i ri) $1',
 'editconflict'                     => 'Konflikt redaktimi: $1',
-'explainconflict'                  => "Dikush tjetër ka ndryshuar këtë faqe kur ju po e redaktonit.
-Kutiza e redaktimit mësipërme tregon tekstin e faqes siç ekziston tani.
-Ndryshimet juaja janë treguar poshtë kutisë së redaktimit.
-Ju duhet të përputhni ndryshimet tuaja me tekstin ekzistues.
-'''Vetëm''' teksti në kutinë e sipërme të redaktimit do të ruhet kur të shtypni \"{{int:savearticle}}\".",
+'explainconflict'                  => "Dikush tjetër ka ndryshuar këtë faqe që kur ju filluat redaktimin.
+Hpasira e sipërme tregon tekstin e faqes siç është aktualisht.
+Ndryshimet tuaja janë shfaqur në hapsirën e poshtme.
+Ju duhet t'ia bashkangjisni ndryshimet tuaja teksit ekzistues.
+'''Vetëm''' teksti në hapsirën e sipërme do të ruhet kur të shtypni \"{{int:savearticle}}\".",
 'yourtext'                         => 'Teksti juaj',
-'storedversion'                    => 'Versioni i ruajtur',
-'nonunicodebrowser'                => "'''KUJDES: Shfletuesi juaj nuk përdor dot unikode, ju lutem ndryshoni shfletues para se të redaktoni artikuj.'''",
-'editingold'                       => "'''KUJDES: Po redaktoni një version të vjetër të kësaj faqeje. Në qoftë se e ruani, çdo ndryshim i bërë deri tani do të humbet.'''",
+'storedversion'                    => 'Rishikim i ruajtur',
+'nonunicodebrowser'                => "'''Kujdes: Shfletuesi juaj ka mospërputhje me standartin unicode.'''
+Ekziston një zgjidhje për redaktimin e sigurt të faqeve: Shkronjat jo-ASCII do të duken në kutinë e redaktimit si kod heksadecimal.",
+'editingold'                       => "'''Kujdes: Po redaktoni një version të vjetër të kësaj faqeje.'''
+Në qoftë se e ruani, çdo ndryshim i bërë deri tani do të humbasë.'''",
 'yourdiff'                         => 'Ndryshimet',
-'copyrightwarning'                 => "Kontributet tek {{SITENAME}} janë të konsideruara të dhëna nën licensën $2 (shikoni $1 për hollësirat).<br />
-'''NDALOHET DHËNIA E PUNIMEVE PA PASUR LEJE NGA AUTORI NË MOSPËRPUTHJE ME KËTË LICENSË!'''<br />",
-'copyrightwarning2'                => "Ju lutem vini re se të gjitha kontributet tek {{SITENAME}} mund të redaktohen, ndryshohen apo fshihen nga përdorues të tjerë. Në qoftë se nuk dëshironi që shkrimet tuaja të redaktohen pa mëshirë mos i jepni këtu.<br />
-Po na premtoni që ç'ka po jepni këtu e keni kontributin tuaj ose e keni kopjuar nga domeni publik apo nga burime të tjera të lira sipas ligjeve përkatëse (shikoni $1 për hollësirat).
-'''NDALOHET DHËNIA E PUNIMEVE PA PASUR LEJE NGA AUTORI NË MOSPËRPUTHJE ME KËTË LICENSË!'''",
-'longpageerror'                    => "'''GABIM: Tesksti që ju po e redaktoni është $1 KB i gjatë dhe është më i gjatë se maksimumi i lejuar prej $2 KB. Ndryshimet nuk mund të ruhen.'''",
-'readonlywarning'                  => "'''KUJDES: Baza e të dhënave është mbyllur për mirëmbajtje, pra ju nuk do të mund të ruani redaktimin tuaj për momentin.
-Ju ndoshta doni të kopjoni tekstin në një tekst dokument dhe të e ruani për më vonë.'''
+'copyrightwarning'                 => "Ju lutemi, vini re! Të gjitha kontributet në {{SITENAME}} jepen për publikim sipas $2 (shiko $1 për më shumë detaje).
+Nëse ju nuk dëshironi që shkrimet tuaja të redaktohen pa mëshirë dhe të shpërndahen sipas dëshirës, atëherë mos i vendosni këtu.<br />
+Gjithashtu, ju po na premtoni ne që gjithçka e keni shkruar vetë, ose e keni kopjuar nga një domain publik ose nga burime të tjera  te hapura.
+'''Mos vendosni material të mbrojtur nga e drejta e autorit pa leje!'''",
+'copyrightwarning2'                => "Ju lutemi, vini re! Të gjitha kontributet në {{SITENAME}} mund të redaktohen, ndryshohen ose hiqen nga përdorues të tjerë  (shiko $1 për më shumë detaje). 
+Nëse ju nuk dëshironi që shkrimet tuaja të redaktohen pa mëshirë dhe të shpërndahen sipas dëshirës, atëherë mos i vendosni këtu<br />
+Gjithashtu, ju po na premtoni ne që gjithçka e keni shkruar vetë, ose e keni kopjuar nga një domain publik ose nga burime të tjera  te hapura.
+'''Mos vendosni material të mbrojtur nga e drejta e autorit pa leje!'''",
+'longpageerror'                    => "'''Gabim: Teksti që shkruat është  {{PLURAL:$1|një kilobajt|$1 kilobajt}} i gjatë, që është mëtepër se maksimumi i lejuar prej  {{PLURAL:$2|një kilobajt|$2 kilobajtësh}} .'''
+Nuk mund të ruhet.",
+'readonlywarning'                  => "'''Kujdes: Baza e të dhënave është mbyllur për mirëmbajtje, prandaj ju nuk do të mund të ruani redaktimin tuaj për momentin.'''
+Ju mund të kopjoni tekstin dhe ta ruani për më vonë në një dokument tjetër.'''
 
-Administruesi që ka bërë mbylljen ka dhënë këtë sqarim: $1.",
-'protectedpagewarning'             => "'''KUJDES: Kjo faqe është mbyllur ashtu që vetëm përdoruesit me titullin administrator mund ta redaktojnë.'''",
-'semiprotectedpagewarning'         => "'''Shënim:''' Redaktimi i kësaj faqeje mund të bëhet vetëm nga përdorues të regjistruar.",
+Administruesi që e bllokoi ka dhënë këtë sqarim: $1.",
+'protectedpagewarning'             => "'''KUJDES: Kjo faqe është e mbrotjur dhe mund të redaktohet nga përdorues me të drejta administratori.'''
+Shënimi i fundit në regjistër është paraqitur më poshtë për reference:",
+'semiprotectedpagewarning'         => "'''Shënim:''' Kjo faqe është e mbrojtur dhe mund të redaktohet vetëm nga përdorues të regjistruar.
+Shënimi i fundit në regjistër është paraqitur më poshtë për reference:",
 'cascadeprotectedwarning'          => "'''Vini re:''' Kjo faqe është e mbrojtur dhe vetëm përdoruesit me privilegje administrative mund ta redaktojnë pasi është përfshirë në mbrotjen \"ujëvarë\" të {{PLURAL:\$1|faqes së|faqeve të}} mëposhtme:",
 'titleprotectedwarning'            => "'''Kujdes:  Kjo faqe është e mbrojtur dhe vetëm [[Special:ListGroupRights|disa përdorues]] mund ta krijojnë.'''
 Regjistri më i vonshëm i hyrjeve është poshtë për referncë:",
@@ -870,21 +953,22 @@ Ajo tanimë ekziston.',
 
 Duhet të ketë më pakë se $2, {{PLURAL:$2|kërkesë|kërkesa}}, kurse tani {{PLURAL:$1|është $1 kërkesë|janë $1 kërkesa}}.',
 'expensive-parserfunction-category'       => 'Faqe me shumë shprehje të kushtueshmë për analizë gramatikore',
-'post-expand-template-inclusion-warning'  => "Vini re: Stampa e përfshirë është shumë e madhe.
-Disa stampa s'do të përfshihen.",
+'post-expand-template-inclusion-warning'  => "'''Kujdes''': Numri i shablloneve që perfshihen është shumë i madh.
+Disa shabllone nuk do të përfshihen.",
 'post-expand-template-inclusion-category' => 'Faqe ku stampat e përfshira kalojnë kufirin',
 'post-expand-template-argument-warning'   => "Vini re: Kjo faqe ka të paktën një parametër stampe që është shumë i madh për t'u shpalosur.
 Këto parametra nuk janë përfshirë.",
 'post-expand-template-argument-category'  => 'Faqe që kanë parametra stampe të papërfshira',
-'parser-template-loop-warning'            => 'stampa u zbulua: [[$1]]',
-'parser-template-recursion-depth-warning' => 'Stampa ka kalur limitin e lejuar: $1',
+'parser-template-loop-warning'            => 'Shablloni nuk mund të therrasë vetveten: [[$1]]',
+'parser-template-recursion-depth-warning' => 'Ka kaluar kufiri i herëve që shablloni mund të thërrasë vetveten: ($1)',
 'language-converter-depth-warning'        => 'Konvertimi i gjuhës ka kaluar limitin e lejuar: ($1)',
 
 # "Undo" feature
-'undo-success' => 'Redaktimi nuk mund të kthehej. Ju lutem kontrolloni ndryshimet e mëposhtëme për të vërtetuar dëshirën e veprimit dhe pastaj kryeni ndryshimet për të plotësuar kthimin e redaktimit.',
-'undo-failure' => 'Redaktimi nuk mund të kthehej për shkak të përplasjeve të ndërmjetshme.',
-'undo-norev'   => "S'mund të zhbëja këtë redaktim pasi nuk ekziston ose është grisur.",
-'undo-summary' => 'U kthye versioni $1 i bërë nga [[Special:Contributions/$2]] ([[User talk:$2]])',
+'undo-success' => 'Redaktimi nuk mund të zhbëhet. 
+Ju lutemi, kontrolloni krahasimin e mëposhtëm për të vërtetuar nëse kjo është ajo që dëshironi dhe pastaj kryeni ndryshimet për të plotësuar zhbërjen e redaktimit.',
+'undo-failure' => 'Redaktimi nuk mund të zhbëhet për shkak të redaktimeve konfliktuese të ndërmjetshme.',
+'undo-norev'   => 'Redaktimi nuk mund të zhbëhet sepse nuk ekziston ose është fshirë.',
+'undo-summary' => 'Zhbëje versionin $1 i bërë nga [[Special:Contributions/$2|$2]] ([[User talk:$2|ligjëratë]])',
 
 # Account creation failure
 'cantcreateaccounttitle' => 'Nuk mundet të krijohet llogaria',
@@ -903,9 +987,9 @@ Arsyeja e dhënë nga $3 është ''$2''.",
 'nextrevision'           => 'Version më i ri →',
 'currentrevisionlink'    => 'shikoni versionin e tanishëm',
 'cur'                    => 'tani',
-'next'                   => 'mbas',
-'last'                   => 'fund',
-'page_first'             => 'Së pari',
+'next'                   => 'Vijo',
+'last'                   => 'mëparshme',
+'page_first'             => 'I parë',
 'page_last'              => 'Së fundmi',
 'histlegend'             => 'Legjenda: (tani) = ndryshimet me versionin e tanishëm,
 (fund) = ndryshimet me versionin e parardhshëm, V = redaktim i vogël',
@@ -923,35 +1007,35 @@ Arsyeja e dhënë nga $3 është ''$2''.",
 'history-feed-empty'          => 'Faqja që kërkuat nuk ekziston. Ajo mund të jetë grisur nga wiki ose mund të jetë zhvendosur nën një emër tjetër. Mund të provoni ta gjeni duke e [[Special:Search|kërkuar]].',
 
 # Revision deletion
-'rev-deleted-comment'         => '(kometi u largua)',
+'rev-deleted-comment'         => '(Edit përmbledhje larguar)',
 'rev-deleted-user'            => '(përdoruesi u largua)',
 'rev-deleted-event'           => '(veprimi në regjistër është hequr)',
 'rev-deleted-user-contribs'   => '[Përdoruesi ose adresa IP u hoq - redaktimet e  fshehura nga kontribuesit]',
 'rev-deleted-text-permission' => "Versioni i kësaj faqeje është '''fshirë'''.
 Detajet mund të gjenden tek [{{fullurl:{{#Special:Log}}/delete={{FULLPAGENAME}}}} regjistri i grisjeve].",
-'rev-deleted-text-unhide'     => "Ky version i faqes është '''fshirë'''.
+'rev-deleted-text-unhide'     => "Ky version i faqes është '''grisur'''.
 Detajet mund të gjenden tek [{{fullurl:{{#Special:Log}}/delete|page={{FULLPAGENAME}}}} regjistri i grisjeve].
-Si një administrator ju akoma mund ta [$1 shikoni këtë version] nëse doni të vazhdoni.",
-'rev-suppressed-text-unhide'  => "Ky version i faqes është '''fshirë'''.
+Ju akoma mund ta [$1 shikoni këtë version] nëse doni të vazhdoni.",
+'rev-suppressed-text-unhide'  => "Ky version i faqes është '''grisur'''.
 Detajet mund të gjenden tek [{{fullurl:{{#Special:Log}}/delete|page={{FULLPAGENAME}}}} regjistri i grisjeve].
-Si një administrator ju akoma mund ta [$1 shikoni këtë version] nëse doni të vazhdoni.",
-'rev-deleted-text-view'       => 'Ky version i faqes është shlyer nga arkivi publik i faqes. Ju si Administrator mund ta shikoni akoma këtë.
-Shiko tek [{{fullurl:{{#Special:Log}}/suppress|page={{FULLPAGENAMEE}}}} regjistri i grisjeve], ndoshta gjenden atje më shumë informacione rreth kësaj.',
-'rev-suppressed-text-view'    => 'Ky version i faqes është shlyer nga arkivi publik i faqes. Ju si Administrator mund ta shikoni akoma këtë.
-Shiko tek [{{fullurl:{{#Special:Log}}/suppress|page={{FULLPAGENAMEE}}}} regjistri i grisjeve], ndoshta gjenden atje më shumë informacione rreth kësaj.',
+Ju akoma mund ta [$1 shikoni këtë version] nëse doni të vazhdoni.",
+'rev-deleted-text-view'       => "Ky version i faqes është '''grisur'''. 
+Ju mund ta shikoni; detajet mund të gjenden te [{{fullurl:{{#Special:Log}}/suppress|page={{FULLPAGENAMEE}}}} regjistri i grisjeve].",
+'rev-suppressed-text-view'    => "Ky version i faqes është '''shtypur'''. 
+Ju mund ta shikoni; detajet mund të gjenden te [{{fullurl:{{#Special:Log}}/suppress|page={{FULLPAGENAMEE}}}} regjistri i shtypjeve].",
 'rev-deleted-no-diff'         => "Ju nuk mund ta shikoni këtë ndryshim sepse një nga versionet është '''fshirë'''.
 Detajet mund të gjenden tek [{{fullurl:{{#Special:Log}}/delete={{FULLPAGENAME}}}} regjistri i grisjeve].",
 'rev-suppressed-no-diff'      => "Ju nuk mund ta shikoni këtë ndryshim sepse një nga versionet është '''grisur'''.",
 'rev-deleted-unhide-diff'     => "Një nga versionet e këtij ndryshimi është '''grisur'''.
 Detajet mund të gjenden tek [{{fullurl:{{#Special:Log}}/delete|page={{FULLPAGENAME}}}} regjistri i grisjeve].
-Si një administrator ju akoma mund ta [$1 shikoni këtë version] nëse doni të vazhdoni.",
-'rev-suppressed-unhide-diff'  => "Një nga versionet e këtij ndryshimi është '''grisur'''.
-Detajet mund të gjenden tek [{{fullurl:{{#Special:Log}}/delete|page={{FULLPAGENAME}}}} regjistri i grisjeve].
-Si një administrator ju akoma mund ta [$1 shikoni këtë version] nëse doni të vazhdoni.",
-'rev-deleted-diff-view'       => 'Ky version i faqes është shlyer nga arkivi publik i faqes. Ju si Administrator mund ta shikoni akoma këtë.
-Shiko tek [{{fullurl:{{#Special:Log}}/suppress|page={{FULLPAGENAMEE}}}} regjistri i grisjeve], ndoshta gjenden atje më shumë informacione rreth kësaj.',
-'rev-suppressed-diff-view'    => "Një nga versionet e këtij ndryshimi është '''grisur'''.
-Si një administrator ju mund ta shikoni këtë ndryshim; detajet mund të gjenden tek [{{fullurl:{{#Special:Log}}/suppress|page={{FULLPAGENAMEE}}}} regjistri i grisjeve].",
+Ju akoma mund ta [$1 shikoni këtë version] nëse doni të vazhdoni.",
+'rev-suppressed-unhide-diff'  => "Një nga versionet e këtij ndryshimi është '''shtypur'''.
+Detajet mund të gjenden tek [{{fullurl:{{#Special:Log}}/suppress|page={{FULLPAGENAME}}}} regjistri i shtypjeve].
+Ju akoma mund ta [$1 shikoni këtë version] nëse doni të vazhdoni.",
+'rev-deleted-diff-view'       => "Një nga versionet e këtij ndryshimi është '''grisur'''.
+Ju mund ta shikoni këtë ndryshim; detajet mund të gjenden te [{{fullurl:{{#Special:Log}}/delete|page={{FULLPAGENAMEE}}}} regjistri i grisjeve].",
+'rev-suppressed-diff-view'    => "Një nga versionet e këtij ndryshimi është '''shtypur'''.
+Ju mund ta shikoni këtë ndryshim; detajet mund të gjenden te [{{fullurl:{{#Special:Log}}/suppress|page={{FULLPAGENAMEE}}}} regjistri i shtypjeve].",
 'rev-delundel'                => 'trego/fshih',
 'rev-showdeleted'             => 'Trego',
 'revisiondelete'              => 'Shlyj/Reparo versionet',
@@ -974,7 +1058,7 @@ Si një administrator ju mund ta shikoni këtë ndryshim; detajet mund të gjend
  *: Adresat në shtëpi''dhe numrat e telefonit, numrat e sigurimeve shoqërore, etj''",
 'revdelete-legend'            => 'Vendosni kufizimet për versionin:',
 'revdelete-hide-text'         => 'Fshihe tekstin e versionit',
-'revdelete-hide-image'        => 'Fshih përmbajtjen skedare',
+'revdelete-hide-image'        => 'Fshih përmbajtjen skedës',
 'revdelete-hide-name'         => 'Fshihe veprimin dhe shënjestrën',
 'revdelete-hide-comment'      => 'fshih komentin e redaktimit',
 'revdelete-hide-user'         => 'Fshihe emrin/IP-në të redaktuesit',
@@ -986,8 +1070,6 @@ Si një administrator ju mund ta shikoni këtë ndryshim; detajet mund të gjend
 'revdelete-unsuppress'        => 'Hiq kufizimet nga versionet e restauruara',
 'revdelete-log'               => 'Arsyeja:',
 'revdelete-submit'            => 'Aplikoni tek {{PLURAL:$1|revision|versionet}} e zgjedhura',
-'revdelete-logentry'          => 'Pamja e versionit u ndryshua për [[$1]]',
-'logdelete-logentry'          => 'u ndryshua dukshmëria e ngjarjes së [[$1]]',
 'revdelete-success'           => "'''Dukshmëria e versioneve u vendos me sukses.'''",
 'revdelete-failure'           => "' ' 'Dukshmëria e rivizionit nuk mund të përditëohet\"
 \$1",
@@ -999,15 +1081,6 @@ $1",
 'revdel-restore-visible'      => 'rivizionet e dukshme',
 'pagehist'                    => 'Historiku i faqes',
 'deletedhist'                 => 'Historiku i grisjeve',
-'revdelete-content'           => 'përmbajtja',
-'revdelete-summary'           => 'përmbledhja redaktimit',
-'revdelete-uname'             => 'përdoruesi',
-'revdelete-restricted'        => 'u vendosën kufizime për administruesit',
-'revdelete-unrestricted'      => 'u hoqën kufizimet për administruesit',
-'revdelete-hid'               => 'u fsheh $1',
-'revdelete-unhid'             => 'u tregua $1',
-'revdelete-log-message'       => '$1 për $2 {{PLURAL:$2|version|versione}}',
-'logdelete-log-message'       => '$1 për $2 {{PLURAL:$2|ngjarje|ngjarje}}',
 'revdelete-hide-current'      => 'Gabim në fshehje të pikës me datë $2, $1: ky është rivizioni i tanishëm. 
 Nuk mund të fshihet',
 'revdelete-show-no-access'    => 'Gabim gjatë shfaqjes së artikullit të datës $2, $1: ky artikull ka qenë i shënuar si "i kufizuar".
@@ -1030,7 +1103,8 @@ Ju lutemi kontrolloni regjistrat.',
 
 # Suppression log
 'suppressionlog'     => 'Regjistri i ndalimeve',
-'suppressionlogtext' => 'Më poshtë jepet një listë grisjesh dhe bllokimesh që kanë të bëjnë me përmbatje të fshehur nga administruesit. Shikoni [[Special:IPBlockList|listën e IP bllokimeve]] për një listë të bllokimeve dhe përzënieve në fuqi.',
+'suppressionlogtext' => 'Më poshtë është një listë e grisjeve dhe bllokimeve duke përfshirë përmbajtjen e fshehur nga administratorët.
+Shiko [[Special:BlockList|listën e bllokimeve IP]] për listën e përjashtimeve operacionale dhe bllokimeve aktuale.',
 
 # History merging
 'mergehistory'                     => 'Bashko historikët e faqeve',
@@ -1070,7 +1144,7 @@ Kini kujdes se përdorimi i lidhjeve të shfletimit do të ndryshojë përzgjedh
 'lineno'                   => 'Rreshti $1:',
 'compareselectedversions'  => 'Krahasoni versionet e zgjedhura',
 'showhideselectedversions' => 'Shfaq/fshih versionet e zgjedhura',
-'editundo'                 => 'ktheje',
+'editundo'                 => 'zhbëje',
 'diff-multi'               => '({{PLURAL:$1|Një version i ndërmjetshëm|$1 versione të ndërmjetshme}} nga {{PLURAL:$2|një përdorues|$2 përdorues}} i/të pashfaqur)',
 'diff-multi-manyusers'     => '({{PLURAL:$1|Një versioni i ndërmjetshëm|$1 versione të ndërmjetshme}} nga më shumë se $2 {{PLURAL:$2|përdorues|përdorues}} i/të pashfaqur)',
 
@@ -1139,12 +1213,13 @@ Kini kujdes se përdorimi i lidhjeve të shfletimit do të ndryshojë përzgjedh
 'searchdisabled'                   => '<p>Kërkimi me tekst të plotë është bllokuar tani për tani ngaqë shërbyesi është shumë i ngarkuar; shpresojmë ta nxjerrim prapë në gjendje normale pas disa punimeve. Deri atëherë mund të përdorni Google-in për kërkime:</p>',
 
 # Quickbar
-'qbsettings'               => 'Vendime të shpejta',
-'qbsettings-none'          => 'Asnjë',
-'qbsettings-fixedleft'     => 'Lidhur majtas',
-'qbsettings-fixedright'    => 'Lidhur djathtas',
-'qbsettings-floatingleft'  => 'Pezull majtas',
-'qbsettings-floatingright' => 'Pezull djathtas',
+'qbsettings'                => 'Vendime të shpejta',
+'qbsettings-none'           => 'Asnjë',
+'qbsettings-fixedleft'      => 'Lidhur majtas',
+'qbsettings-fixedright'     => 'Lidhur djathtas',
+'qbsettings-floatingleft'   => 'Pezull majtas',
+'qbsettings-floatingright'  => 'Pezull djathtas',
+'qbsettings-directionality' => 'Fikse, në varësi të skriptës së drejtuar në gjuhën tuaj',
 
 # Preferences page
 'preferences'                   => 'Parapëlqimet',
@@ -1155,19 +1230,22 @@ Kini kujdes se përdorimi i lidhjeve të shfletimit do të ndryshojë përzgjedh
 'changepassword'                => 'Ndërroni fjalëkalimin',
 'prefs-skin'                    => 'Pamja',
 'skin-preview'                  => 'Parapamje',
-'prefs-math'                    => 'Formula',
 'datedefault'                   => 'Parazgjedhje',
+'prefs-beta'                    => 'Karakteristikat Beta',
 'prefs-datetime'                => 'Data dhe Ora',
+'prefs-labs'                    => 'Karakteristikat laboratorik',
 'prefs-personal'                => 'Përdoruesi',
 'prefs-rc'                      => 'Ndryshime së fundmi',
 'prefs-watchlist'               => 'Lista mbikqyrëse',
 'prefs-watchlist-days'          => 'Numri i ditëve të treguara tek lista mbikqyrëse:',
-'prefs-watchlist-days-max'      => 'Maksimum 7 ditë',
+'prefs-watchlist-days-max'      => 'Maksimumi $1 ditë',
 'prefs-watchlist-edits'         => 'Numri i redaktimeve të treguara tek lista mbikqyrëse e zgjeruar:',
-'prefs-watchlist-edits-max'     => '(numri maksimal: 1000)',
+'prefs-watchlist-edits-max'     => 'Numri maksimal: 1000',
 'prefs-watchlist-token'         => 'Lista mbikqyrëse shenjë:',
 'prefs-misc'                    => 'Të ndryshme',
 'prefs-resetpass'               => 'Ndrysho fjalëkalimin',
+'prefs-changeemail'             => 'Ndrysho postën elektronike',
+'prefs-setemail'                => 'Vendos adresën e postës elektronike',
 'prefs-email'                   => 'Opsionet E-mail',
 'prefs-rendering'               => 'Dukja',
 'saveprefs'                     => 'Ruaj parapëlqimet',
@@ -1179,8 +1257,6 @@ Kini kujdes se përdorimi i lidhjeve të shfletimit do të ndryshojë përzgjedh
 'columns'                       => 'Kollona:',
 'searchresultshead'             => 'Kërkimi',
 'resultsperpage'                => 'Sa përputhje të tregohen për faqe:',
-'contextlines'                  => 'Sa rreshta të tregohen për përputhje:',
-'contextchars'                  => 'Sa germa të tregohen për çdo rresht:',
 'stub-threshold'                => 'Kufiri për formatin e <a href="#" class="stub">lidhjeve cung</a> (B):',
 'stub-threshold-disabled'       => 'Çaktivizuar',
 'recentchangesdays'             => 'Numri i ditëve të treguara në ndryshime së fundmi:',
@@ -1193,7 +1269,7 @@ Kini kujdes se përdorimi i lidhjeve të shfletimit do të ndryshojë përzgjedh
 'savedprefs'                    => 'Parapëlqimet tuaja janë ruajtur.',
 'timezonelegend'                => 'Zona kohore:',
 'localtime'                     => 'Ora lokale:',
-'timezoneuseserverdefault'      => 'Përdor serverin e parazgjedhur',
+'timezoneuseserverdefault'      => 'wiki default Përdorimi ( $1 )',
 'timezoneuseoffset'             => 'Tjera (zgjidh rajonin)',
 'timezoneoffset'                => 'Ofset¹:',
 'servertime'                    => 'Ora e shërbyesit:',
@@ -1228,7 +1304,8 @@ Kjo nuk mundet me u zhbâ.',
 'prefs-registration'            => 'Koha e regjistrimit:',
 'yourrealname'                  => 'Emri juaj i vërtetë*',
 'yourlanguage'                  => 'Ndërfaqja gjuhësore',
-'yourvariant'                   => 'Varianti',
+'yourvariant'                   => 'Varianti i gjuhës së përmbajtjes:',
+'prefs-help-variant'            => 'Varianti ose ortografia juaj e preferuar për të shfaqur përmbajtjen e faqeve në këtë wiki.',
 'yournick'                      => 'Nënshkrimi',
 'prefs-help-signature'          => 'Komentet në faqet e diskutimit duhet të nënshkruhen me "<nowiki>~~~~</nowiki>" të cilat do të konvertohen me emrin tuaj të përdoruesit dhe kohën.',
 'badsig'                        => 'Sintaksa e signaturës është e pavlefshme, kontrolloni HTML-in.',
@@ -1243,6 +1320,7 @@ Kjo informatë është publike.',
 'email'                         => 'Email',
 'prefs-help-realname'           => '* Emri i vërtetë nuk është i domosdoshëm: Nëse e jipni do të përmendeni si kontribues për punën që ke bërë.',
 'prefs-help-email'              => "Posta elektronike është zgjedhore, por ju mundëson që fjalëkalimi i ri të ju dërgohet nëse e harroni atë. Gjithashtu mund të zgjidhni nëse doni të tjerët t'ju shkruajnë ose jo përmes faqes suaj të diskutimit pa patur nevojë të zbulojnë identitetin tuaj.",
+'prefs-help-email-others'       => 'Mundeni gjithashtu të zgjidhni të kontaktoheni nga të tjerët përmes faqeve tuaja të diskutimit ose përdoruesit pa e treguar identitetin.',
 'prefs-help-email-required'     => 'Nevojitet e-mail adresa .',
 'prefs-info'                    => 'Informatat bazike',
 'prefs-i18n'                    => 'Internacionalizimi',
@@ -1268,7 +1346,7 @@ Kjo informatë është publike.',
 'userrights-lookup-user'       => 'Ndrysho grupet e përdoruesit',
 'userrights-user-editname'     => 'Fusni emrin e përdoruesit:',
 'editusergroup'                => 'Redakto grupet e përdoruesve',
-'editinguser'                  => "Duke ndryshuar privilegjet e përdoruesit '''[[User:$1|$1]]''' ([[User talk:$1|{{int:talkpagelinktext}}]]{{int:pipe-separator}}[[Special:Contributions/$1|{{int:contribslink}}]])",
+'editinguser'                  => "Duke ndryshuar privilegjet e përdoruesit '''[[User:$1|$1]]''' $2",
 'userrights-editusergroup'     => 'Anëtarësimi tek grupet',
 'saveusergroups'               => 'Ruaj Grupin e Përdoruesve',
 'userrights-groupsmember'      => 'Anëtar i:',
@@ -1281,7 +1359,7 @@ Kjo informatë është publike.',
 'userrights-no-interwiki'      => 'Nuk keni leje për të ndryshuar privilegjet e përdoruesve në wiki të tjera.',
 'userrights-nodatabase'        => 'Regjistri $1 nuk ekziston ose nuk është vendor.',
 'userrights-nologin'           => 'Duhet të [[Special:UserLogin|hyni brenda]] me një llogari administrative për të ndryshuar privilegjet e përdoruesve.',
-'userrights-notallowed'        => 'Llogaria juaj nuk ju lejon të ndryshoni privilegjet e përdoruesve.',
+'userrights-notallowed'        => 'llogaria juaj nuk ka leje për të shtuar ose hequr privilegjet e përdoruesve.',
 'userrights-changeable-col'    => 'Grupe që mund të ndryshoni',
 'userrights-unchangeable-col'  => "Grupe që s'mund të ndryshoni",
 
@@ -1295,12 +1373,12 @@ Kjo informatë është publike.',
 'group-suppress'      => 'Kujdestari',
 'group-all'           => '(të gjitha)',
 
-'group-user-member'          => 'Përdorues',
-'group-autoconfirmed-member' => 'Përdorues i vërtetuar automatikisht',
-'group-bot-member'           => 'Robot',
-'group-sysop-member'         => 'Administrues',
-'group-bureaucrat-member'    => 'Burokrat',
-'group-suppress-member'      => 'Kujdestari',
+'group-user-member'          => '{{GENDER:$1|përdorues|përdoruese}}',
+'group-autoconfirmed-member' => '{{GENDER:$1|përdorues i vërtetuar automatikisht|përdoruese e vërtetuar automatikisht}}',
+'group-bot-member'           => '{{GENDER:$1|robot|robote}}',
+'group-sysop-member'         => '{{GENDER:$1|administrues|administruese}}',
+'group-bureaucrat-member'    => '{{GENDER:$1|burokrat|burokrate}}',
+'group-suppress-member'      => '{{GENDER:$1|kujdestar|kujdestare}}',
 
 'grouppage-user'          => '{{ns:project}}:Përdorues',
 'grouppage-autoconfirmed' => '{{ns:project}}:Përdorues të vërtetuar automatikisht',
@@ -1362,30 +1440,30 @@ Kjo informatë është publike.',
 'right-autopatrol'            => 'A e vet redaktimet e shënuar automatikisht patrulluar',
 'right-patrolmarks'           => 'Shiko ndryshimet e fundit shënon patrullë',
 'right-unwatchedpages'        => 'Shiko listën e faqeve të pa vëzhguara',
-'right-trackback'             => 'Dërgoni një ndjekëse',
 'right-mergehistory'          => 'Bashko historinë e faqeve',
 'right-userrights'            => 'Redakto të gjitha të drejtat e përdoruesit',
 'right-userrights-interwiki'  => 'Ndrysho të drejtat e përdoruesve në wiki të tjera',
 'right-siteadmin'             => 'Mbyll ose hap bazën e të dhënave',
-'right-reset-passwords'       => 'Rivendos fjalëkalimet e përdoruesit të tjerë',
 'right-override-export-depth' => 'Eksoprto faqet duke përfshirë e lidhura deri në një thellësi prej 5',
 'right-sendemail'             => 'Dërgo e-mail tek përdoruesit e tjerë',
+'right-passwordreset'         => 'Shiko e-mail-et e rivendosjes së fjalëkalimit',
 
 # User rights log
-'rightslog'      => 'Regjistri i privilegjeve',
-'rightslogtext'  => 'Ky është një regjistër për ndryshimet e titujve të përdoruesve.',
-'rightslogentry' => 'të drejtat e $1 u ndryshuan prej $2 në $3',
-'rightsnone'     => '(asgjë)',
+'rightslog'                  => 'Regjistri i privilegjeve të përdoruesit',
+'rightslogtext'              => 'Ky është një regjistër për ndryshimet e privilegjeve të përdoruesit.',
+'rightslogentry'             => 'u ndryshua anëtarësimi i grupit për $1 nga $2 tek $3',
+'rightslogentry-autopromote' => 'automatikisht u rrit në datyrë nga $2 në $3',
+'rightsnone'                 => '(asgjë)',
 
 # Associated actions - in the sentence "You do not have permission to X"
 'action-read'                 => 'lexo këtë faqe',
 'action-edit'                 => 'redakto këtë faqe',
-'action-createpage'           => 'hapë faqe',
-'action-createtalk'           => 'hap faqe diskutimi',
-'action-createaccount'        => 'hapë këtë llogari',
+'action-createpage'           => 'krijo faqe',
+'action-createtalk'           => 'krijo faqe diskutimi',
+'action-createaccount'        => 'krijo këtë llogari përdoruesi',
 'action-minoredit'            => 'shëno këtë redaktim si të vogël',
-'action-move'                 => 'lëviz këtë faqe',
-'action-move-subpages'        => 'zhvendos këtë faqe dhe nënfaqet që ka',
+'action-move'                 => 'zhvendos këtë faqe',
+'action-move-subpages'        => 'zhvendos këtë faqe dhe nënfaqet e saj',
 'action-move-rootuserpages'   => 'lëviz rrënjët e faqeve të përdoruesve',
 'action-movefile'             => 'lëviz këtë skedë',
 'action-upload'               => 'ngarko këtë skedë',
@@ -1402,16 +1480,17 @@ Kjo informatë është publike.',
 'action-suppressionlog'       => 'shiko këtë regjistër privat',
 'action-block'                => 'blloko përdoruesin',
 'action-protect'              => 'ndrysho nivelin e mbrojtjes për këtë faqe',
+'action-rollback'             => 'ritkthen shpejt redaktimet e përdoruesit të fundit që redaktoi një faqe të veçantë',
 'action-import'               => 'importo këtë faqe nga një wiki tjetër',
 'action-importupload'         => 'importo këtë faqe nga një ngarkim i një skedari',
 'action-patrol'               => 'shëno redaktimin e tjerëve si të patrulluar',
 'action-autopatrol'           => 'shëno redaktimet tua si të patrulluara',
 'action-unwatchedpages'       => 'shiko listën e faqeve të pa vrojtuara',
-'action-trackback'            => 'dërgo një ndjekës',
 'action-mergehistory'         => 'bashko historikun e kësaj faqeje',
 'action-userrights'           => 'ndrysho të gjitha të drejtat e përdoruesit',
 'action-userrights-interwiki' => 'ndrysho të drejtat e përdoruesve në wiki-t tjera',
 'action-siteadmin'            => 'mbyll ose hap bazën e të dhënave',
+'action-sendemail'            => 'dërgo e-maile',
 
 # Recent changes
 'nchanges'                          => '$1 {{PLURAL:$1|ndryshim|ndryshime}}',
@@ -1443,15 +1522,17 @@ Kjo informatë është publike.',
 'number_of_watching_users_pageview' => '[$1 duke u mbikqyrur nga {{PLURAL:$1|përdorues|përdorues}}]',
 'rc_categories'                     => 'Kufizimi i kategorive (të ndara me "|")',
 'rc_categories_any'                 => 'Të gjitha',
+'rc-change-size-new'                => '$1 {{PLURAL:$1|bajt|bajtë}} pas ndryshimit',
 'newsectionsummary'                 => '/* $1 */ seksion i ri',
 'rc-enhanced-expand'                => 'Trego detajet (kërkon JavaScript)',
 'rc-enhanced-hide'                  => 'Fshih detajet',
+'rc-old-title'                      => 'fillimisht i krijuar si "$1"',
 
 # Recent changes linked
-'recentchangeslinked'          => 'Ndryshimet fqinje',
-'recentchangeslinked-feed'     => 'Ndryshimet fqinje',
-'recentchangeslinked-toolbox'  => 'Ndryshimet fqinje',
-'recentchangeslinked-title'    => 'Ndryshimet në lidhje me "$1"',
+'recentchangeslinked'          => 'Ndryshime të ndërvarura',
+'recentchangeslinked-feed'     => 'Ndryshime të ndërvarura',
+'recentchangeslinked-toolbox'  => 'Ndryshime të ndërvarura',
+'recentchangeslinked-title'    => 'Ndryshime që kanë lidhje me "$1"',
 'recentchangeslinked-noresult' => 'Nuk ka pasur ndryshime tek faqet e lidhura gjatë kohës së dhënë.',
 'recentchangeslinked-summary'  => "Kjo është një listë e ndryshimeve së fundmi të faqeve të lidhura nga faqja e dhënë (ose bëjnë pjesë tek kategoria e dhënë).
 Faqet [[Special:Watchlist|nën mbikqyrjen tuaj]] duken të '''theksuara'''.",
@@ -1476,9 +1557,9 @@ Për të parë ose kërkuar skeda të ngarkuara më parë, shkoni tek [[Special:
 (ri)ngarkimet janë gjithashtu të regjistruara tek [[Special:Log/upload|regjistri i ngarkimeve]], grisjet tek [[Special:Log/delete|regjistri i grisjeve]].
 
 Për të përfshirë një skedë në një faqe, përdorni një nga format e mëposhtme:
-* '''<tt><nowiki>[[</nowiki>{{ns:file}}<nowiki>:Skeda.jpg]]</nowiki></tt>''' për të përdorur versionin e plotë të skedës
-* '''<tt><nowiki>[[</nowiki>{{ns:file}}<nowiki>:Skeda.png|200px|thumb|left|alt text]]</nowiki></tt>''' për të përdorur nje interpretim prej 200 piksel në të majtë me 'alt tekst' si përshkrim
-* '''<tt><nowiki>[[</nowiki>{{ns:media}}<nowiki>:Skeda.ogg]]</nowiki></tt>''' për të lidhur skedën direkt, pa e shfaqur atë",
+* '''<code><nowiki>[[</nowiki>{{ns:file}}<nowiki>:Skeda.jpg]]</nowiki></code>''' për të përdorur versionin e plotë të skedës
+* '''<code><nowiki>[[</nowiki>{{ns:file}}<nowiki>:Skeda.png|200px|thumb|left|alt text]]</nowiki></code>''' për të përdorur nje interpretim prej 200 piksel në të majtë me 'alt tekst' si përshkrim
+* '''<code><nowiki>[[</nowiki>{{ns:media}}<nowiki>:Skeda.ogg]]</nowiki></code>''' për të lidhur skedën direkt, pa e shfaqur atë",
 'upload-permitted'            => 'Llojet e lejuara të skedave: $1.',
 'upload-preferred'            => 'Llojet e parapëlqyera të skedave: $1.',
 'upload-prohibited'           => 'Llojet e ndaluara të skedave: $1.',
@@ -1497,14 +1578,15 @@ Të gjithë orët janë me orën e shërbyesit.',
 'ignorewarnings'              => 'Shpërfill çdo paralajmërim',
 'minlength1'                  => 'Emri i dosjes duhet të jetë së paku një fjalë',
 'illegalfilename'             => 'Skeda "$1" përmban gërma që nuk lejohen tek titujt e faqeve. Ju lutem ndërrojani emrin dhe provoni ta ngarkoni përsëri.',
+'filename-toolong'            => 'Emrat e skedave nuk mund të jenë më të gjata se 240 bajt.',
 'badfilename'                 => 'Emri i skedës është ndërruar në "$1".',
-'filetype-mime-mismatch'      => 'Prapashtesa e skedarit nuk përshtatet me tipin MIME.',
+'filetype-mime-mismatch'      => 'Prapashtesa .$1 e skedarit ($2) nuk përshtatet me tipin MIME.',
 'filetype-badmime'            => 'Skedat e llojit MIME "$1" nuk lejohen për ngarkim.',
 'filetype-bad-ie-mime'        => 'Nuk mund të ngarkoni këtë skedë sepse Internet Explorer do ta zbulonte si "$1", që është një lloj skede e papranuar dhe potencialisht e rrezikshme.',
 'filetype-unwanted-type'      => "'''\".\$1\"''' është një lloj skede i padëshiruar.
 Parapëlqehet {{PLURAL:\$3|skeda të jetë e |skedat të jenë të}} llojit \$2.",
-'filetype-banned-type'        => "'''\".\$1\"''' nuk është lloj i lejuar i skedave.
-Si {{PLURAL:\$3|i lejuar është lloji i skedës|të lejuara janë llojet e skedave}} \$2.",
+'filetype-banned-type'        => '\'\'\'".$1"\'\'\' {{PLURAL:$4|nuk është një lloj i skedës së lejuar|nuk janë lloje të lejuara të skedave}}.
+{{PLURAL:$3|Lloji i lejuar i skedës është|Llojet e lejuara të skedave janë}} $2.',
 'filetype-missing'            => 'Skeda nuk ka mbaresë (si p.sh. ".jpg").',
 'empty-file'                  => 'Skeda që paraqitët ishte bosh.',
 'file-too-large'              => 'Skeda që paraqitët ishte shumë e madhe.',
@@ -1521,20 +1603,21 @@ Si {{PLURAL:\$3|i lejuar është lloji i skedës|të lejuara janë llojet e sked
 kjo skedë është $2.',
 'largefileserver'             => 'Skeda është më e madhe se sa serveri e lejon këtë.',
 'emptyfile'                   => 'Skeda që keni dhënë është bosh ose mbi madhësinë e lejushme. Kjo gjë mund të ndodhi nëse shtypni emrin gabim, prandaj kontrolloni nëse dëshironi të jepni skedën me këtë emër.',
-'fileexists'                  => "Ekziston një skedë me atë emër, ju lutem kontrolloni '''<tt>[[:$1]]</tt>''' në qoftë se nuk jeni të sigurt nëse dëshironi ta zëvendësoni.
-[[$1|thumb]]",
-'filepageexists'              => "Përshkrimi i faqes për këtë skedë është krijuar tek '''<tt>[[:$1]]</tt>''', por asnjë skedë me këtë emër nuk ekziston.
+'windows-nonascii-filename'   => 'Ky wiki nuk e mbështet emrin e dokumentit me karaktere të veçanta.',
+'fileexists'                  => 'Ekziston një skedë me atë emër, ju lutem kontrolloni <strong>[[:$1]]</strong> në qoftë se nuk jeni të sigurt nëse dëshironi ta zëvendësoni.
+[[$1|thumb]]',
+'filepageexists'              => 'Përshkrimi i faqes për këtë skedë është krijuar tek <strong>[[:$1]]</strong>, por asnjë skedë me këtë emër nuk ekziston.
 Përmbledhja që shkruat nuk do të shfaqet në përshkrimin e faqes.
 Për ta bërë përmbledhjen tuaj të dukshme atje, ju duhet ta redaktoni automatikisht.
-[[$1|thumb]]",
-'fileexists-extension'        => "Ekziston një skedë me emër të ngjashëm: [[$2|thumb]]
-* Emri i skedës në ngarkim: '''<tt>[[:$1]]</tt>'''
-* Emri i skedës ekzistuese: '''<tt>[[:$2]]</tt>'''
-Ju lutem zgjidhni një emër tjetër.",
+[[$1|thumb]]',
+'fileexists-extension'        => 'Ekziston një skedë me emër të ngjashëm: [[$2|thumb]]
+* Emri i skedës në ngarkim: <strong>[[:$1]]</strong>
+* Emri i skedës ekzistuese: <strong>[[:$2]]</strong>
+Ju lutem zgjidhni një emër tjetër.',
 'fileexists-thumbnail-yes'    => "Kjo skedë duket se është një figurë me madhësi të zvogëluar ''(figurë përmbledhëse)''. [[$1|thumb]]
-Ju lutem kontrolloni skedën '''<tt>[[:$1]]</tt>'''.
+Ju lutem kontrolloni skedën <strong>[[:$1]]</strong>.
 Nëse skeda e kontrolluar është e së njëjtës madhësi me origjinalen atëherë nuk ka nevojë të ngarkoni një figurë përmbledhëse.",
-'file-thumbnail-no'           => "Emri i skedës fillon me '''<tt>$1</tt>'''.
+'file-thumbnail-no'           => "Emri i skedës fillon me <strong>$1</strong>.
 Duket se është një figurë me madhësi të zvogëluar ''(thumbnail)''.
 Nëse keni këtë figurë me madhësi të plotë ju lutem të ngarkoni atë, përndryshe ju lutem të ndryshoni emrin e skedës.",
 'fileexists-forbidden'        => 'Ekziston një skedë me të njëjtin emër. Ju lutemi kthehuni mbrapsht dhe ngarkoni këtë skedë me një emër të ri. 
@@ -1557,6 +1640,8 @@ Ju duhet të kontrolloni historikun e grisjes të asaj skede përpara se ta ri-n
 Ju lutemi kontrolloni parametrat e ngarkimeve të skedave.',
 'uploadscripted'              => 'Skeda përmban HTML ose kode të tjera që mund të interpretohen gabimisht nga një shfletues.',
 'uploadvirus'                 => 'Skeda përmban një virus! Detaje: $1',
+'uploadjava'                  => 'Dokumenti është në formatin ZIP i cili përmban Java. class dokumente.
+Ngarkimi i Java dokumenteve nuk është i lejuar, sepse ato mund të shkaktojnë kufizime të sigurisë për ti anashkaluar.',
 'upload-source'               => 'Burimi i skedës',
 'sourcefilename'              => 'Emri i skedës:',
 'sourceurl'                   => 'Burimi URL:',
@@ -1566,10 +1651,6 @@ Ju lutemi kontrolloni parametrat e ngarkimeve të skedave.',
 'upload-options'              => 'Opsionet e ngarkimit',
 'watchthisupload'             => 'Mbikqyre këtë skedë',
 'filewasdeleted'              => 'Një skedë më këtë emër është ngarkuar një here dhe pastaj është grisur. Duhet të shikoni $1 përpara se ta ngarkoni përsëri.',
-'upload-wasdeleted'           => "'''Vini re: Po ngarkoni një skedë që është grisur më parë.'''
-
-Duhet të mendoheni nëse është e pranueshme ngarkimi i kësaj skede.
-Regjistri i grisjes së skedës jepet më poshtë:",
 'filename-bad-prefix'         => "Emri i skedës që po ngarkoni fillon me '''\"\$1\"''' dhe nuk është veçantisht përshkrues pasi përdoret nga shumë kamera.
 Ju lutem zgjidhni një emër më përshkrues për skedën tuaj.",
 'upload-success-subj'         => 'Dhënie e sukseshme',
@@ -1594,23 +1675,76 @@ Nëse problemi vazhdon atëherë kontaktoni një [[Special:ListUsers/sysop|admin
 'upload-unknown-size'       => 'Madhësia e panjohur',
 'upload-http-error'         => 'Ndodhi një gabim HTTP: $1',
 
+# File backend
+'backend-fail-stream'        => 'Nuk mund të kalojë skedën $1.',
+'backend-fail-backup'        => 'Nuk mund të rezervojë skedën $1.',
+'backend-fail-notexists'     => 'Skeda $1 nuk ekziston.',
+'backend-fail-hashes'        => 'Nuk mund të marrë rrëmujat e skedave për krahasim.',
+'backend-fail-notsame'       => 'Një skedë joidentike ekziston tashmë tek $1.',
+'backend-fail-invalidpath'   => '$1 nuk është një rrugë e vlefshme ruajtjeje.',
+'backend-fail-delete'        => 'Nuk mund të grisë skedën $1.',
+'backend-fail-alreadyexists' => 'Skeda $1 ekziston tashmë.',
+'backend-fail-store'         => 'Nuk mund të ruajë skedën $1 tek $2.',
+'backend-fail-copy'          => 'Nuk mund të kopjojë skedën $1 tek $2.',
+'backend-fail-move'          => 'Nuk mund të zhvendosë skedën $1 tek $2.',
+'backend-fail-opentemp'      => 'Nuk mund të hapë skedën e përkohshme.',
+'backend-fail-writetemp'     => 'Nuk mund të shkruajë te skeda e përkohshme.',
+'backend-fail-closetemp'     => 'Nuk mund të mbyllë skedën e përkohshme.',
+'backend-fail-read'          => 'Nuk mund të lexojë skedën $1.',
+'backend-fail-create'        => 'Nuk mund të krijojë skedën $1.',
+'backend-fail-readonly'      => 'Shërbimi i depos "$1" është për momentin vetëm-për-lexim. Arsyeja e dhënë është: "\'\'$2\'\'"',
+'backend-fail-synced'        => 'Skedari "$1" është në një gjendje të parregullt brenda proceseve të depos së brendshme',
+'backend-fail-connect'       => 'Nuk u arrit lidhja me shërbimin e depos "$1".',
+'backend-fail-internal'      => 'Një problem i panjohur ndodhi në shërbimin e depos "$1".',
+'backend-fail-contenttype'   => 'Nuk mundi të përcaktojë llojin e përmbajtjes së skedarit për ta ruajtur në "$1".',
+
+# Lock manager
+'lockmanager-notlocked'        => 'Nuk mund të zhbllokojë "$1"; nuk është e bllokuar.',
+'lockmanager-fail-closelock'   => 'Nuk mund të mbyllë kyçjen e skedës për "$1".',
+'lockmanager-fail-deletelock'  => 'Nuk mund të grisë kyçjen e skedës për "$1".',
+'lockmanager-fail-acquirelock' => 'Nuk mund të sigurojë kyçjen për "$1".',
+'lockmanager-fail-openlock'    => 'Nuk mund të hapë kyçjen e skedës për "$1".',
+'lockmanager-fail-releaselock' => 'Nuk mund të lëshojë kyçjen për "$1".',
+'lockmanager-fail-db-bucket'   => 'Nuk mund të kontaktojë mjaftueshëm baza të dhënash kyçjes në kovën $1.',
+'lockmanager-fail-db-release'  => 'Nuk mund të lëshojë kyçjet në bazën e të dhënave $1.',
+'lockmanager-fail-svr-release' => 'Nuk mund të lëshojë kyçjet në serverin $1.',
+
+# ZipDirectoryReader
+'zip-file-open-error' => 'Një gabim është hasur gjatë hapjes së dokumentit për ZIP kontrollimin.',
+'zip-wrong-format'    => 'Dokumenti i specifikuar nuk ishte ZIP dokument.',
+'zip-bad'             => 'Dokumenti është i korruptuar ose përndryshe dokument ZIP i palexueshëm.
+Ajo nuk mund të kontrollohet siç duhet për sigurinë',
+'zip-unsupported'     => 'Dokumenti është ZIP format i cili përdorë ZIP karakteristikat që nuk mbështeten nga MediaWiki.
+Ajo nuk mund të kontrollohet siç duhet për sigurinë.',
+
+# Special:UploadStash
+'uploadstash'          => 'Fshehje ngarkimi',
+'uploadstash-summary'  => 'Kjo faqe ofron qasje tek skedat të cilat janë ngarkuar (ose janë në proçes ngarkimi) por që nuk janë publikuat akoma në wiki. Këto skeda nuk janë të dukshme për këdo përveç për përdoruesin që i ka ngarkuar ato.',
+'uploadstash-clear'    => 'Spastro skedat e fshehura',
+'uploadstash-nofiles'  => 'Ju nuk keni skeda të fshehura.',
+'uploadstash-badtoken' => 'Kryerja e këtij veprimi ishte e pasuksesshme, ndoshta sepse kredencialet redaktuese tuaja kanë skaduar. Provoni përsëri.',
+'uploadstash-errclear' => 'Spastrimi i skedave ishte i pasuksesshëm.',
+'uploadstash-refresh'  => 'Rifreskoni listën e skedave',
+'invalid-chunk-offset' => 'Kompensim cope i pavlefshëm',
+
 # img_auth script messages
-'img-auth-accessdenied' => 'Refuzohet hyrja',
-'img-auth-nopathinfo'   => 'Mungon PATH_INFO.
+'img-auth-accessdenied'     => 'Refuzohet hyrja',
+'img-auth-nopathinfo'       => 'Mungon PATH_INFO.
 Shërbyesi juaj nuk e kalon këtë informacion.
 Mund të jetë CGI-bazuar dhe nuk mund të mbështesë img_auth.
-Shikoni http://www.mediawiki.org/wiki/Manual:Image_Authorization.',
-'img-auth-notindir'     => 'Kërkesa nuk është në drejtorinë e ngarkimeve të konfiguruara.',
-'img-auth-badtitle'     => 'Nuk mund të krihohej një titull i vlefshëm nga "$1".',
-'img-auth-nologinnWL'   => 'Ju nuk jeni i regjistruar dhe "$1" nuk është në listën e bardhë.',
-'img-auth-nofile'       => 'Skeda "$1" nuk ekziston.',
-'img-auth-isdir'        => 'Ju po përpiqeni të hyni në një drejtori "$1".
+Shiko https://www.mediawiki.org/wiki/Manual:Image_Authorization.',
+'img-auth-notindir'         => 'Kërkesa nuk është në drejtorinë e ngarkimeve të konfiguruara.',
+'img-auth-badtitle'         => 'Nuk mund të krihohej një titull i vlefshëm nga "$1".',
+'img-auth-nologinnWL'       => 'Ju nuk jeni i regjistruar dhe "$1" nuk është në listën e bardhë.',
+'img-auth-nofile'           => 'Skeda "$1" nuk ekziston.',
+'img-auth-isdir'            => 'Ju po përpiqeni të hyni në një drejtori "$1".
 Vetëm  qasja e skedës është e lejuar.',
-'img-auth-streaming'    => 'Duke rrejdhur "$1"',
-'img-auth-public'       => 'Funksioni i img_auth.php është për të larguar skedat nga një wiki privat.
+'img-auth-streaming'        => 'Duke rrejdhur "$1"',
+'img-auth-public'           => 'Funksioni i img_auth.php është për të larguar skedat nga një wiki privat.
 Ky wiki është i konfiguruar si një wiki publik.
 Për siguri optimale, img_auth.php është çaktivizuar.',
-'img-auth-noread'       => 'Përdoruesi nuk ka qasje për të lexuar "$1".',
+'img-auth-noread'           => 'Përdoruesi nuk ka qasje për të lexuar "$1".',
+'img-auth-bad-query-string' => 'URL ka një varg të pavlefshme pyetje.',
 
 # HTTP errors
 'http-invalid-url'      => 'Adresë URL e pavlefshme: $1',
@@ -1662,22 +1796,22 @@ Shtypni kolonat e tjera për të ndryshuar radhitjen.',
 'filehist-revert'           => 'riktheje',
 'filehist-current'          => 'e tanishme',
 'filehist-datetime'         => 'Data/Ora',
-'filehist-thumb'            => 'Parapamje',
-'filehist-thumbtext'        => 'Parapamja për versionin nga $1',
+'filehist-thumb'            => 'Thumbnail',
+'filehist-thumbtext'        => 'Thumbnail për versionin duke filluar nga $1',
 'filehist-nothumb'          => "S'ka parapamje",
 'filehist-user'             => 'Përdoruesi',
 'filehist-dimensions'       => 'Dimensionet',
 'filehist-filesize'         => 'Madhësia e skedës',
 'filehist-comment'          => 'Koment',
 'filehist-missing'          => 'Mungon skeda',
-'imagelinks'                => 'Lidhje skedash',
+'imagelinks'                => 'Përdorimi i skedës',
 'linkstoimage'              => '{{PLURAL:$1|faqe lidhet|$1 faqe lidhen}} tek kjo skedë:',
 'linkstoimage-more'         => 'Më shumë se $1 {{PLURAL:$1|lidhje faqeje|lidhje faqesh}} tek kjo skedë.
 Lista e mëposhtme tregon {{PLURAL:$1|lidhjen e parë të faqes|lidhjet e para $1 të faqeve}} vetëm tek kjo skedë.
 Një [[Special:WhatLinksHere/$2|listë e plotë]] është e mundur.',
 'nolinkstoimage'            => 'Asnjë faqe nuk lidhet tek kjo skedë.',
 'morelinkstoimage'          => 'Shikoni [[Special:WhatLinksHere/$1|më shumë lidhje]] tek kjo skedë.',
-'redirectstofile'           => 'Skeda vijuese {{PLURAL:$1|file redirects|$1 ridrejtohet}} tek kjo skedë:',
+'linkstoimage-redirect'     => '$1 (dokument përcjellës) $2',
 'duplicatesoffile'          => 'Në vijim {{PLURAL:$1|skeda është identike|$1 janë idnetike}} me këtë skedë
 ([[Special:FileDuplicateSearch/$2|më shumë detaje]]):',
 'sharedupload'              => 'Kjo skedë është nga $1 dhe mund të përdoret në projekte të tjera.',
@@ -1702,27 +1836,28 @@ Përshkrimi në [$2 faqen përshkruese të skedës] është treguar më poshtë.
 'filerevert-badversion'     => 'Nuk ka version vendor tjetër të kësaj skede në kohën e dhënë.',
 
 # File deletion
-'filedelete'                  => 'Grise $1',
-'filedelete-legend'           => 'Grise skedën',
-'filedelete-intro'            => "Jeni duke grisur '''[[Media:$1|$1]]''' së baashku me të gjithë historikun e saj.",
-'filedelete-intro-old'        => "Po grisni versionin e '''[[Media:$1|$1]]''' të [$4 $3, $2].",
-'filedelete-comment'          => 'Arsyeja:',
-'filedelete-submit'           => 'Grise',
-'filedelete-success'          => "'''$1''' është grisur.",
-'filedelete-success-old'      => "Versioni i '''[[Media:$1|$1]]''' që nga $3, $2 është grisur.",
-'filedelete-nofile'           => "'''$1''' nuk ekziston.",
-'filedelete-nofile-old'       => "Nuk ka version të arkivuar të '''$1''' me të dhënat e kërkuara.",
-'filedelete-otherreason'      => 'Arsye tjetër / shtesë:',
-'filedelete-reason-otherlist' => 'Arsye tjetër',
-'filedelete-reason-dropdown'  => '*Arsye të shpeshpërdorura për grisje:
+'filedelete'                   => 'Grise $1',
+'filedelete-legend'            => 'Grise skedën',
+'filedelete-intro'             => "Jeni duke grisur '''[[Media:$1|$1]]''' së baashku me të gjithë historikun e saj.",
+'filedelete-intro-old'         => "Po grisni versionin e '''[[Media:$1|$1]]''' të [$4 $3, $2].",
+'filedelete-comment'           => 'Arsyeja:',
+'filedelete-submit'            => 'Grise',
+'filedelete-success'           => "'''$1''' është grisur.",
+'filedelete-success-old'       => "Versioni i '''[[Media:$1|$1]]''' që nga $3, $2 është grisur.",
+'filedelete-nofile'            => "'''$1''' nuk ekziston.",
+'filedelete-nofile-old'        => "Nuk ka version të arkivuar të '''$1''' me të dhënat e kërkuara.",
+'filedelete-otherreason'       => 'Arsye tjetër / shtesë:',
+'filedelete-reason-otherlist'  => 'Arsye tjetër',
+'filedelete-reason-dropdown'   => '*Arsye të shpeshpërdorura për grisje:
 ** Kundër të drejtave të autorit
 ** Skedë kopje',
-'filedelete-edit-reasonlist'  => 'Arsye grisjeje për redaktimet',
-'filedelete-maintenance'      => 'Grisja dhe restaurimi i skedave është çaktivizuar përkohësisht gjatë mirëmbajtjes.',
+'filedelete-edit-reasonlist'   => 'Arsye grisjeje për redaktimet',
+'filedelete-maintenance'       => 'Grisja dhe restaurimi i skedave është çaktivizuar përkohësisht gjatë mirëmbajtjes.',
+'filedelete-maintenance-title' => 'Nuk mund të grisë skedën',
 
 # MIME search
 'mimesearch'         => 'Kërkime MIME',
-'mimesearch-summary' => 'Kjo faqe lejon kërkimin e skedave sipas llojit MIME. Kërkimi duhet të jetë i llojit: contenttype/subtype, p.sh. <tt>image/jpeg</tt>.',
+'mimesearch-summary' => 'Kjo faqe lejon kërkimin e skedave sipas llojit MIME. Kërkimi duhet të jetë i llojit: contenttype/subtype, p.sh. <code>image/jpeg</code>.',
 'mimetype'           => 'Lloji MIME:',
 'download'           => 'shkarkim',
 
@@ -1739,7 +1874,7 @@ Mos harroni të shihni nyje tjera të stampave para grisjes së tyre.',
 'unusedtemplateswlh'  => 'lidhje',
 
 # Random page
-'randompage'         => 'Artikull i rastit',
+'randompage'         => 'Faqe e rastit',
 'randompage-nopages' => 'Nuk ka faqe në {{PLURLA:$2|hapësirën|hapësirat}} në vijim: $1',
 
 # Random redirect
@@ -1767,18 +1902,19 @@ Mos harroni të shihni nyje tjera të stampave para grisjes së tyre.',
 'statistics-users-active-desc' => 'Përdoruesit që kanë së paku një veprim në {{PLURAL:$1|ditën|$1 ditët}} e fundit',
 'statistics-mostpopular'       => 'Faqet më të shikuara',
 
-'disambiguations'      => 'Faqe kthjelluese',
+'disambiguations'      => 'Faqet që lidhen te faqet kthjelluese',
 'disambiguationspage'  => 'Template:Kthjellim',
 'disambiguations-text' => "Faqet e mëposhtme lidhen tek një '''faqe kthjelluese'''.
 Ato duhet të kenë lidhje të drejtpërdrejtë tek artikujt e nevojshëm.<br />
 Një faqe trajtohet si faqe kthjelluese nëse përdor stampat e lidhura nga [[MediaWiki:Disambiguationspage]]",
 
-'doubleredirects'            => 'Përcjellime dopjo',
-'doubleredirectstext'        => "Kjo faqe liston faqet përcjellëse tek faqet e tjera përcjellëse.
+'doubleredirects'                   => 'Përcjellime dopjo',
+'doubleredirectstext'               => "Kjo faqe liston faqet përcjellëse tek faqet e tjera përcjellëse.
 Secili rresht përmban lidhjet tek përcjellimi i parë dhe përcjellimi i dytë, gjithashtu synimin e përcjellimit të dytë, që është zakonisht faqja synuese '''e vërtetë''', që faqja w parë duhej të ishte përcjellëse e kësaj faqeje.
 <del>Kalimet nga</del> hyrjet janë zgjidhur.",
-'double-redirect-fixed-move' => '[[$1]] u zhvendos, tani është gjendet në [[$2]]',
-'double-redirect-fixer'      => 'Rregullues zhvendosjesh',
+'double-redirect-fixed-move'        => '[[$1]] u zhvendos, tani është gjendet në [[$2]]',
+'double-redirect-fixed-maintenance' => 'Duke zgjidhur përcjellimin e dyfishtë nga [[$1]] tek [[$2]].',
+'double-redirect-fixer'             => 'Rregullues zhvendosjesh',
 
 'brokenredirects'        => 'Përcjellime të prishura',
 'brokenredirectstext'    => "Përcjellimet që vijojnë lidhen tek një artikull që s'ekziston:",
@@ -1815,6 +1951,8 @@ Secili rresht përmban lidhjet tek përcjellimi i parë dhe përcjellimi i dytë
 'wantedpages'             => 'Artikuj më të dëshiruar',
 'wantedpages-badtitle'    => 'Titull i pavlefshëm në vendosjen e rezultateve: $1',
 'wantedfiles'             => 'Skedat e dëshiruara',
+'wantedfiletext-cat'      => 'Skedarët vijues janë përdorur por nuk ekzistojnë. Skedarët nga depot e panjohura mund të listohen megjithëse nuk ekzistojnë. Ndonjë gjë pozitive e pavërtetë e tillë do të <del>largohet</del>. Për më tepër, faqet që vendosin skedarë që nuk ekzistojnë janë listuar në [[:$1]].',
+'wantedfiletext-nocat'    => 'Skedarët vijues janë përdorur por nuk ekzistojnë. Skedarët nga depot e panjohura mund të listohen megjithëse nuk ekzistojnë. Ndonjë gjë pozitive e pavërtetë e tillë do të <del>largohet</del>.',
 'wantedtemplates'         => 'Stampat e dëshiruara',
 'mostlinked'              => 'Artikuj më të lidhur',
 'mostlinkedcategories'    => 'Kategori më të lidhura',
@@ -1823,6 +1961,7 @@ Secili rresht përmban lidhjet tek përcjellimi i parë dhe përcjellimi i dytë
 'mostimages'              => 'Figura më të lidhura',
 'mostrevisions'           => 'Artikuj më të redaktuar',
 'prefixindex'             => 'Të gjitha faqet me parashtesa',
+'prefixindex-namespace'   => 'Të gjitha faqet me parashtesë (hapësira $1)',
 'shortpages'              => 'Artikuj të shkurtër',
 'longpages'               => 'Artikuj të gjatë',
 'deadendpages'            => 'Artikuj pa rrugëdalje',
@@ -1839,7 +1978,7 @@ Secili rresht përmban lidhjet tek përcjellimi i parë dhe përcjellimi i dytë
 'listusers-editsonly'     => 'Trego vetëm përdoruesit me redaktime',
 'listusers-creationsort'  => 'Radhiti sipas datës së krijimit',
 'usereditcount'           => '$1 {{PLURAL:$1|redaktim|redaktime}}',
-'usercreated'             => 'Krijuar më $1 në $2',
+'usercreated'             => '{{GENDER:$3|Krijuar}} më $1 në $2',
 'newpages'                => 'Artikuj të rinj',
 'newpages-username'       => 'Përdoruesi:',
 'ancientpages'            => 'Artikuj më të vjetër',
@@ -1855,6 +1994,7 @@ Ju lutemi, vini re se faqe të tjera në rrjet si mund të lidhin një figurë m
 'pager-newer-n'           => '{{PLURAL:$1|1 më i reja|$1 më të reja}}',
 'pager-older-n'           => '{{PLURAL:$1|1 më i vjetër|$1 më të vjetra}}',
 'suppress'                => 'Kujdestari',
+'querypage-disabled'      => 'Kjo faqe speciale është çaktivizuar për arsye të performancës.',
 
 # Book sources
 'booksources'               => 'Burime librash',
@@ -1864,8 +2004,8 @@ Ju lutemi, vini re se faqe të tjera në rrjet si mund të lidhin një figurë m
 'booksources-invalid-isbn'  => 'ISBN-ja e dhënë nuk duket të jetë e vlefshme; kontrolloni oër gabime gjatë kopjimit nga burimi origjinal.',
 
 # Special:Log
-'specialloguserlabel'  => 'Përdoruesi:',
-'speciallogtitlelabel' => 'Titulli:',
+'specialloguserlabel'  => 'Performuesi:',
+'speciallogtitlelabel' => 'Objektivi (titulli ose përdoruesi):',
 'log'                  => 'Regjistrat',
 'all-logs-page'        => 'Të gjitha regjistrat',
 'alllogstext'          => 'Kjo faqe tregon të gjithë regjistrat e mundshëm të {{SITENAME}}.
@@ -1906,12 +2046,13 @@ Shikoni edhe [[Special:WantedCategories|kategoritë e dëshiruara]].',
 'sp-deletedcontributions-contribs' => 'kontributet',
 
 # Special:LinkSearch
-'linksearch'       => 'Lidhje të jashtme',
+'linksearch'       => 'Kërkim lidhjesh të jashtme',
 'linksearch-pat'   => 'Motivi kërkimor:',
 'linksearch-ns'    => 'Hapësira:',
 'linksearch-ok'    => 'Kërko',
-'linksearch-text'  => 'Ylli zëvëndësues mund të përdoret si p.sh. "*.wikipedia.org".<br />
-Protokolle të mbështetura: <tt>$1</tt>',
+'linksearch-text'  => 'Ylli zëvëndësues mund të përdoret si p.sh. "*.wikipedia.org".
+Duhet një domen top-nivel, si p.sh. "*.org.<br />
+Protokolle të mbështetura: <code>$1<code> (mos shtoni ndonjërin nga këta në kërkimin tuaj).',
 'linksearch-line'  => '$1 lidhur nga $2',
 'linksearch-error' => 'Ylli mund të përdoret vetëm në fillim të emrit',
 
@@ -1923,7 +2064,7 @@ Protokolle të mbështetura: <tt>$1</tt>',
 
 # Special:ActiveUsers
 'activeusers'            => 'Lista e përdoruesve aktivë',
-'activeusers-intro'      => 'Kjo është një listë e përdoruesve që kanë qenë aktivë për $ {{PLURAL:$1|ditë|ditë}}.',
+'activeusers-intro'      => 'Kjo është një listë e përdoruesve që kanë qenë aktivë për $1 {{PLURAL:$1|ditë|ditë}}.',
 'activeusers-count'      => '$1 {{PLURAL:$1|redaktim|redaktime}} në {{PLURAL:$3|ditën|$3 ditët}} e fundit',
 'activeusers-from'       => 'Trego përdoruesit duke filluar prej te:',
 'activeusers-hidebots'   => 'Fshih robotët',
@@ -1931,12 +2072,8 @@ Protokolle të mbështetura: <tt>$1</tt>',
 'activeusers-noresult'   => 'Asnjë përdorues nuk u gjet.',
 
 # Special:Log/newusers
-'newuserlogpage'              => 'Regjistri i llogarive',
-'newuserlogpagetext'          => 'Ky është një regjistër i llogarive të fundit që janë hapur',
-'newuserlog-byemail'          => 'fjalëkalimi u dërgua në postën elektronike',
-'newuserlog-create-entry'     => 'Përdorues i ri',
-'newuserlog-create2-entry'    => 'krijoi llofari të re $1',
-'newuserlog-autocreate-entry' => 'Llogaria u hap automatikisht',
+'newuserlogpage'     => 'Regjistri i llogarive',
+'newuserlogpagetext' => 'Ky është një regjistër i llogarive të fundit që janë hapur',
 
 # Special:ListGroupRights
 'listgrouprights'                      => 'Grupime përdoruesish me privilegje',
@@ -1964,13 +2101,17 @@ Protokolle të mbështetura: <tt>$1</tt>',
 'emailpagetext'        => 'Mund të përdorni formularin e mëposhtëm për të dërguar e-mail tek ky përdorues.
 Adresa e email-it që shkruat tek [[Special:Preferences|preferencat tuaja]] do të duket si "Nga" adresa e email-it, pra marrësi do të ketë mundësinë t\'ju përgjigjet direkt.',
 'usermailererror'      => 'Objekti postal ktheu gabimin:',
-'defemailsubject'      => '{{SITENAME}} email',
+'defemailsubject'      => '{{SITENAME}} posta elektronike nga përdoruesi "$1"',
 'usermaildisabled'     => 'Email-i i përdoruesit çaktivizua',
 'usermaildisabledtext' => 'Ju nuk mund të dërgoni e-mail tek përdoruesit e tjerë në këtë wiki',
 'noemailtitle'         => "S'ka adresë email-i",
 'noemailtext'          => 'Ky përdorues nuk ka përcaktuar një adresë të vlefshme e-mail.',
 'nowikiemailtitle'     => 'Nuk lejohet postë elektronike',
 'nowikiemailtext'      => 'Ky përdorues ka zgjedhur të mos pranojë porosi elektronike nga përdoruesit tjerë.',
+'emailnotarget'        => 'Nofka jo ekzistuese ose e pavlefshme për marrësin',
+'emailtarget'          => 'Shkruani nofkën e marrësit',
+'emailusername'        => 'Nofka:',
+'emailusernamesubmit'  => 'Paraqit',
 'email-legend'         => 'Dërgoni porosi elektronike një përdoruesi të {{SITENAME}}',
 'emailfrom'            => 'Nga:',
 'emailto'              => 'Për:',
@@ -1995,11 +2136,11 @@ Adresa e email-it që shkruat tek [[Special:Preferences|preferencat tuaja]] do t
 'watchlistanontext'    => 'Ju lutemi $1 për të parë redaktimet e artikujve në listë tuaj mbikqyrëse.',
 'watchnologin'         => 'Nuk keni hyrë brënda',
 'watchnologintext'     => 'Duhet të keni [[Special:UserLogin|hyrë brenda]] për të ndryshuar listën mbikqyrëse.',
-'addedwatch'           => 'U shtua tek lista mbikqyrëse',
+'addwatch'             => 'Shto tek lista mbikqyrëse',
 'addedwatchtext'       => "Faqja \"[[:\$1]]\"  i është shtuar [[Special:Watchlist|listës mbikqyrëse]] tuaj. Ndryshimet e ardhshme të kësaj faqeje dhe faqes së diskutimit të saj do të jepen më poshtë, dhe emri i faqes do të duket i '''trashë''' në [[Special:RecentChanges|listën e ndryshimeve së fundmi]] për t'i dalluar më kollaj.
 
 Në qoftë se dëshironi të hiqni një faqe nga lista mbikqyrëse më vonë, shtypni \"çmbikqyre\" në tabelën e sipërme.",
-'removedwatch'         => 'U hoq nga lista mibkqyrëse',
+'removewatch'          => 'Largo nga lista mbikqyrëse',
 'removedwatchtext'     => 'Faqja "[[:$1]]" është hequr nga [[Special:Watchlist|lista mbikqyrëse e juaj]].',
 'watch'                => 'Mbikqyre',
 'watchthispage'        => 'Mbikqyre këtë faqe',
@@ -2015,13 +2156,14 @@ Në qoftë se dëshironi të hiqni një faqe nga lista mbikqyrëse më vonë, sh
 'watchmethod-list'     => 'duke parë faqet nën mbikqyrje për ndryshimet e fundit',
 'watchlistcontains'    => 'Lista mbikqyrëse e juaj ka $1 {{PLURAL:$1|faqe|faqe}}.',
 'iteminvalidname'      => "Problem me artikullin '$1', titull jo i saktë...",
-'wlnote'               => "Më poshtë {{PLURAL:$1|është $1 ndryshim i|janë $1 ndryshimet e}} {{PLURAL:$2|orës së fundit|'''$2''' orëve të fundit}}.",
+'wlnote'               => "Më poshtë {{PLURAL:$1|është ndryshimi i fundit|janë '''$1''' ndryshimet e fundit}} në {{PLUARAL:$2:orën e fundit|'''$2''' orët e fundit}}, që nga $3, $4.",
 'wlshowlast'           => 'Trego $1 orët $2 ditët $3',
 'watchlist-options'    => 'Mundësitë e listës mbikqyrëse',
 
 # Displayed when you click the "watch" button and it is in the process of watching
-'watching'   => 'Duke mbikqyrur...',
-'unwatching' => 'Duke çmbikqyrur...',
+'watching'       => 'Duke mbikqyrur...',
+'unwatching'     => 'Duke çmbikqyrur...',
+'watcherrortext' => 'Është paraqitur një gabim përderisa ndryshuat parametrat e listës suaj mbikqyrëse për "$1".',
 
 'enotif_mailer'                => 'Postieri Njoftues i {{SITENAME}}',
 'enotif_reset'                 => 'Shëno të gjitha faqet e vizituara',
@@ -2033,7 +2175,35 @@ Në qoftë se dëshironi të hiqni një faqe nga lista mbikqyrëse më vonë, sh
 'enotif_lastvisited'           => 'Shikoni $1 për të gjitha ndryshimet që prej vizitës tuaj të fundit.',
 'enotif_lastdiff'              => 'Shikoni $1 për ndryshime.',
 'enotif_anon_editor'           => 'përdorues anonim $1',
-'enotif_body'                  => 'I/E dashur $WATCHINGUSERNAME,
+'enotif_body'                  => 'I Nderuar $WATCHINGUSERNAME,
+
+
+Kjo {{SITENAME}} faqe $PAGETITLE eshte $CHANGEDORCREATED on $PAGEEDITDATE by $PAGEEDITOR, see $PAGETITLE_URL per versioni mo i ri.
+
+$NEWPAGE
+
+Editor\'s summary: $PAGESUMMARY $PAGEMINOREDIT
+Kontakto:
+mail: $PAGEEDITOR_EMAIL
+wiki: $PAGEEDITOR_WIKI
+
+There will be no other notifications in case of further changes unless you visit this page.
+You could also reset the notification flags for all your watched pages on your watchlist.
+
+Your friendly {{SITENAME}} notification system
+
+--
+To change your email notification settings, visit
+{{canonicalurl:{{#special:Preferences}}}}
+
+To change your watchlist settings, visit
+{{canonicalurl:{{#special:EditWatchlist}}}}
+
+To delete the page from your watchlist, visit
+$UNWATCHURL
+
+Feedback and further assistance:
+{{canonicalurl:{{MediaWiki:Helppage}}}}
 
 Faqja $PAGETITLE tek {{SITENAME}} është $CHANGEDORCREATED më $PAGEEDITDATE nga $PAGEEDITOR, shikoni $PAGETITLE_URL për versionin e tanishëm.
 
@@ -2050,13 +2220,13 @@ Nuk do të ketë njoftime të tjera për ndryshimet e ardhshme përveç nëse e 
              Miku juaj njoftues nga {{SITENAME}}
 
 --
-Për të ndryshuar parapëlqimet e mbikqyrjes shikoni {{fullurl:Special:Watchlist/edit}}
+Për të ndryshuar parapëlqimet e mbikqyrjes shikoni {{canonicalurl:Special:Watchlist/edit}}
 
 Për të larguar faqen nga lista juaj mbikqyrëse, shikoni 
 $UNWATCHURL
 
 Për të na dhënë përshtypjet tuaja ose për ndihmë të mëtejshme:
-{{fullurl:{{MediaWiki:Helpage}}}}',
+{{canonicalurl:{{MediaWiki:Helpage}}}}',
 
 # Delete
 'deletepage'             => 'Grise faqen',
@@ -2072,9 +2242,7 @@ Për të na dhënë përshtypjet tuaja ose për ndihmë të mëtejshme:
 'confirmdeletetext'      => 'Jeni duke grisur një faqe me tërë historinë e saj. Ju lutemi konfirmoni që po e bëni qëllimisht, që i kuptoni pasojat, dhe që po veproni në përputhje me [[{{MediaWiki:Policy-url}}]].',
 'actioncomplete'         => 'Veprimi u krye',
 'actionfailed'           => 'Veprimi dështoi',
-'deletedtext'            => '"<nowiki>$1</nowiki>" është grisur nga regjistri. Shikoni $2 për një pasqyrë të grisjeve së fundmi.',
-'deletedarticle'         => 'grisi "[[$1]]"',
-'suppressedarticle'      => '"[[$1]]" i shtypur',
+'deletedtext'            => '"$1" është grisur nga regjistri. Shikoni $2 për një pasqyrë të grisjeve së fundmi.',
 'dellogpage'             => 'Regjistri i grisjeve',
 'dellogpagetext'         => 'Më poshtë është një listë e grisjeve më të fundit.',
 'deletionlog'            => 'regjistrin e grisjeve',
@@ -2118,17 +2286,20 @@ Redaktimi i fundit është bërë nga [[User:$3|$3]] ([[User talk:$3|diskuto]]{{
 Shih listën e [[Special:ProtectedPages|faqeve të mbrojtura]] nga lista e mbrojtjeve të faqeve tani në veprim.',
 'protectedarticle'            => 'mbrojti [[$1]]',
 'modifiedarticleprotection'   => 'u ndryshua mbrojtja e faqes "[[$1]]"',
-'unprotectedarticle'          => 'liroi [[$1]]',
+'unprotectedarticle'          => 'Largo mbrojtjen nga " [[$1]] "',
 'movedarticleprotection'      => 'u bartën të dhënat e mbrojtjes nga "[[$2]]" në "[[$1]]"',
 'protect-title'               => 'Ndryshoni nivelin e mbrojtjes së "$1"',
+'protect-title-notallowed'    => 'Shiko nivelin e mbrojtjes së "$1"',
 'prot_1movedto2'              => '[[$1]] u zhvendos tek [[$2]]',
+'protect-badnamespace-title'  => 'Hapësirë e pambrojtshme',
+'protect-badnamespace-text'   => 'Faqet në këtë hapësirë nuk mund të mbrohen.',
 'protect-legend'              => 'Konfirmoni',
 'protectcomment'              => 'Arsyeja:',
 'protectexpiry'               => 'Afati',
 'protect_expiry_invalid'      => 'Data e skadimit është e gabuar.',
 'protect_expiry_old'          => 'Data e skadencës është në të shkuarën.',
 'protect-unchain-permissions' => 'Zhbllokoni opsionet e mëtejshme të mbrojtjes',
-'protect-text'                => "Këtu mund të shikoni dhe ndryshoni nivelin e mbrojtjes për faqen '''<nowiki>$1</nowiki>'''.",
+'protect-text'                => "Këtu mund të shikoni dhe ndryshoni nivelin e mbrojtjes për faqen '''$1'''.",
 'protect-locked-blocked'      => "Nuk mund të ndryshoni nivelet e mbrojtjes duke qenë i bllokuar. Kufizimet e kësaj faqeje janë '''$1''':",
 'protect-locked-dblock'       => "Nivelet e mbrojtjes nuk mund të ndryshohen pasi regjistri është i bllokuar. Kufizimet e kësaj faqeje janë '''$1''':",
 'protect-locked-access'       => "Llogaria juaj nuk ka privilegjet e nevojitura për të ndryshuar nivelin e mbrojtjes. Kufizimet e kësaj faqeje janë '''$1''':",
@@ -2140,6 +2311,7 @@ Mund të ndryshoni nivelin e mbrojtjes të kësaj faqeje por kjo nuk do të ndry
 'protect-level-sysop'         => 'Lejo vetëm administruesit',
 'protect-summary-cascade'     => 'të varura',
 'protect-expiring'            => 'skadon me $1 (UTC)',
+'protect-expiring-local'      => 'Skadon $1',
 'protect-expiry-indefinite'   => 'i pacaktuar',
 'protect-cascade'             => 'Mbrojtje e ndërlidhur - mbro çdo faqe që përfshihet në këtë faqe.',
 'protect-cantedit'            => 'Nuk mund ta ndryshoni nivelin e mbrojtjes të kësaj faqeje sepse nuk keni leje për këtë.',
@@ -2180,10 +2352,8 @@ Mund të ndryshoni nivelin e mbrojtjes të kësaj faqeje por kjo nuk do të ndry
 'undeletepagetext'             => '{{PLURAL:$1|Faqja në vazhdim është grisur, por akoma është|$1 Faqet në vazhdim janë grisur, por akoma janë}} në arkiv dhe mund të rikthehen.
 Arkivi, kohëpaskohe është e mundur të pastrohet.',
 'undelete-fieldset-title'      => 'Rikthe revizionet',
-'undeleteextrahelp'            => "Për të restauruar të gjithë historikun e faqes, lërini të gjitha kutizat të paselektuara dhe klikoni
-'''''{{int:undeletebtn}}'''''.
-Për të bërë një restaurim të pjesshëm zgjidhni kutizat koresponduese të versioneve që doni të restauroni dhe klikoni '''''{{int:undeletebtn}}'''''.
-Klikimi i '''''{{int:undeletereset}}''''' do të pastrojë fushat e komenteve dhe kutizat.",
+'undeleteextrahelp'            => "Per tu rregeluar histori, zbardh gjith kutit '''''{{int:undeletebtn}}'''''.
+To perform a selective restoration, check the boxes corresponding to the revisions to be restored, and click '''''{{int:undeletebtn}}'''''.",
 'undeleterevisions'            => '$1 {{PLURAL:$1|version u fut|versione u futën}} në arkiv',
 'undeletehistory'              => 'Nëse restauroni një faqe, të gjitha versionet do të restaurohen në histori.
 Nëse një faqe e re me të njëjtin titull është krijuar pas grisjes, versionet e restauruara do të paraqiten më mbrapa në histori.',
@@ -2200,7 +2370,6 @@ Ju mund të keni një lidhje të keqe, ose versioni mund të jetë restauruar os
 'undeletereset'                => 'Boshatis',
 'undeleteinvert'               => 'Selektim anasjelltas',
 'undeletecomment'              => 'Arsyeja:',
-'undeletedarticle'             => 'u restaurua "$1"',
 'undeletedrevisions'           => '$1 {{PLURAL:$1|version u restaurua|versione u restauruan}}',
 'undeletedrevisions-files'     => '$1 {{PLURAL:$1|version|versione}} dhe $2 {{PLURAL:$2|skedë|skeda}} janë restauruar',
 'undeletedfiles'               => '$1 {{PLURAL:$1|skedë u restaurua|skeda u restauruan}}',
@@ -2209,6 +2378,7 @@ Ju mund të keni një lidhje të keqe, ose versioni mund të jetë restauruar os
 
 Shikoni [[Special:Log/delete|regjistrin e grisjeve]] për grisjet dhe restaurimet së fundmi.",
 'undelete-header'              => 'Shikoni [[Special:Log/delete|regjistrin e grisjeve]] për faqet e grisura së fundmi.',
+'undelete-search-title'        => 'Kërko faqet e grisura',
 'undelete-search-box'          => 'Kërko faqet e grisura',
 'undelete-search-prefix'       => 'Trego faqet duke filluar nga:',
 'undelete-search-submit'       => 'Kërko',
@@ -2218,6 +2388,7 @@ Shikoni [[Special:Log/delete|regjistrin e grisjeve]] për grisjet dhe restaurime
 'undelete-cleanup-error'       => 'Gabim në grisjen e skedës "$1" të pa përdorur të arkivit .',
 'undelete-missing-filearchive' => 'Nuk mund të restaurohet arkivi ID i skedës $1 sepse nuk është në bazën të dhënave.
 Mund të jetë restauruar një herë.',
+'undelete-error'               => 'Gabim gjatë restaurimit të faqes',
 'undelete-error-short'         => 'Gabim në rikthimin e skedës: $1',
 'undelete-error-long'          => 'U hasën gabime gjatë restaurimit të skedës:
 
@@ -2226,9 +2397,12 @@ $1',
 'undelete-show-file-submit'    => 'Po',
 
 # Namespace form on various pages
-'namespace'      => 'Hapësira:',
-'invert'         => 'Kundër zgjedhjes',
-'blanknamespace' => '(Artikujt)',
+'namespace'                     => 'Hapësira:',
+'invert'                        => 'Kundër zgjedhjes',
+'tooltip-invert'                => 'Shëno këtë kuti për të fshehur ndryshimet në faqet përbrenfa hapsirës së selektuar (dhe hapsirës së lidhur nëse e shënuar)',
+'namespace_association'         => 'Hapsira e lidhur',
+'tooltip-namespace_association' => 'Shëno këtë kuti për të përfshijnë gjithashtu diskutimin apo hapsirën e subjektit e lidhur me hapësirën e zgjedhur',
+'blanknamespace'                => '(Artikujt)',
 
 # Contributions
 'contributions'       => 'Kontributet',
@@ -2267,7 +2441,7 @@ Bllokimi i funditë është më poshtë për referencë:',
 'nolinkshere-ns'           => "Nuk ka faqe në hapësirën e zgjedhur që lidhen tek '''[[:$1]]'''.",
 'isredirect'               => 'faqe përcjellëse',
 'istemplate'               => 'përfshirë',
-'isimage'                  => 'lidhje figure',
+'isimage'                  => 'Lidhja e dokumentit',
 'whatlinkshere-prev'       => '{{PLURAL:$1|e kaluara|të kaluarat $1}}',
 'whatlinkshere-next'       => '{{PLURAL:$1|tjetra|tjerat $1}}',
 'whatlinkshere-links'      => '← lidhje',
@@ -2278,13 +2452,15 @@ Bllokimi i funditë është më poshtë për referencë:',
 'whatlinkshere-filters'    => 'Filtra',
 
 # Block/unblock
+'autoblockid'                     => 'Autobllokim #$1',
+'block'                           => 'Blloko përdoruesin',
+'unblock'                         => 'Zhblloko përdoruesin',
 'blockip'                         => 'Blloko përdorues',
 'blockip-title'                   => 'Përdorues i Bllokuar',
 'blockip-legend'                  => 'Blloko përdoruesin',
 'blockiptext'                     => 'Përdorni formularin e mëposhtëm për të hequr lejen e shkrimit për një përdorues ose IP specifike.
 Kjo duhet bërë vetëm në raste vandalizmi, dhe në përputhje me [[{{MediaWiki:Policy-url}}|rregullat e {{SITENAME}}-s]].
 Plotësoni arsyen specifike më poshtë (p.sh., tregoni faqet specifike që u vandalizuan).',
-'ipaddress'                       => 'IP Adresë/përdorues',
 'ipadressorusername'              => 'Adresë IP ose emër përdoruesi',
 'ipbexpiry'                       => 'Afati',
 'ipbreason'                       => 'Arsyeja:',
@@ -2297,7 +2473,7 @@ Plotësoni arsyen specifike më poshtë (p.sh., tregoni faqet specifike që u va
 ** Sjellje arrogante/perverze
 ** Përdorimi i më shumë llogarive të përdoruesve
 ** Nofkë të papranueshme',
-'ipbanononly'                     => 'Blloko vetëm përdoruesin anonim',
+'ipb-hardblock'                   => 'Parandalo përdoruesit e kyçur për të redaktuar nga kjo IP adresë',
 'ipbcreateaccount'                => 'Mbroje krijimin e llogarive',
 'ipbemailban'                     => 'Pa mundëso dërgimin  e porosive elektronike nga përdoruesit',
 'ipbenableautoblock'              => 'Blloko edhe IP adresën që ka përdor ky përdorues deri tash, si dhe të gjitha subadresat nga të cilat mundohet ky përdorues të editoj.',
@@ -2308,12 +2484,15 @@ Plotësoni arsyen specifike më poshtë (p.sh., tregoni faqet specifike që u va
 'ipbotherreason'                  => 'Arsye tjetër/shtesë',
 'ipbhidename'                     => 'Fshih emrat e përdorueseve nga redaktimet dhe listat',
 'ipbwatchuser'                    => 'Shiko faqen e prezantimit dhe diskutimit të këtij përdoruesi',
-'ipballowusertalk'                => 'Lejoni këtë përdorues të redaktojë faqen e diskutimit të tij kur është i bllokuar',
+'ipb-disableusertalk'             => 'Parandalo këtë përdorues për të redaktuar faqe-diskutimin e tyre përderisa janë të bllokkuar',
 'ipb-change-block'                => 'Ri-blloko përdorues me këta parametra',
+'ipb-confirm'                     => 'Konfirmo bllokimin',
 'badipaddress'                    => 'Nuk ka asnjë përdorues me atë emër',
 'blockipsuccesssub'               => 'Bllokimi u bë me sukses',
 'blockipsuccesstext'              => 'Përdoruesi/IP-Adresa [[Special:Contributions/$1|$1]] u bllokua.<br />
-Shiko te [[Special:IPBlockList|Lista e përdoruesve dhe e IP adresave të bllokuara]] për të çbllokuar Përdorues/IP.',
+Shiko te [[Special:BlockList|Lista e përdoruesve dhe e IP adresave të bllokuara]] për të çbllokuar Përdorues/IP.',
+'ipb-blockingself'                => 'Ju jeni duke bllokuar vetëveten ! Jeni te sigurte qe doni te bëni këtë?',
+'ipb-confirmhideuser'             => 'Ju jeni gati për të bllokuar një përdorues me "përdorues të fshehur" të aktivizuar. Kjo do të shtypur emrin e përdoruesit në të gjitha listat dhe aktivitetet hyrëse. Jeni te sigurte qe doni ta bëni këtë ?',
 'ipb-edit-dropdown'               => 'Redakto arsyet e bllokimit',
 'ipb-unblock-addr'                => 'Çblloko $1',
 'ipb-unblock'                     => 'Çblloko përdorues dhe IP të bllokuara',
@@ -2324,17 +2503,24 @@ Shiko te [[Special:IPBlockList|Lista e përdoruesve dhe e IP adresave të blloku
 një përdoruesi ose IP adreseje të bllokuar.",
 'ipusubmit'                       => 'Hiqni këtë bllokim',
 'unblocked'                       => '[[User:$1|$1]] është çbllokuar',
+'unblocked-range'                 => '$1 është zhbllokuar',
 'unblocked-id'                    => 'Bllokimi $1 është hequr',
-'ipblocklist'                     => 'Lista e përdoruesve dhe e IP adresave të bllokuara',
+'blocklist'                       => 'Përdorues i Bllokuar',
+'ipblocklist'                     => 'Përdorues i Bllokuar',
 'ipblocklist-legend'              => 'Gjej një përdorues të bllokuar',
-'ipblocklist-username'            => 'Adresa IP ose nofka e përdoruesit:',
-'ipblocklist-sh-userblocks'       => '$1 bllokimet e llogarisë',
-'ipblocklist-sh-tempblocks'       => '$1 bllokimet e përkohshme',
-'ipblocklist-sh-addressblocks'    => '$1 bllokimet e IP',
+'blocklist-userblocks'            => 'Fsheh bllokimin e llogarisë',
+'blocklist-tempblocks'            => 'Fsheh bllokimin e përkohshëm',
+'blocklist-addressblocks'         => 'Fsheh bllokimin e IP vetanake',
+'blocklist-rangeblocks'           => 'Fsheh varg bllokimet',
+'blocklist-timestamp'             => 'Kohë-caktimi',
+'blocklist-target'                => 'Objektivi',
+'blocklist-expiry'                => 'Skadon',
+'blocklist-by'                    => 'Administratori i bllokimit',
+'blocklist-params'                => 'Parametrat e Bllokimit',
+'blocklist-reason'                => 'Arsyeja',
 'ipblocklist-submit'              => 'Kërko',
 'ipblocklist-localblock'          => 'Bllokim lokal',
 'ipblocklist-otherblocks'         => '{{PLURAL:$1|Bllokim tjetër|Bllokime të tjera}}',
-'blocklistline'                   => '$1, $2 bllokoi $3 ($4)',
 'infiniteblock'                   => 'pakufi',
 'expiringblock'                   => 'skadon më $1 në $2',
 'anononlyblock'                   => 'vetëm anonimët',
@@ -2348,6 +2534,7 @@ një përdoruesi ose IP adreseje të bllokuar.",
 'unblocklink'                     => 'çblloko',
 'change-blocklink'                => 'ndryshoje bllokun',
 'contribslink'                    => 'kontribute',
+'emaillink'                       => 'dërgo e-mail',
 'autoblocker'                     => 'Bllokuar automatikisht sepse adresa juaj IP është përdorur së fundmi nga "[[User:$1|$1]]".
 Arsyeja e dhënë për bllokimin e $1 është: "$2"',
 'blocklogpage'                    => 'Regjistri i bllokimeve',
@@ -2357,7 +2544,7 @@ Regjistri i bllokimeve është poshtë për referncë:',
 Regjistri i bllokimeve është poshtë për referncë:',
 'blocklogentry'                   => 'bllokoi [[$1]] për një kohë prej: $2 $3',
 'reblock-logentry'                => 'ndryshoi parametrat e bllokimit për [[$1]] me një kohë prej $2 $3',
-'blocklogtext'                    => 'Ky është një regjistër bllokimesh dhe çbllokimesh të përdoruesve. IP-të e bllokuara automatikisht nuk janë të dhëna. Shikoni dhe [[Special:IPBlockList|listën e IP-ve të bllokuara]] për një listë të bllokimeve të tanishme.',
+'blocklogtext'                    => 'Ky është një regjistër bllokimesh dhe çbllokimesh të përdoruesve. IP-të e bllokuara automatikisht nuk janë të dhëna. Shikoni dhe [[Special:BlockList|listën e IP-ve të bllokuara]] për një listë të bllokimeve të tanishme.',
 'unblocklogentry'                 => 'çbllokoi "$1"',
 'block-log-flags-anononly'        => 'vetëm anonimët',
 'block-log-flags-nocreate'        => 'krijimi i kontove është pamundësuar',
@@ -2371,10 +2558,10 @@ Regjistri i bllokimeve është poshtë për referncë:',
 'ipb_expiry_temp'                 => 'Bllokimet e përdoruesve të fshehur duhet të jenë të përhershme.',
 'ipb_hide_invalid'                => 'Nuk mund ta prishni këtë llogari; mund të ketë shumë redaktime.',
 'ipb_already_blocked'             => '"$1" është i bllokuar',
-'ipb-needreblock'                 => "== I bllokuar ==
-$1 është i bllokuar.
+'ipb-needreblock'                 => "$1 është i bllokuar.
 Dëshironi t'i ndryshoni parametrat?",
 'ipb-otherblocks-header'          => '{{PLURAL:$1|Bllokim tjetër|Bllokime të tjera}}',
+'unblock-hideuser'                => 'Ju nuk mund të zhbllokoni këtë përdorues, përderisa nofka e tij është fshehur.',
 'ipb_cant_unblock'                => 'Gabim: Bllokimi ID $1 nuk u gjet.
 Mund të jetë zhbllokuar.',
 'ipb_blocked_as_range'            => 'Gabim: Adresa IP $1 nuk është bllokuar direkt dhe nuk mund të zhbllokohet.
@@ -2414,6 +2601,7 @@ Kujtohuni ta [[Special:UnlockDB|çbllokoni]] pasi të keni mbaruar mirëmbajtjen
 'lockfilenotwritable' => "Skeda për bllokimin e regjistrit s'mund të shkruhet.
 Shërbyesi i rrjetit duhet të jetë në gjendje të shkruaj këtë skedë për të bllokuar ose çbllokuar regjistrin.",
 'databasenotlocked'   => 'Regjistri nuk është bllokuar.',
+'lockedbyandtime'     => '(nga {{GENDER:$1|$1}} më $2 në $3)',
 
 # Move page
 'move-page'                    => 'Zhvendose $1',
@@ -2472,9 +2660,6 @@ Në ato raste, duhet ta zhvendosni ose përpuqni faqen vetë n.q.s. dëshironi."
 'movepage-page-moved'          => 'Faqja $1 është zhvendosur tek $2.',
 'movepage-page-unmoved'        => "Faqja $1 s'mund të zhvendosej tek $2.",
 'movepage-max-pages'           => 'Maksimumi prej $1 {{PLURAL:$1|faqeje|faqesh}} është zhvendosur dhe nuk do të zhvendoset më automatikisht.',
-'1movedto2'                    => '[[$1]] u zhvendos tek [[$2]]',
-'1movedto2_redir'              => '[[$1]] u zhvendos tek [[$2]] dhe u krijua një faqe përcjellimi',
-'move-redirect-suppressed'     => 'përcjellimi i prishur',
 'movelogpage'                  => 'Regjistri i zhvendosjeve',
 'movelogpagetext'              => 'Më poshtë është një listë e faqeve të zhvendosura',
 'movesubpage'                  => '$1 nën-faqe',
@@ -2487,7 +2672,7 @@ Në ato raste, duhet ta zhvendosni ose përpuqni faqen vetë n.q.s. dëshironi."
 
 Faqja "[[:$1]]" ekziston, dëshironi ta grisni për të mundësuar zhvendosjen?',
 'delete_and_move_confirm'      => 'Po, grise faqen',
-'delete_and_move_reason'       => 'U gris për të liruar vendin për përcjellim',
+'delete_and_move_reason'       => 'U gris për të liruar vendin për përcjellim të "[[$1]]"',
 'selfmove'                     => 'Nuk munda ta zhvendos faqen sepse titulli i ri është i njëjtë me të vjetrin.',
 'immobile-source-namespace'    => 'Nuk mund të lëvizet faqja tek "$1"',
 'immobile-target-namespace'    => 'Nuk mund të lëvizen faqet tek "$1"',
@@ -2514,8 +2699,10 @@ Ju lutemi zgjidhni në emët tjetër.',
 'exporttext'        => 'Mund të eksportoni tekstin dhe historinë e redaktimit e një faqeje ose disa faqesh të mbështjesha në XML; kjo mund të importohet në një wiki tjetër që përdor softuerin MediaWiki (tani për tani, ky opsion nuk është përfshirë tek {{SITENAME}}).
 
 Për të eksportuar faqe, thjesht shtypni një emër për çdo rresht, ose krijoni lidhje të tipit [[{{#Special:Export}}/{{MediaWiki:Mainpage}}]] si [[{{MediaWiki:Mainpage}}]].',
+'exportall'         => 'Eksportoni të gjitha faqet',
 'exportcuronly'     => 'Përfshi vetëm versionin e fundit, jo të gjithë historinë',
 'exportnohistory'   => "'''Shënim:''' Eksportimi i historisë së faqes për shkaqe të rendimentit nuk është e mundshme.",
+'exportlistauthors' => 'Përfshij një listë të plotë të kontribuesve për secilën faqe',
 'export-submit'     => 'Eksporto',
 'export-addcattext' => 'Shto faqe nga kategoria:',
 'export-addcat'     => 'Shto',
@@ -2531,7 +2718,7 @@ Për të eksportuar faqe, thjesht shtypni një emër për çdo rresht, ose krijo
 'allmessagesdefault'            => 'Teksti i parazgjedhur',
 'allmessagescurrent'            => 'Teksti i tanishëshm',
 'allmessagestext'               => 'Kjo është një listë e të gjitha faqeve në hapësirën MediaWiki:
-Ju lutemi vizitoni [http://www.mediawiki.org/wiki/Localisation MediaWiki Localisation] dhe [http://translatewiki.net translatewiki.net] nëse dëshironi të kontribuoni në lokalizimin e përgjithshëm MediaWiki',
+Ju lutemi vizitoni [//www.mediawiki.org/wiki/Localisation MediaWiki Localisation] dhe [//translatewiki.net translatewiki.net] nëse dëshironi të kontribuoni në lokalizimin e përgjithshëm MediaWiki',
 'allmessagesnotsupportedDB'     => "Kjo faqe nuk mund të përdoret sepse '''\$wgUseDatabaseMessages''' është çaktivizuar.",
 'allmessages-filter-legend'     => 'Filtër',
 'allmessages-filter'            => 'Filtroni nga shteti',
@@ -2548,6 +2735,8 @@ Ju lutemi vizitoni [http://www.mediawiki.org/wiki/Localisation MediaWiki Localis
 'thumbnail_error'          => 'Gabim gjatë krijimit të figurës përmbledhëse: $1',
 'djvu_page_error'          => 'Faqja DjVu jashtë renditjes',
 'djvu_no_xml'              => 'Nuk mund të gjendet XML për skedën DjVu',
+'thumbnail-temp-create'    => 'Nuk mund të krijohej parapamja e përkohshme e skedës',
+'thumbnail-dest-create'    => 'Nuk mund të ruhej parapamja tek destinacioni',
 'thumbnail_invalid_params' => 'Parametrat thumbnail të pavlefshme',
 'thumbnail_dest_directory' => 'Në pamundësi për të krijuar dosjen e destinacionit',
 'thumbnail_image-type'     => 'Lloji i fotografisë nuk mbështetet',
@@ -2567,7 +2756,7 @@ Të gjitha veprimet e importit transwiki janë të regjistruara tek [[Special:Lo
 'import-interwiki-namespace' => 'Hapësira e destinuar:',
 'import-upload-filename'     => 'Emri i skedës:',
 'import-comment'             => 'Arsyeja:',
-'importtext'                 => 'Ju lutem eksportoni këtë skedë nga burimi wiki duke përdorur mjetin Special:Export, ruajeni në diskun tuaj dhe ngarkojeni këtu.',
+'importtext'                 => 'Ju lutem eksportoni këtë skedë nga burimi wiki duke përdorur  [[Special:Export|export utility]].! XAU Save atë në kompjuterin tuaj dhe ngarkoni këtu.',
 'importstart'                => 'Duke importuar faqet...',
 'import-revision-count'      => '$1 {{PLURAL:$1|version|versione}}',
 'importnopages'              => "S'ka faqe për tu importuar.",
@@ -2595,6 +2784,11 @@ Një dosje e përkohëshme mungon.',
 'import-token-mismatch'      => 'Humbje e të dhënave të sesionit.
 Ju lutemi provoni përsëri.',
 'import-invalid-interwiki'   => 'Nuk mund të importohet nga wiki i specifikuar.',
+'import-error-edit'          => 'Faqja "$1" nuk është importuar sepse ju nuk lejoheni ta redaktoni atë.',
+'import-error-create'        => 'Faqja "$1" nuk është importuar sepse ju nuk lejoheni ta krijoni atë.',
+'import-error-interwiki'     => 'Faqja "$1" nuk është importuar sepse emri i saj është rezervuar për lidhje të jashtme (interwiki)',
+'import-error-special'       => 'Faqja "$1" nuk është importuar sepse ajo i përket një hapësire të veçantë që nuk i lejon faqet.',
+'import-error-invalid'       => 'Faqja "$1" nuk është importuar sepse emri i saj është i palejueshëm.',
 
 # Import log
 'importlogpage'                    => 'Regjistri i importeve',
@@ -2604,80 +2798,91 @@ Ju lutemi provoni përsëri.',
 'import-logentry-interwiki'        => 'transwikoji $1',
 'import-logentry-interwiki-detail' => '$1 {{PLURAL:$!1|version|versione}} nga $2',
 
+# JavaScriptTest
+'javascripttest'                           => 'Duke testuar JavaScript',
+'javascripttest-disabled'                  => 'Ky funksion nuk është mundësuar në këtë wiki.',
+'javascripttest-title'                     => 'Duke kryer testet $1',
+'javascripttest-pagetext-noframework'      => 'Kjo faqe është rezervuar për kryerjen e testimeve JavaScript.',
+'javascripttest-pagetext-unknownframework' => 'Kornizë pune e panjohur testuese "$1".',
+'javascripttest-pagetext-frameworks'       => 'Ju lutemi zgjidhni njërën nga kornizat vijuese punuese të testimit: $1',
+'javascripttest-pagetext-skins'            => "Zgjidhni një mostër për t'i kryer testimet:",
+'javascripttest-qunit-intro'               => 'Shiko [$1 dokumentacionin e testimit] në mediawiki.org.',
+'javascripttest-qunit-heading'             => 'Platforma testuese JavaScript QUnit',
+
 # Tooltip help for the actions
-'tooltip-pt-userpage'             => 'Faqja juaj e përdoruesit',
-'tooltip-pt-anonuserpage'         => 'Faqja e përdoruesve anonim nga kjo adresë IP',
-'tooltip-pt-mytalk'               => 'Faqja juaj e diskutimeve',
-'tooltip-pt-anontalk'             => 'Faqja e diskutimeve të përdoruesve anonim për këtë adresë IP',
-'tooltip-pt-preferences'          => 'Parapëlqimet tuaja',
-'tooltip-pt-watchlist'            => 'Lista e faqeve nën mbikqyrjen tuaj.',
-'tooltip-pt-mycontris'            => 'Lista e kontributeve tuaja',
-'tooltip-pt-login'                => 'Të hysh brenda nuk është e detyrueshme, por ka shumë përparësi.',
-'tooltip-pt-anonlogin'            => 'Të hysh brenda nuk është e detyrueshme, por ka shumë përparësi.',
-'tooltip-pt-logout'               => 'Dalje',
-'tooltip-ca-talk'                 => 'Diskuto për përmbajtjen e faqes',
-'tooltip-ca-edit'                 => "Ju mund ta redaktoni këtë faqe. Përdorni butonin >>Trego parapamjen<< para se t'i kryeni ndryshimet.",
-'tooltip-ca-addsection'           => 'Fillo një temë të re diskutimi.',
-'tooltip-ca-viewsource'           => 'Kjo faqe është e mbrojtur. Ju mundeni vetëm ta shikoni burimin e tekstit.',
-'tooltip-ca-history'              => 'Versione të mëparshme të artikullit.',
-'tooltip-ca-protect'              => 'Mbroje këtë faqe',
-'tooltip-ca-unprotect'            => 'Liroje faqen',
-'tooltip-ca-delete'               => 'Grise këtë faqe',
-'tooltip-ca-undelete'             => 'Faqja u restaurua',
-'tooltip-ca-move'                 => 'Me anë të zhvendosjes mund ta ndryshoni titullin e artikullit',
-'tooltip-ca-watch'                => 'Shtoje faqen në lisën e faqeve nën mbikqyrje',
-'tooltip-ca-unwatch'              => 'Hiqe faqen nga lista e faqeve nën mbikqyrje.',
-'tooltip-search'                  => 'Kërko në projekt',
-'tooltip-search-go'               => 'Shko tek faqja me këtë emër nëse ekziston',
-'tooltip-search-fulltext'         => 'Kërko faqet me këtë tekst',
-'tooltip-p-logo'                  => 'Figura e Faqes Kryesore',
-'tooltip-n-mainpage'              => 'Vizitoni Faqen kryesore',
-'tooltip-n-mainpage-description'  => 'Vizito faqen kryesore',
-'tooltip-n-portal'                => 'Mbi projektin, çfarë mund të bëni dhe ku gjenden gjërat.',
-'tooltip-n-currentevents'         => 'Informacion rreth ngjarjeve aktuale.',
-'tooltip-n-recentchanges'         => 'Lista e ndryshimeve së fundmi në projekt',
-'tooltip-n-randompage'            => 'Shikoni një artikull të rastit.',
-'tooltip-n-help'                  => 'Vendi ku mund të gjeni ndihmë.',
-'tooltip-t-whatlinkshere'         => 'Lista e faqeve që lidhen tek kjo faqe',
-'tooltip-t-recentchangeslinked'   => 'Lista e ndryshimeve të faqeve që lidhen tek kjo faqe',
-'tooltip-feed-rss'                => 'Burimi ushqyes "RSS" për këtë faqe',
-'tooltip-feed-atom'               => 'Burimi ushqyes "Atom" për këtë faqe',
-'tooltip-t-contributions'         => 'Shiko listën e kontributeve për përdoruesin në fjalë',
-'tooltip-t-emailuser'             => 'Dërgoni një email përdoruesit',
-'tooltip-t-upload'                => 'Ngarkoni figura ose skeda të tjera',
-'tooltip-t-specialpages'          => 'Lista e të gjitha faqeve speciale.',
-'tooltip-t-print'                 => 'Version i shtypshëm i kësaj faqeje',
-'tooltip-t-permalink'             => 'Lidhja e përhershme tek ky version i faqes',
-'tooltip-ca-nstab-main'           => 'Shikoni përmbajtjen e atikullit.',
-'tooltip-ca-nstab-user'           => 'Shikoni faqen e përdoruesit',
-'tooltip-ca-nstab-media'          => 'Shikoni faqen e skedës',
-'tooltip-ca-nstab-special'        => 'Kjo është një faqe speciale. Ju nuk mundeni ta redaktoni këtë faqe',
-'tooltip-ca-nstab-project'        => 'Shikoni faqen e projektit',
-'tooltip-ca-nstab-image'          => 'Shikoni faqen e figurës',
-'tooltip-ca-nstab-mediawiki'      => 'Shikoni mesazhet e sistemit',
-'tooltip-ca-nstab-template'       => 'Shikoni stampën',
-'tooltip-ca-nstab-help'           => 'Shikoni faqet ndihmëse',
-'tooltip-ca-nstab-category'       => 'Shikoni faqen e kategorisë',
-'tooltip-minoredit'               => 'Shënoje këtë redaktim të vogël',
-'tooltip-save'                    => 'Kryej ndryshimet',
-'tooltip-preview'                 => 'Shiko parapamjen e ndryshimeve, përdoreni këtë para se të kryeni ndryshimet!',
-'tooltip-diff'                    => 'Trego ndryshimet që Ju i keni bërë tekstit.',
-'tooltip-compareselectedversions' => 'Shikoni krahasimin midis dy versioneve të zgjedhura të kësaj faqeje.',
-'tooltip-watch'                   => 'Mbikqyre këtë faqe',
-'tooltip-recreate'                => 'Rikrijoje faqen edhe nëse është grisur më parë',
-'tooltip-upload'                  => 'Fillo ngarkimin',
-'tooltip-rollback'                => '"Rikthimi" rikthen ndryshimet tek kjo faqe nga redaktuesi i fundit vetëm me një klikim.',
-'tooltip-undo'                    => '"Zhbëj" rikthen këtë ndryshim deh hap formën e redaktimit në mënyrë parapamjeje. Lejon që të shtoni një arsye tek përmbledhja.',
-'tooltip-preferences-save'        => 'Ruaj parapëlqimet',
-'tooltip-summary'                 => 'Fusni një përmbledhje të shkurtër',
+'tooltip-pt-userpage'                 => 'Faqja juaj e përdoruesit',
+'tooltip-pt-anonuserpage'             => 'Faqja e përdoruesve anonim nga kjo adresë IP',
+'tooltip-pt-mytalk'                   => 'Faqja juaj e diskutimeve',
+'tooltip-pt-anontalk'                 => 'Faqja e diskutimeve të përdoruesve anonim për këtë adresë IP',
+'tooltip-pt-preferences'              => 'Parapëlqimet tuaja',
+'tooltip-pt-watchlist'                => 'Lista e faqeve nën mbikqyrjen tuaj.',
+'tooltip-pt-mycontris'                => 'Lista e kontributeve tuaja',
+'tooltip-pt-login'                    => 'Identifikimi nuk është i detyrueshëm, megjithatë ne jua rekomandojmë.',
+'tooltip-pt-anonlogin'                => 'Të hysh brenda nuk është e detyrueshme, por ka shumë përparësi.',
+'tooltip-pt-logout'                   => 'Dalje',
+'tooltip-ca-talk'                     => 'Diskutim për faqen përmbajtje',
+'tooltip-ca-edit'                     => 'Ju mund ta redaktoni këtë faqe. Përdorni butonin Trego parapamjen para se të ruani ndryshimet.',
+'tooltip-ca-addsection'               => 'Fillo një temë të re diskutimi.',
+'tooltip-ca-viewsource'               => 'Kjo faqe është e mbrojtur. Ju mundeni vetëm ta shikoni burimin e tekstit.',
+'tooltip-ca-history'                  => 'Versione të mëparshme të artikullit.',
+'tooltip-ca-protect'                  => 'Mbroje këtë faqe',
+'tooltip-ca-unprotect'                => 'Liroje mbrojtjen e kësaj faqeje',
+'tooltip-ca-delete'                   => 'Grise këtë faqe',
+'tooltip-ca-undelete'                 => 'Faqja u restaurua',
+'tooltip-ca-move'                     => 'Me anë të zhvendosjes mund ta ndryshoni titullin e artikullit',
+'tooltip-ca-watch'                    => 'Shtoje faqen në lisën e faqeve nën mbikqyrje',
+'tooltip-ca-unwatch'                  => 'Hiqe faqen nga lista e faqeve nën mbikqyrje.',
+'tooltip-search'                      => 'Kërko {{SITENAME}}',
+'tooltip-search-go'                   => 'Shko tek faqja me këtë emër nëse ekziston',
+'tooltip-search-fulltext'             => 'Kërko faqet për këtë tekst',
+'tooltip-p-logo'                      => 'Vizito faqen kryesore',
+'tooltip-n-mainpage'                  => 'Vizitoni Faqen kryesore',
+'tooltip-n-mainpage-description'      => 'Vizito faqen kryesore',
+'tooltip-n-portal'                    => 'Rreth projektit, çfarë mund të bëni dhe ku gjenden gjërat',
+'tooltip-n-currentevents'             => 'Kërko informacion të mëparshëm për ngjarjet aktuale.',
+'tooltip-n-recentchanges'             => 'Lista e ndryshimeve më të fundit në wiki',
+'tooltip-n-randompage'                => 'Shikoni një artikull të rastit',
+'tooltip-n-help'                      => 'Vendi ku mund të gjeni ndihmë',
+'tooltip-t-whatlinkshere'             => 'Lista e të gjitha faqeve wiki që lidhen tek kjo faqe',
+'tooltip-t-recentchangeslinked'       => 'Lista e ndryshimeve të faqeve që lidhen tek kjo faqe',
+'tooltip-feed-rss'                    => 'Burimi ushqyes "RSS" për këtë faqe',
+'tooltip-feed-atom'                   => 'Burimi ushqyes "Atom" për këtë faqe',
+'tooltip-t-contributions'             => 'Shiko listën e kontributeve për përdoruesin në fjalë',
+'tooltip-t-emailuser'                 => 'Dërgoni një email përdoruesit',
+'tooltip-t-upload'                    => 'Ngarko skeda',
+'tooltip-t-specialpages'              => 'Lista e të gjitha faqeve speciale.',
+'tooltip-t-print'                     => 'Version i shtypshëm i kësaj faqeje',
+'tooltip-t-permalink'                 => 'Lidhja e përhershme tek ky version i faqes',
+'tooltip-ca-nstab-main'               => 'Shikoni përmbajtjen e atikullit.',
+'tooltip-ca-nstab-user'               => 'Shikoni faqen e përdoruesit',
+'tooltip-ca-nstab-media'              => 'Shikoni faqen e skedës',
+'tooltip-ca-nstab-special'            => 'Kjo është një faqe speciale. Ju nuk mundeni ta redaktoni këtë faqe',
+'tooltip-ca-nstab-project'            => 'Shikoni faqen e projektit',
+'tooltip-ca-nstab-image'              => 'Shikoni faqen e figurës',
+'tooltip-ca-nstab-mediawiki'          => 'Shikoni mesazhet e sistemit',
+'tooltip-ca-nstab-template'           => 'Shikoni stampën',
+'tooltip-ca-nstab-help'               => 'Shikoni faqet ndihmëse',
+'tooltip-ca-nstab-category'           => 'Shikoni faqen e kategorisë',
+'tooltip-minoredit'                   => 'Shënoje këtë redaktim të vogël',
+'tooltip-save'                        => 'Kryej ndryshimet',
+'tooltip-preview'                     => 'Shqyrtoni ndryshimet tuaj, ju lutemi, bëjeni këtë para se të ruani ndryshimet!',
+'tooltip-diff'                        => 'Trego ndryshimet që Ju i keni bërë tekstit.',
+'tooltip-compareselectedversions'     => 'Shikoni krahasimin midis dy versioneve të zgjedhura të kësaj faqeje.',
+'tooltip-watch'                       => 'Mbikqyre këtë faqe',
+'tooltip-watchlistedit-normal-submit' => 'Largo titujt',
+'tooltip-watchlistedit-raw-submit'    => 'Aktualizo listën mbikqyrëse',
+'tooltip-recreate'                    => 'Rikrijoje faqen edhe nëse është grisur më parë',
+'tooltip-upload'                      => 'Fillo ngarkimin',
+'tooltip-rollback'                    => '"Rikthimi" rikthen ndryshimet tek kjo faqe nga redaktuesi i fundit vetëm me një klikim.',
+'tooltip-undo'                        => '"Zhbëje" rikthen këtë ndryshim dhe hap modulin e redaktimit për shqyrtim. Lejon që të jepni një arsye tek përmbledhja.',
+'tooltip-preferences-save'            => 'Ruaj parapëlqimet',
+'tooltip-summary'                     => 'Fusni një përmbledhje të shkurtër',
 
 # Stylesheets
 'monobook.css' => '/* redaktoni këtë faqe për të përshtatur pamjen Monobook për tëra faqet tuaja */',
 
 # Metadata
-'nodublincore'      => 'Dublin Core RDF metadata nuk është i mundshëm për këtë server.',
-'nocreativecommons' => 'Creative Commons RDF metadata nuk është i mundshëm për këtë server.',
-'notacceptable'     => 'Wiki server nuk mundet ti përgatit të dhënat për klintin tuaj.',
+'notacceptable' => 'Wiki server nuk mundet ti përgatit të dhënat për klintin tuaj.',
 
 # Attribution
 'anonymous'        => '{{PLURAL:$1|Përdoruesi anonim|Përdoruesit anonimë}} të {{SITENAME}}',
@@ -2700,36 +2905,22 @@ Ju lutemi provoni përsëri.',
 'spam_blanking'       => 'U boshatis sepse të gjitha versionet kanë lidhje tek $1',
 
 # Info page
-'infosubtitle'   => 'Informacion për faqen',
-'numedits'       => 'Numri i versioneve të artikullit: $1',
-'numtalkedits'   => 'Numrii versioneve të diskutimit të artikullit: $1',
-'numwatchers'    => 'Numri i mbikqyrësve: $1',
-'numauthors'     => 'Numri i autorëve të artikullit: $1',
-'numtalkauthors' => 'Numri i diskutuesve për artikullin: $1',
+'pageinfo-title'            => 'Informacion për " $1 "',
+'pageinfo-header-edits'     => 'Redaktimet',
+'pageinfo-header-watchlist' => 'Lista mbikqyrëse',
+'pageinfo-header-views'     => 'Shikime',
+'pageinfo-subjectpage'      => 'Faqe',
+'pageinfo-talkpage'         => 'Faqe diskutimi',
+'pageinfo-watchers'         => 'Numri i mbikqyrësve',
+'pageinfo-edits'            => 'Numri i redaktimeve',
+'pageinfo-authors'          => 'Numri i autorëve të veçantë',
+'pageinfo-views'            => 'Numri i shikimeve',
+'pageinfo-viewsperedit'     => 'Shikime për redaktim',
 
 # Skin names
 'skinname-standard'    => 'Standarte',
 'skinname-nostalgia'   => 'Nostalgjike',
 'skinname-cologneblue' => 'Kolonjë Blu',
-
-# Math options
-'mw_math_png'    => 'Gjithmonë PNG',
-'mw_math_simple' => 'HTML në qoftë se është e thjeshtë ose ndryshe PNG',
-'mw_math_html'   => 'HTML në qoftë se është e mundur ose ndryshe PNG',
-'mw_math_source' => 'Lëre si TeX (për shfletuesit tekst)',
-'mw_math_modern' => 'E rekomanduar për shfletuesit modern',
-'mw_math_mathml' => 'MathML',
-
-# Math errors
-'math_failure'          => 'Nuk e kuptoj',
-'math_unknown_error'    => 'gabim i panjohur',
-'math_unknown_function' => 'funksion i panjohur',
-'math_lexing_error'     => 'gabim leximi',
-'math_syntax_error'     => 'Gabim sintakse',
-'math_image_error'      => 'Konversioni PNG dështoi; kontrolloni për ndonjë gabim instalimi të latex-it, dvips-it, gs-it, dhe convert-it.',
-'math_bad_tmpdir'       => 'Nuk munda të shkruaj ose krijoj dosjen e përkohshme për matematikë',
-'math_bad_output'       => 'Nuk munda të shkruaj ose të krijoj prodhimin matematik në dosjen',
-'math_notexvc'          => 'Mungon zbatuesi texvc; ju lutem shikoni math/README për konfigurimin.',
 
 # Patrolling
 'markaspatrolleddiff'                 => 'Shënoje si të patrulluar',
@@ -2745,9 +2936,6 @@ Ju lutemi provoni përsëri.',
 # Patrol log
 'patrol-log-page'      => 'Regjistri i patrollimeve',
 'patrol-log-header'    => 'Këto janë të dhëna të revizioneve të patrulluara.',
-'patrol-log-line'      => 'shënoi $1 të $2 të patrulluar $3',
-'patrol-log-auto'      => '(automatikisht)',
-'patrol-log-diff'      => 'versioni $1',
 'log-show-hide-patrol' => '$1 regjistri i patrollimeve',
 
 # Image deletion
@@ -2766,22 +2954,25 @@ $1',
 'nextdiff'     => 'Ndryshimi më pas →',
 
 # Media information
-'mediawarning'         => "''Kujdes''': Kjo skedë mund të ketë përmbajtje të dëmshme. 
+'mediawarning'           => "''Kujdes''': Kjo skedë mund të ketë përmbajtje të dëmshme. 
 Duke e përdorur sistemi juaj mund të rrezikohet.",
-'imagemaxsize'         => "Kufizoni madhësinë e fotos:<br />''(për faqet e përshkrimit të skedave)''",
-'thumbsize'            => 'Madhësia fotove përmbledhëse:',
-'widthheightpage'      => '$1×$2, $3 {{PLURAL:$3|faqe|faqe}}',
-'file-info'            => 'madhësia skedës: $1, lloji MIME: $2',
-'file-info-size'       => '$1 × $2 pixela, madhësia e skedës: $3, tipi MIME: $4',
-'file-nohires'         => '<small>Nuk ka rezolucion më të madh.</small>',
-'svg-long-desc'        => 'skedë SVG, fillimisht $1 × $2 pixel, madhësia e skedës: $3',
-'show-big-image'       => 'Rezolucion i plotë',
-'show-big-image-thumb' => '<small>Madhësia e këtij shikimi: $1 × $2 pixel</small>',
-'file-info-gif-looped' => 'kthyer',
-'file-info-gif-frames' => '$1 {{PLURAL:$1|kornizë|korniza}}',
-'file-info-png-looped' => 'kthyer',
-'file-info-png-repeat' => 'luajtur $1 herë',
-'file-info-png-frames' => '$1 {{PLURAL:$1|kornizë|korniza}}',
+'imagemaxsize'           => "Kufizoni madhësinë e fotos:<br />''(për faqet e përshkrimit të skedave)''",
+'thumbsize'              => 'Madhësia fotove përmbledhëse:',
+'widthheightpage'        => '$1 × $2, $3 {{PLURAL:$3|faqe|faqe}}',
+'file-info'              => 'madhësia skedës: $1, lloji MIME: $2',
+'file-info-size'         => '$1 × $2 pixela, madhësia e skedës: $3, tipi MIME: $4',
+'file-info-size-pages'   => '$1 × $2 pixel, madhësia e dokumentit: $3 , MIME tipi: $4 , $5 {{PLURAL:$5| faqe | faqet}}',
+'file-nohires'           => 'Nuk ka rezolucion më të madh.',
+'svg-long-desc'          => 'skedë SVG, fillimisht $1 × $2 pixel, madhësia e skedës: $3',
+'show-big-image'         => 'Rezolucion i plotë',
+'show-big-image-preview' => 'Madhësia e këtij shikimi: $1.',
+'show-big-image-other'   => '{{PLURAL:$2|Rezolucion tjetër|Rezolucione të tjera}}: $1.',
+'show-big-image-size'    => '$1 × $2 pixel',
+'file-info-gif-looped'   => 'kthyer',
+'file-info-gif-frames'   => '$1 {{PLURAL:$1|kornizë|korniza}}',
+'file-info-png-looped'   => 'kthyer',
+'file-info-png-repeat'   => 'luajtur $1 herë',
+'file-info-png-frames'   => '$1 {{PLURAL:$1|kornizë|korniza}}',
 
 # Special:NewFiles
 'newimages'             => 'Galeria e figurave të reja',
@@ -2795,12 +2986,19 @@ Duke e përdorur sistemi juaj mund të rrezikohet.",
 'bydate'                => 'datës',
 'sp-newimages-showfrom' => 'Trego skedat e reja duke filluar nga $2, $1',
 
-# Bad image list
-'bad_image_list' => 'Formati është si vijon:<br /><br />
+# Video information, used by Language::formatTimePeriod() to format lengths in the above messages
+'seconds' => '{{PLURAL:$1|$1 sekondë|$1 sekonda}}',
+'minutes' => '{{PLURAL:$1|$1 minutë|$1 minuta}}',
+'hours'   => '{{PLURAL:$1|$1 orë|$1 orë}}',
+'days'    => '{{PLURAL:$1|$1 ditë|$1 ditë}}',
+'ago'     => '$1 më parë',
 
-Vetëm elementet e listuara ( rreshtat duhet të fillojnë me * ) mirren parasysh.<br />
-Lidhja e parë nërresht duhet të lidhet tek një skedë e keqe.<br />
-Çdo lidhje pasuese në rreshtin e njëjtë konsiderohen si përjashtime.<br />',
+# Bad image list
+'bad_image_list' => 'Formati është si vijon:
+
+Vetëm elementët listë ( rreshtat duhet të fillojnë me * ) merren parasysh.
+Lidhja e parë në një rresht duhet të lidhet me një skedë të prishur.
+Çdo lidhje pasuese në rreshtin e njëjtë konsiderohet si përjashtim, p.sh. faqe në të cilat skeda mund të shfaqet në të njëjtin rresht.',
 
 # Metadata
 'metadata'          => 'Metadata',
@@ -2808,15 +3006,20 @@ Lidhja e parë nërresht duhet të lidhet tek një skedë e keqe.<br />
 Në qoftë se skeda është ndryshuar nga gjendja origjinale, disa hollësira mund të mos pasqyrojnë versionin e tanishëm.',
 'metadata-expand'   => 'Trego detajet',
 'metadata-collapse' => 'Fshih detajet',
-'metadata-fields'   => 'Të dhënat EXIF që tregohen mëposhtë do të përfshihen tek faqja përshkruese e figurës kur tabela e të dhënave të jetë palosur.
-Të tjerat do të fshihen.
+'metadata-fields'   => 'Imetadata fusha Image të listuara në këtë mesazh do të përfshihen në faqen shfaqur imazhin kur tryezë metadata është shembur
 * make
 * model
 * datetimeoriginal
 * exposuretime
 * fnumber
 * isospeedratings
-* focallength',
+* focallength
+* artist
+* copyright
+* imagedescription
+* gpslatitude
+* gpslongitude
+* gpsaltitude',
 
 # EXIF tags
 'exif-imagewidth'                  => 'Gjerësia',
@@ -2831,13 +3034,11 @@ Të tjerat do të fshihen.
 'exif-ycbcrpositioning'            => 'Pozicioni Y dhe C',
 'exif-xresolution'                 => 'Rezolucioni horizontal',
 'exif-yresolution'                 => 'Rezolucioni vertikal',
-'exif-resolutionunit'              => 'Madhësia e njësisë se X dhe Y',
 'exif-stripoffsets'                => 'Vendi i figurave',
 'exif-rowsperstrip'                => 'Numri i rreshtave për shirit',
 'exif-stripbytecounts'             => 'Bajt për shirit të ngjeshur',
 'exif-jpeginterchangeformat'       => 'Çvendos tek JPEG SOI',
 'exif-jpeginterchangeformatlength' => 'Bajtët të dhënave JPEG',
-'exif-transferfunction'            => 'Funksioni i transferit',
 'exif-whitepoint'                  => 'Pikët e bardha kromatike',
 'exif-primarychromaticities'       => 'Kromatikët e primareve',
 'exif-ycbcrcoefficients'           => 'Koeficentët e transformimit të hapësirave të ngjyrave të matricës',
@@ -2854,9 +3055,8 @@ Të tjerat do të fshihen.
 'exif-colorspace'                  => 'Hapësira e ngjyrave',
 'exif-componentsconfiguration'     => 'Kuptimi i secilit komponent',
 'exif-compressedbitsperpixel'      => 'Lloji i ngjeshjes së figurës',
-'exif-pixelydimension'             => 'Gjerësia e vlefshme e figurës',
-'exif-pixelxdimension'             => 'Valind image height',
-'exif-makernote'                   => 'Shënimet e prodhuesit',
+'exif-pixelydimension'             => 'Gjerësia Image',
+'exif-pixelxdimension'             => 'lartësi Image',
 'exif-usercomment'                 => 'Vërejtjet e përdoruesit',
 'exif-relatedsoundfile'            => 'Skeda audio shoqëruese',
 'exif-datetimeoriginal'            => 'Data dhe koha e prodhimit të të dhënave',
@@ -2870,10 +3070,9 @@ Të tjerat do të fshihen.
 'exif-exposureprogram'             => 'Zbuloni programin',
 'exif-spectralsensitivity'         => 'Ndjeshmëria spektrale',
 'exif-isospeedratings'             => 'Vlerësimi i shpejtësisë ISO',
-'exif-oecf'                        => 'Faktori i konvertimit optoelektronik',
-'exif-shutterspeedvalue'           => 'Shpejtësia e mbyllësit',
-'exif-aperturevalue'               => 'Apertura',
-'exif-brightnessvalue'             => 'Ndriçimi',
+'exif-shutterspeedvalue'           => 'shpejtësi APEX qepen',
+'exif-aperturevalue'               => 'aperture APEX',
+'exif-brightnessvalue'             => 'shkëlqim APEX',
 'exif-exposurebiasvalue'           => 'zbuloni vijat e pjerrëta',
 'exif-maxaperturevalue'            => 'Hapje maksimale e tokës',
 'exif-subjectdistance'             => 'Largësia e subjektit',
@@ -2883,7 +3082,6 @@ Të tjerat do të fshihen.
 'exif-focallength'                 => 'Gjatësia e vatrës',
 'exif-subjectarea'                 => 'Hapësira e subjektit',
 'exif-flashenergy'                 => 'Energjia e blicit',
-'exif-spatialfrequencyresponse'    => 'Përgjigje e frekuencës hapësinore',
 'exif-focalplanexresolution'       => 'Rezelucioni i planit fokal X',
 'exif-focalplaneyresolution'       => 'Rezelucioni i planit fokal Y',
 'exif-focalplaneresolutionunit'    => 'Rezolucioni i njësisë së planit fokal',
@@ -2892,7 +3090,6 @@ Të tjerat do të fshihen.
 'exif-sensingmethod'               => 'Metoda Sensing',
 'exif-filesource'                  => 'Burimi i skedës',
 'exif-scenetype'                   => 'Lloji Scene',
-'exif-cfapattern'                  => 'Modeli CFA',
 'exif-customrendered'              => 'Përpunim i fotografisë Costum',
 'exif-exposuremode'                => 'Mënyra e ekspozimit',
 'exif-whitebalance'                => 'Balanca e bardhë',
@@ -2937,10 +3134,79 @@ Të tjerat do të fshihen.
 'exif-gpsareainformation'          => 'Emri i zonës GPS',
 'exif-gpsdatestamp'                => 'E dhënë GPS',
 'exif-gpsdifferential'             => 'Korrigjim diferencial i GPS',
+'exif-jpegfilecomment'             => 'Komenti i JPEG dokumentit',
+'exif-keywords'                    => 'Fjalët kyçe',
+'exif-worldregioncreated'          => 'Rajoni botërorë ku është marrë fotografia',
+'exif-countrycreated'              => 'Shteti ku është marrë fotografia',
+'exif-countrycodecreated'          => 'Kodi për shtetin ku është marrë fotografia',
+'exif-provinceorstatecreated'      => 'Provinca apo shteti ku është marrë fotografia',
+'exif-citycreated'                 => 'Qyteti ku është marrë fotografia',
+'exif-sublocationcreated'          => 'Nën-Lokacioni i qytetit ku është marrë fotografia',
+'exif-worldregiondest'             => 'Rajoni botërorë i treguar',
+'exif-countrydest'                 => 'Shteti i treguar',
+'exif-countrycodedest'             => 'Kodi për vendin e treguar',
+'exif-provinceorstatedest'         => 'Provinca ose të shteti i treguar',
+'exif-citydest'                    => 'Qyteti i treguar',
+'exif-sublocationdest'             => 'Nën-Lokacioni i qytetit të treguar',
 'exif-objectname'                  => 'Titull i shkurtër',
+'exif-specialinstructions'         => 'Udhëzime të veçanta',
+'exif-headline'                    => 'Mbishkrimi',
+'exif-credit'                      => 'Atribues / Furnizues',
+'exif-source'                      => 'Burimi',
+'exif-editstatus'                  => 'Statusi editorial i fotografisë',
+'exif-urgency'                     => 'Urgjencë',
+'exif-fixtureidentifier'           => 'Emri i shtojcës',
+'exif-locationdest'                => 'Vendndodhja e përshkruar',
+'exif-locationdestcode'            => 'Kodi i lokacionit të përshkruar',
+'exif-objectcycle'                 => 'Koha e ditës që media është menduar për',
+'exif-contact'                     => 'Informatat e kontaktit',
+'exif-writer'                      => 'Shkrimtari',
+'exif-languagecode'                => 'Gjuha',
+'exif-iimversion'                  => 'IIM versioni',
+'exif-iimcategory'                 => 'Kategoria',
+'exif-iimsupplementalcategory'     => 'Kategoritë plotësuese',
+'exif-datetimeexpires'             => 'Mos përdorni më pas',
+'exif-datetimereleased'            => 'Lëshuar më',
+'exif-originaltransmissionref'     => 'Kodi origjinal i vendit të transmetimit',
+'exif-identifier'                  => 'Identifikuesi',
+'exif-lens'                        => 'Lentja e përdorur',
+'exif-serialnumber'                => 'Numri serik i kamerës',
+'exif-cameraownername'             => 'Pronari i kamerës',
+'exif-label'                       => 'Etiketa',
+'exif-datetimemetadata'            => 'Data e ndryshimit të fundit të të dhënave',
+'exif-nickname'                    => 'Emri joformal i fotografisë',
+'exif-rating'                      => 'Vlerësimi (nga 5)',
+'exif-rightscertificate'           => 'Certifikatë e të drejtave të menaxhmentit',
+'exif-copyrighted'                 => 'Statusi i të drejtës së autorit',
+'exif-copyrightowner'              => 'Pronari i të drejtës së autorit',
+'exif-usageterms'                  => 'Mënyra e përdorimit',
+'exif-webstatement'                => 'Deklarata e të drejtës së autorit në-linjë',
+'exif-originaldocumentid'          => 'ID-ja unike e dokumentit origjinal',
+'exif-licenseurl'                  => 'URL-ja për licencën e të drejtës së autorit',
+'exif-morepermissionsurl'          => 'Informacion alternativ i licencimit',
+'exif-attributionurl'              => 'Kur ri-shfrytëzoni këtë punë, ju lutem lidheni tek',
+'exif-preferredattributionname'    => 'Kur ri-shfrytëzoni këtë punë, ju lutem atribuoni',
+'exif-pngfilecomment'              => 'Komenti i PGN dokumentit',
+'exif-disclaimer'                  => 'Shfajësimet',
+'exif-contentwarning'              => 'Paralajmërim i përmbajtjes',
+'exif-giffilecomment'              => 'Komenti i GIF dokumentit',
+'exif-intellectualgenre'           => 'Lloji i artikullit',
+'exif-subjectnewscode'             => 'Kodi i subjektit',
+'exif-scenecode'                   => 'Kodi i IPTC skenës',
+'exif-event'                       => 'Ngjarja e përshkruar',
+'exif-organisationinimage'         => 'Organizata e përshkruar',
+'exif-personinimage'               => 'Personi i përshkruar',
+'exif-originalimageheight'         => 'Lartësia e fotografisë para se të shkurtohej',
+'exif-originalimagewidth'          => 'Gjerësia e fotografisë para se të shkurtohej',
 
 # EXIF attributes
 'exif-compression-1' => 'E pangjeshur',
+'exif-compression-2' => 'CCITT Grupi 3 1-Dimensional Kodimi i Modifikuar Huffman i linjës së gjatësisë',
+'exif-compression-3' => 'CCITT Grupi 3 faks kodimi',
+'exif-compression-4' => 'CCITT Grupi 4 faks kodimi',
+
+'exif-copyrighted-true'  => 'E drejtë e autorit',
+'exif-copyrighted-false' => 'Sferë publike',
 
 'exif-unknowndate' => 'E dhënë e pa njohur',
 
@@ -2949,12 +3215,14 @@ Të tjerat do të fshihen.
 'exif-orientation-3' => 'E rrotulluar 180°',
 'exif-orientation-4' => 'E kthyer vertikalisht',
 'exif-orientation-5' => 'E rrotulluar 90° kundër orës dhe e kthyer vertikalisht',
-'exif-orientation-6' => 'E rrotulluar 90° sipas orës',
+'exif-orientation-6' => 'Rrotulluar 90° kundër akrepave të orës',
 'exif-orientation-7' => 'E rrotulluar 90° sipas orës dhe e kthyer vertikalisht',
-'exif-orientation-8' => 'E rrotulluar 90° kundër orës',
+'exif-orientation-8' => 'Rrotulluar 90° sipas akrepave të orës',
 
 'exif-planarconfiguration-1' => 'formati copë',
 'exif-planarconfiguration-2' => 'formati planar',
+
+'exif-colorspace-65535' => 'e pa kalibruar',
 
 'exif-componentsconfiguration-0' => 'nuk ekziston',
 
@@ -3019,6 +3287,8 @@ Të tjerat do të fshihen.
 'exif-sensingmethod-7' => 'Sensor trilinear',
 'exif-sensingmethod-8' => 'Sensori linear kolor sequential',
 
+'exif-filesource-3' => 'Digital ende kamera',
+
 'exif-scenetype-1' => 'Nje fotografi e fotografuar direkt',
 
 'exif-customrendered-0' => 'Proces normal',
@@ -3067,6 +3337,10 @@ Të tjerat do të fshihen.
 'exif-gpslongitude-e' => 'Gjatësi lindore',
 'exif-gpslongitude-w' => 'Gjatësi perëndimore',
 
+# Pseudotags used for GPSAltitudeRef
+'exif-gpsaltitude-above-sealevel' => '$1 {{PLURAL:$1|metër|metra}} mbi nivelin detar',
+'exif-gpsaltitude-below-sealevel' => '$1 {{PLURAL:$1|metër|metra}} nën nivelin detar',
+
 'exif-gpsstatus-a' => 'Duke bërë matje',
 'exif-gpsstatus-v' => 'Matja e nderveprimit',
 
@@ -3078,21 +3352,73 @@ Të tjerat do të fshihen.
 'exif-gpsspeed-m' => 'Milje në orë',
 'exif-gpsspeed-n' => 'Nyje',
 
+# Pseudotags used for GPSDestDistanceRef
+'exif-gpsdestdistance-k' => 'Kilometra',
+'exif-gpsdestdistance-m' => 'Milje',
+'exif-gpsdestdistance-n' => 'Milje detare',
+
+'exif-gpsdop-excellent' => 'Shkëlqyeshëm ($1)',
+'exif-gpsdop-good'      => 'Mirë ( $1 )',
+'exif-gpsdop-moderate'  => 'Mesatar ( $1 )',
+'exif-gpsdop-fair'      => 'Mjaftueshëm ( $1 )',
+'exif-gpsdop-poor'      => 'Dobët ( $1 )',
+
+'exif-objectcycle-a' => 'Vetëm në Mëngjes',
+'exif-objectcycle-p' => 'Vetëm në Mbrëmje',
+'exif-objectcycle-b' => 'Të dy në mëngjes dhe në mbrëmje',
+
 # Pseudotags used for GPSTrackRef, GPSImgDirectionRef and GPSDestBearingRef
 'exif-gpsdirection-t' => 'Drejtimi i vërtetë',
 'exif-gpsdirection-m' => 'Drejtimi magnetik',
 
+'exif-ycbcrpositioning-1' => 'Qendër',
+'exif-ycbcrpositioning-2' => 'Bashkë-Faqet',
+
+'exif-dc-contributor' => 'Kontribuesit',
+'exif-dc-coverage'    => 'Shtrirje hapsinore apo e përkohshme e mediave',
+'exif-dc-date'        => 'Datë (at)',
+'exif-dc-publisher'   => 'Botuesi',
+'exif-dc-relation'    => 'Mediat e lidhura',
+'exif-dc-rights'      => 'Privilegjet',
+'exif-dc-source'      => 'Burimi i medias',
+'exif-dc-type'        => 'Lloji i mediave',
+
+'exif-rating-rejected' => 'Refuzuar',
+
+'exif-isospeedratings-overflow' => 'Më e madhe se 65.535',
+
+'exif-iimcategory-ace' => 'Art, kulturë dhe argëtim',
+'exif-iimcategory-clj' => 'Krimi dhe Ligji',
+'exif-iimcategory-dis' => 'Fatkeqësit dhe aksidentet',
+'exif-iimcategory-fin' => 'Ekonomi dhe biznes',
+'exif-iimcategory-edu' => 'Arsim',
+'exif-iimcategory-evn' => 'Mjedis',
+'exif-iimcategory-hth' => 'Shëndetësi',
+'exif-iimcategory-hum' => 'Interes njerëzor',
+'exif-iimcategory-lab' => 'Punë',
+'exif-iimcategory-lif' => 'Stil-Jete dhe kohë e lirë',
+'exif-iimcategory-pol' => 'Politikë',
+'exif-iimcategory-rel' => 'Religjioni dhe besimi',
+'exif-iimcategory-sci' => 'Shkencë dhe teknologji',
+'exif-iimcategory-soi' => 'Çështje sociale',
+'exif-iimcategory-spo' => 'Sporti',
+'exif-iimcategory-war' => 'Lufta, konflikte dhe trazira',
+'exif-iimcategory-wea' => 'Moti',
+
+'exif-urgency-normal' => 'Normale ( $1 )',
+'exif-urgency-low'    => 'Ulët ( $1 )',
+'exif-urgency-high'   => 'E Lartë ( $1 )',
+'exif-urgency-other'  => 'Prioritet i përcaktuar nga përdoruesi ( $1 )',
+
 # External editor support
 'edit-externally'      => 'Ndryshoni këtë skedë me një mjet të jashtëm',
-'edit-externally-help' => '(Shikoni [http://www.mediawiki.org/wiki/Manual:External_editors udhëzimet e instalimit] për më shumë informacion)',
+'edit-externally-help' => '(Shikoni [//www.mediawiki.org/wiki/Manual:External_editors udhëzimet e instalimit] për më shumë informacion)',
 
 # 'all' in various places, this might be different for inflected languages
-'recentchangesall' => 'të gjitha',
-'imagelistall'     => 'të gjitha',
-'watchlistall2'    => 'të gjitha',
-'namespacesall'    => 'të gjitha',
-'monthsall'        => 'të gjitha',
-'limitall'         => 'Të gjitha',
+'watchlistall2' => 'të gjitha',
+'namespacesall' => 'të gjitha',
+'monthsall'     => 'të gjitha',
+'limitall'      => 'Të gjitha',
 
 # E-mail address confirmation
 'confirmemail'              => 'Vërtetoni adresën tuaj',
@@ -3163,24 +3489,24 @@ Ky kod i konfirmimit skadon me $4.',
 'scarytranscludefailed'   => '[Gjetja e stampes deshtoi per $1]',
 'scarytranscludetoolong'  => '[Adresa URL eshte teper e gjate]',
 
-# Trackbacks
-'trackbackbox'      => 'Lidhje ndjekëse për këtë faqe:<br />
-$1',
-'trackbackremove'   => '([$1 hiqe])',
-'trackbacklink'     => 'Lidhje ndjekëse',
-'trackbackdeleteok' => 'Lidhja ndjekëse u hoq.',
-
 # Delete conflict
-'deletedwhileediting' => 'Kujdes! Kjo faqe është grisur pasi keni filluar redaktimin!',
-'confirmrecreate'     => "Përdoruesi [[User:$1|$1]] ([[User talk:$1|diskutime]]) grisi këtë artikull mbasi ju filluat ta redaktoni për arsyen:
+'deletedwhileediting'      => 'Kujdes! Kjo faqe është grisur pasi keni filluar redaktimin!',
+'confirmrecreate'          => "Përdoruesi [[User:$1|$1]] ([[User talk:$1|diskutime]]) grisi këtë artikull mbasi ju filluat ta redaktoni për arsyen:
 : ''$2''
 Ju lutem konfirmoni nëse dëshironi me të vertetë ta rikrijoni këtë artikull.",
-'recreate'            => 'Rikrijo',
+'confirmrecreate-noreason' => 'Përdoruesi [[User:$1|$1]] ([[User talk:$1|talk]]) ka fshirë këtë faqe pasi ju filluat ta redaktoni. Ju lutem konfirmoni që ju vërtet doni të ri-krijoni këtë faqe.',
+'recreate'                 => 'Rikrijo',
 
 # action=purge
 'confirm_purge_button' => 'Shko',
 'confirm-purge-top'    => "Pastro ''cache''-in për këtë faqe?",
 'confirm-purge-bottom' => "Spastrimi i një faqeje pastron ''cache''-in dhe detyron shfaqjen e verzionit më të fundit të faqes.",
+
+# action=watch/unwatch
+'confirm-watch-button'   => 'Në rregull',
+'confirm-watch-top'      => 'Shto këtë faqe në listën mbikqyrëse tuajen?',
+'confirm-unwatch-button' => 'Në rregull',
+'confirm-unwatch-top'    => 'Largo këtë faqe nga lista juaj mbikqyrëse ?',
 
 # Multipage image navigation
 'imgmultipageprev' => '← faqja e kaluar',
@@ -3223,14 +3549,14 @@ Ju lutem konfirmoni nëse dëshironi me të vertetë ta rikrijoni këtë artikul
 'watchlistedit-normal-legend'  => 'Largo titujt nga lista mbikqyrëse',
 'watchlistedit-normal-explain' => 'Titujt në listën mbikëqyrëse janë treguar poshtë.
 Largo titullin duke shënuar kutizën dhe pastaj shtype butonin Largoj titujt.
-Ju gjithashtu mundeni ta redaktoni listën [[Special:Watchlist/raw|këtu]].',
+Ju gjithashtu mundeni ta redaktoni listën [[Special:EditWatchlist/raw|këtu]].',
 'watchlistedit-normal-submit'  => 'Largo Titujt',
 'watchlistedit-normal-done'    => '{{PLURAL:$1|1 titull u larguan|$1 tituj u larguan}} u larguan nga lista mbikëqyrëse e juaj:',
 'watchlistedit-raw-title'      => 'Redakto listën mbikëqyrëse të papërpunuar',
 'watchlistedit-raw-legend'     => 'Redakto listën mbikëqyrëse të papërpunuar',
 'watchlistedit-raw-explain'    => 'Titujt në listën tuaj mbikqyrëse janë të treguar poshtë dhe mund të redaktohen duke i shtuar ose duke i hequr nga lista; një titull pë rresht.
 Kur të mbaroni, klikoni "{{int:Watchlistedit-raw-submit}}".
-Ju gjithashtu mund [[Special:Watchlist/edit|të përdorni redaktuesin standart]].',
+Ju gjithashtu mund [[Special:EditWatchlist|të përdorni redaktuesin standart]].',
 'watchlistedit-raw-titles'     => 'Titujt:',
 'watchlistedit-raw-submit'     => 'Aktualizoje listën',
 'watchlistedit-raw-done'       => 'Lista mbikëqyrëse u aktualizua.',
@@ -3242,64 +3568,65 @@ Ju gjithashtu mund [[Special:Watchlist/edit|të përdorni redaktuesin standart]]
 'watchlisttools-edit' => 'Shih dhe redakto listën mbikqyrëse.',
 'watchlisttools-raw'  => 'Redaktoje drejtpërdrejt listën',
 
+# Signatures
+'signature' => '[[{{ns:user}}:$1|$2]] ([[{{ns:user_talk}}:$1|diskutimet]])',
+
 # Core parser functions
 'unknown_extension_tag' => 'Etiketë shtesë e panjohur "$1"',
 'duplicate-defaultsort' => '\'\'\'Kujdes:\'\'\' Renditja kryesore e çelësit "$2" refuzon renditjen e mëparshme kryesore të çelësit "$1".',
 
 # Special:Version
-'version'                          => 'Versioni',
-'version-extensions'               => 'Zgjerime të instaluara',
-'version-specialpages'             => 'Faqe speciale',
-'version-parserhooks'              => 'Parser goditje',
-'version-variables'                => 'Variabël',
-'version-skins'                    => 'Pamjet',
-'version-other'                    => 'Të tjera',
-'version-mediahandlers'            => 'Mbajtesit e Media-s',
-'version-hooks'                    => 'Goditjet',
-'version-extension-functions'      => 'Funksionet shtese',
-'version-parser-extensiontags'     => 'Parser etiketat shtese',
-'version-parser-function-hooks'    => 'Parser goditjet e funksionit',
-'version-skin-extension-functions' => 'Funksionet shtese te pamjes',
-'version-hook-name'                => 'Emri i goditjes',
-'version-hook-subscribedby'        => 'Abonuar nga',
-'version-version'                  => '(Versioni $1)',
-'version-license'                  => 'Licensa',
-'version-poweredby-credits'        => "Ky wiki është mundësuar nga '''[http://www.mediawiki.org/ MediaWiki]''', copyright © 2001-$1 $2.",
-'version-poweredby-others'         => 'të tjerë',
-'version-license-info'             => 'MediaWiki është një softuer i lirë; ju mund ta shpërndani dhe redakatoni atë nën kushtet GNU General Public License si e publikuar nga fondacioni Free Software; ose versioni 2 i licensës, ose çdo version më i vonshëm.
+'version'                       => 'Versioni',
+'version-extensions'            => 'Zgjerime të instaluara',
+'version-specialpages'          => 'Faqe speciale',
+'version-parserhooks'           => 'Parser goditje',
+'version-variables'             => 'Variabël',
+'version-antispam'              => 'Spam',
+'version-skins'                 => 'Pamjet',
+'version-other'                 => 'Të tjera',
+'version-mediahandlers'         => 'Mbajtesit e Media-s',
+'version-hooks'                 => 'Goditjet',
+'version-extension-functions'   => 'Funksionet shtese',
+'version-parser-extensiontags'  => 'Parser etiketat shtese',
+'version-parser-function-hooks' => 'Parser goditjet e funksionit',
+'version-hook-name'             => 'Emri i goditjes',
+'version-hook-subscribedby'     => 'Abonuar nga',
+'version-version'               => '(Versioni $1)',
+'version-license'               => 'Licensa',
+'version-poweredby-credits'     => "Ky wiki është mundësuar nga '''[//www.mediawiki.org/ MediaWiki]''', copyright © 2001-$1 $2.",
+'version-poweredby-others'      => 'të tjerë',
+'version-license-info'          => 'MediaWiki është një softuer i lirë; ju mund ta shpërndani dhe redakatoni atë nën kushtet GNU General Public License si e publikuar nga fondacioni Free Software; ose versioni 2 i licensës, ose çdo version më i vonshëm.
 
 MediaWiki është shpërndarë me shpresën se do të jetë i dobishëm, por PA ASNJË GARANCI; as garancinë e shprehur të SHITJES apo PËRDORIMIT PËR NJË QËLLIM TË CAKTUAR. Shikoni GNU General Public License  për më shumë detaje.
 
-Ju duhet të keni marrë [{{SERVER}}{{SCRIPTPATH}}/COPYING një kopje të GNU General Public License] së bashku me këtë program; nëse jo, shkruani tek Free Software Foundation, Inc., 51 Rruga Franklin, Kati i pestë, Boston, MA 02110-1301, ShBA ose [http://www.gnu.org/licenses/old-licenses/gpl-2.0.html lexojeni atë online].',
-'version-software'                 => 'Softuerët e instaluar',
-'version-software-product'         => 'Produkti',
-'version-software-version'         => 'Versioni',
+Ju duhet të keni marrë [{{SERVER}}{{SCRIPTPATH}}/COPYING një kopje të GNU General Public License] së bashku me këtë program; nëse jo, shkruani tek Free Software Foundation, Inc., 51 Rruga Franklin, Kati i pestë, Boston, MA 02110-1301, ShBA ose [//www.gnu.org/licenses/old-licenses/gpl-2.0.html lexojeni atë online].',
+'version-software'              => 'Softuerët e instaluar',
+'version-software-product'      => 'Produkti',
+'version-software-version'      => 'Versioni',
 
 # Special:FilePath
 'filepath'         => 'Vendndodhja e skedave',
 'filepath-page'    => 'Skeda:',
 'filepath-submit'  => 'Shko',
-'filepath-summary' => 'Kjo faqe speciale jep vendndodhjen e plotë të një skede. Figurat tregohen me madhësi të plotë, skedat e tjera hapen me programet përkatëse.
-
-Shtypni emrin e skedës pa parashtesën "Figura:".',
+'filepath-summary' => 'Kjo faqe speciale jep vendndodhjen e plotë të një skede.
+Figurat tregohen me madhësi të plotë, skedat e tjera hapen me programet përkatëse.',
 
 # Special:FileDuplicateSearch
-'fileduplicatesearch'          => 'Kërkoni për skeda të dyfishta',
-'fileduplicatesearch-summary'  => 'Kërkoni për dyfishime të skedave në bazë të vlerës përmbledhëse («hash»).
-
-Vendosni emrin e skedës pa parashtesën "{{ns:file}}:".',
-'fileduplicatesearch-legend'   => 'Kërko për dyfishime',
-'fileduplicatesearch-filename' => 'Emri i skedës:',
-'fileduplicatesearch-submit'   => 'Kërko',
-'fileduplicatesearch-info'     => '$1 × $2 pixel<br />Madhësia e skedës: $3<br />Lloji MIME: $4',
-'fileduplicatesearch-result-1' => 'Skeda "$1" nuk ka kopje të njëjta',
-'fileduplicatesearch-result-n' => 'Skeda "$1" ka {{PLURAL:$2|1 dyfishim|$2 dyfishime}}.',
+'fileduplicatesearch'           => 'Kërkoni për skeda të dyfishta',
+'fileduplicatesearch-summary'   => 'Kërkoni për dyfishime të skedave në bazë të vlerës përmbledhëse («hash»).',
+'fileduplicatesearch-legend'    => 'Kërko për dyfishime',
+'fileduplicatesearch-filename'  => 'Emri i skedës:',
+'fileduplicatesearch-submit'    => 'Kërko',
+'fileduplicatesearch-info'      => '$1 × $2 pixel<br />Madhësia e skedës: $3<br />Lloji MIME: $4',
+'fileduplicatesearch-result-1'  => 'Skeda "$1" nuk ka kopje të njëjta',
+'fileduplicatesearch-result-n'  => 'Skeda "$1" ka {{PLURAL:$2|1 dyfishim|$2 dyfishime}}.',
+'fileduplicatesearch-noresults' => 'Nuk u gjet asnjë skedë me emrin "$1".',
 
 # Special:SpecialPages
 'specialpages'                   => 'Faqet speciale',
-'specialpages-note'              => '---
-Faqet speciale normale.
-<strong class="mw-specialpagerestricted">Faqet speciale të kufizuara.</strong>',
+'specialpages-note'              => '* Faqet speciale normale.
+* <strong class="mw-specialpagerestricted">Faqet speciale të kufizuara.</strong>
+* <span class="mw-specialpagecached">Faqet speciale të fshehtat (mund të jenë vjetëruar).</span>',
 'specialpages-group-maintenance' => 'Përmbledhje mirëmbajtjeje',
 'specialpages-group-other'       => 'Faqe speciale të tjera',
 'specialpages-group-login'       => 'Hyrje dhe hapje llogarie',
@@ -3341,13 +3668,16 @@ Faqet speciale normale.
 'tags-hitcount'           => '$1 {{PLURAL:$1|ndryshim|ndryshime}}',
 
 # Special:ComparePages
-'comparepages'     => 'Krahasoni faqet',
-'compare-selector' => 'Krahasoni versionet e faqeve',
-'compare-page1'    => 'Faqe 1',
-'compare-page2'    => 'Faqe 2',
-'compare-rev1'     => 'Version 1',
-'compare-rev2'     => 'Version 2',
-'compare-submit'   => 'Krahasimi',
+'comparepages'                => 'Krahasoni faqet',
+'compare-selector'            => 'Krahasoni versionet e faqeve',
+'compare-page1'               => 'Faqe 1',
+'compare-page2'               => 'Faqe 2',
+'compare-rev1'                => 'Version 1',
+'compare-rev2'                => 'Version 2',
+'compare-submit'              => 'Krahasimi',
+'compare-invalid-title'       => 'Titulli që keni specifikuar është i pavlefshëm',
+'compare-title-not-exists'    => 'Titulli që keni specifikuar nuk ekziston.',
+'compare-revision-not-exists' => 'Rishikimi që ju specifikuat nuk ekziston',
 
 # Database error messages
 'dberr-header'      => 'Kjo wiki ka një problem',
@@ -3374,5 +3704,91 @@ Kjo faqe është duke përjetuar vështirësi teknike.',
 # SQLite database support
 'sqlite-has-fts' => '$1 me mbështetje të kërkimit me teskt të plotë',
 'sqlite-no-fts'  => '$1 pa mbështetje të kërkimit me teskt të plotë',
+
+# New logging system
+'logentry-delete-delete'              => '$1 grisi faqen $3',
+'logentry-delete-restore'             => '$1 riktheu faqen $3',
+'logentry-delete-event'               => '$1 ndryshoi dukshmërinë e {{PLURAL:$5|një ngjarje regjistri|$5 ngjarjeve regjistri}} në $3: $4',
+'logentry-delete-revision'            => '$1 ndryshoi dukshmërinë e {{PLURAL:$5|një versioni|$5 versioneve}} në $3: $4',
+'logentry-delete-event-legacy'        => '$1 ndryshoi dukshmërinë e ngjarjeve të regjistrit në $3',
+'logentry-delete-revision-legacy'     => '$1 ndryshoi dukshmërinë e versioneve në $3',
+'logentry-suppress-delete'            => '$1 shtypi faqen $3',
+'logentry-suppress-event'             => '$1 në mënyrë sekrete ndryshoi dukshmërinë e {{PLURAL:$5|një ngjarje regjistri|$5 ngjarjeve regjistri}} në $3: $4',
+'logentry-suppress-revision'          => '$1 në mënyrë sekrete ndryshoi dukshmërinë e {{PLURAL:$5|një versioni|$5 versioneve}} në $3: $4',
+'logentry-suppress-event-legacy'      => '$1 në mënyrë sekrete ndryshoi dukshmërinë e ngjarjeve të regjistrit në $3',
+'logentry-suppress-revision-legacy'   => '$1 në mënyrë sekrete ndryshoi dukshmërinë e versioneve në faqen $3',
+'revdelete-content-hid'               => 'përmbajtja u fsheh',
+'revdelete-summary-hid'               => 'redaktimi i përmbledhjes i fshehur',
+'revdelete-uname-hid'                 => 'emri i përdoruesit i fshehur',
+'revdelete-content-unhid'             => 'përmbajtje jo e fshehur',
+'revdelete-summary-unhid'             => 'redaktimi i përmbledhjes jo i fshehur',
+'revdelete-uname-unhid'               => 'emri i përdoruesit jo i fshehur',
+'revdelete-restricted'                => 'u vendosën kufizime për administruesit',
+'revdelete-unrestricted'              => 'u hoqën kufizimet për administruesit',
+'logentry-move-move'                  => '$1 zhvendosi faqen $3 te $4',
+'logentry-move-move-noredirect'       => '$1 zhvendosi faqen $3 te $4 pa lënë një përcjellim',
+'logentry-move-move_redir'            => '$1 zhvendosi faqen $3 te $4 nëpërmjet përcjellimit',
+'logentry-move-move_redir-noredirect' => '$1 zhvendosi faqen $3 te $4 nëpërmjet një përcjellimi pa lënë një përcjellim',
+'logentry-patrol-patrol'              => '$1 shënoi versionin $4 të faqes $3 të patrolluar',
+'logentry-patrol-patrol-auto'         => '$1 automatikisht shënoi versionin $4 të faqes $3 të patrolluar',
+'logentry-newusers-newusers'          => '$1 krijoi një llogari',
+'logentry-newusers-create'            => '$1 krijoi një llogari',
+'logentry-newusers-create2'           => '$1 krijoi një llogari $3',
+'logentry-newusers-autocreate'        => 'Llogaria $1 u krijua automatikisht',
+'newuserlog-byemail'                  => 'fjalëkalimi u dërgua në postën elektronike',
+
+# Feedback
+'feedback-bugornote' => 'Nëse jeni gati për të përshkruar një problem teknik me detaje ju lutemi [$1 raportoni një problem].
+Përndryshe, ju mund të formularin e thjeshtë më poshtë. Komenti juaj do të shtohet te faqja "[$3 $2]"", së bashku me emrin tuaj të përdoruesit dhe shfletuesin të cilin jeni duke përdorur.',
+'feedback-subject'   => 'Subjekti:',
+'feedback-message'   => 'Mesazhi:',
+'feedback-cancel'    => 'Anulo',
+'feedback-submit'    => 'Paraqit përshtypjet',
+'feedback-adding'    => 'Duke shtuar përshtypjen te faqja...',
+'feedback-error1'    => 'Gabim: Rezultat i panjohur nga API',
+'feedback-error2'    => 'Gabim: Redaktimi dështoi',
+'feedback-error3'    => 'Gabim: Nuk ka përgjigje nga API',
+'feedback-thanks'    => 'Faleminderit! Përshtypja juaj është postuar në faqen "[$2 $1]".',
+'feedback-close'     => 'Përfunduar',
+'feedback-bugcheck'  => 'Shumë mirë! Thjesht kontrolloni që nuk është një nga [$1 problemet e njohura].',
+'feedback-bugnew'    => 'E kontrollova. Raporto një problem të ri',
+
+# API errors
+'api-error-badaccess-groups'              => 'Ju nuk lejoheni të ngarkoni skeda në këtë wiki.',
+'api-error-badtoken'                      => 'Gabim i brendshëm: Shenjë e keqe.',
+'api-error-copyuploaddisabled'            => 'Ngarkimi nga URL-ja është çaktivizuar në këtë server.',
+'api-error-duplicate'                     => '{{PLURAL:$1|Ekziston [$2 një skedë tjetër]|Ekzistojnë [$2 disa skeda të tjera]}} me të njëjtën përmbajtje.',
+'api-error-duplicate-archive'             => '{{Ekzistonte [$2 një skedë tjetër]|Ekzistonin [$2 disa skeda të tjera]}} me të njëjtën përmbajtje, por {{PLURAL:$1|u gris|u grisën}}.',
+'api-error-duplicate-archive-popup-title' => 'Dublo {{PLURAL:$1|skedë|skeda}} që janë grisur tashmë',
+'api-error-duplicate-popup-title'         => 'Dublo {{PLURAL:$1|skedë|skeda}}',
+'api-error-empty-file'                    => 'Skeda që paraqitët ishte bosh.',
+'api-error-emptypage'                     => 'Nuk lejohet krijimi i faqeve të reja bosh.',
+'api-error-fetchfileerror'                => 'Gabim i brendshëm: Diçka shkoi keq gjatë marrjes së skedës.',
+'api-error-file-too-large'                => 'Skeda që paraqitët ishte shumë e madhe.',
+'api-error-filename-tooshort'             => 'Emri i skedës është shumë i shkurtër.',
+'api-error-filetype-banned'               => 'Ky lloj i skedës është përjashtuar.',
+'api-error-filetype-missing'              => 'Skedës i mungon një shtesë.',
+'api-error-hookaborted'                   => 'Modifikimi që provuat të bëni u ndërpre nga një goditje shtese.',
+'api-error-http'                          => 'Gabim i brendshëm: Nuk mund të lidhet me serverin.',
+'api-error-illegal-filename'              => 'Emri i skedës nuk lejohet.',
+'api-error-internal-error'                => 'Gabim i brendshëm: Diçka shkoi keq me procesimin e ngarkimit tuaj në wiki.',
+'api-error-invalid-file-key'              => 'Gabim i brendshëm: Skeda nuk u gjet në ruajtjen e përkohshme.',
+'api-error-missingparam'                  => 'Gabim i brendshëm: Mungesë e parametrave në kërkesë.',
+'api-error-missingresult'                 => 'Gabim i brendshëm: Nuk mund të përcaktohet nëse kopjimi doli me sukses.',
+'api-error-mustbeloggedin'                => 'Ju duhet të identifikoheni për të ngarkuar skeda.',
+'api-error-mustbeposted'                  => 'Gabim i brendshëm: Kërkesa kërkon HTTP POST.',
+'api-error-noimageinfo'                   => 'Ngarkimi u krye me sukses, por serveri nuk na dha ndonjë informacion për këtë skedë.',
+'api-error-nomodule'                      => 'Gabim i brendshëm: Nuk ka modul ngarkimi të vendosur.',
+'api-error-ok-but-empty'                  => 'Gabim i brendshëm: Nuk ka përgjigje nga serveri.',
+'api-error-overwrite'                     => 'Mbishkrimi i një skede ekzistuese nuk lejohet.',
+'api-error-stashfailed'                   => 'Gabim i brendshëm: Serveri nuk arriti të ruajë skedën e përkohshme.',
+'api-error-timeout'                       => 'Serveri nuk u përgjigj gjatës kohës që pritej.',
+'api-error-unclassified'                  => 'Një gabim i panjohur ndodhi.',
+'api-error-unknown-code'                  => 'Gabim i panjohur: "$1"',
+'api-error-unknown-error'                 => 'Gabim i brendshëm: Diçka shkoi gabim kur provuat të ngarkoni skedën tuaj.',
+'api-error-unknown-warning'               => 'Paralajmërim i panjohur: $1',
+'api-error-unknownerror'                  => 'Gabim i papërcaktuar: "$1".',
+'api-error-uploaddisabled'                => 'Ngarkimi është i çaktivizuar në këte wiki.',
+'api-error-verification-error'            => 'Skeda mund të jetë e korruptuar ose ka shtesë të gabuar.',
 
 );

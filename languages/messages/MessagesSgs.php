@@ -1,5 +1,5 @@
 <?php
-/** Samogitian (Žemaitėška)
+/** Samogitian (žemaitėška)
  *
  * See MessagesQqq.php for message documentation incl. usage of parameters
  * To improve a translation please visit http://translatewiki.net
@@ -8,6 +8,7 @@
  * @file
  *
  * @author Hugo.arg
+ * @author Kaganer
  * @author Reedy
  * @author Urhixidur
  * @author Zordsdavini
@@ -63,14 +64,14 @@ $messages = array(
 'tog-justify'                 => 'Līgintė pastraipas palē abi poses',
 'tog-hideminor'               => 'Pakavuotė mažus pataisėmus vielībūju taisīmu sārašė',
 'tog-extendwatchlist'         => 'Ėšpliestė keravuojamu sāraša, kū ruodītu vėsus tėnkamus pakeitėmus',
-'tog-usenewrc'                => 'Pažongē ruodomė vielibė̅jė pakeitėmā (JavaScript)',
+'tog-usenewrc'                => 'Pažongē ruodomė vielibė̅jė pakeitėmā (rēk JavaScript)',
 'tog-numberheadings'          => 'Autuomatėškā numeroutė skėrsnelios',
 'tog-showtoolbar'             => 'Ruodītė redagavėma rakondinė (JavaScript)',
 'tog-editondblclick'          => 'Poslapiu redagavėms dvėgobu paspaudėmu (JavaScript)',
 'tog-editsection'             => 'Ijongtė skėrsneliu redagavėma nauduojant nūruodas [taisītė]',
 'tog-editsectiononrightclick' => 'Ijongtė skėrsneliu redagavėma paspaudos skėrsnelė pavadėnėma<br />dešėniouju pelies klavėšu (JavaScript)',
 'tog-showtoc'                 => 'Ruodītė torėni, jē poslapī daugiau kāp 3 skėrsnelē',
-'tog-rememberpassword'        => 'Atmintė prėsėjongėma infuormacėjė šėtom kuompioterī (for a maximum of $1 {{PLURAL:$1|day|days}})',
+'tog-rememberpassword'        => 'Atmintė prėsėjongėma infuormacėjė šėtom kuompioterī (daugiausē $1 {{PLURAL:$1|dėina|dėinuom}})',
 'tog-watchcreations'          => 'Pridietė poslapius, katrūs sokorio, i keravuojamu sāraša',
 'tog-watchdefault'            => 'Pridietė poslapius, katrūs taisau, i keravuojamu sāraša',
 'tog-watchmoves'              => 'Pridietė poslapius, katrūs parkelio, i keravuojamu sāraša',
@@ -84,9 +85,10 @@ $messages = array(
 'tog-enotifminoredits'        => 'Siōstė mon gromata, kūmet poslapė keitėms īr mažos',
 'tog-enotifrevealaddr'        => 'Ruodītė mona el. pašta adresa primėnėma gromatuos',
 'tog-shownumberswatching'     => 'Ruodītė keravuojantiu nauduotuoju skatliu',
-'tog-fancysig'                => 'Parašos ba autuomatėniu nūruodu',
-'tog-externaleditor'          => 'Palē nutīliejėma nauduotė ėšuorini radaktuoriu',
-'tog-externaldiff'            => 'Palē nutīliejėma nauduotė ėšuorinė skėrtomu ruodīma pruograma',
+'tog-oldsig'                  => 'Esams parašos:',
+'tog-fancysig'                => 'Parašos kāp wiki tekstos (ba autuomatėniu nūruodu)',
+'tog-externaleditor'          => 'Vagol nutīliejėma nauduotė ėšuorini radaktuoriu (tėktās specam, rēk specēliū nustatīmu kompioteriō. [//www.mediawiki.org/wiki/Manual:External_editors Daugiau infuormacėjės.])',
+'tog-externaldiff'            => 'Palē nutīliejėma nauduotė ėšuorinė skėrtomu ruodīma pruograma (tėktās specam, rēk specēliū nustatīmu kompioteriō. [//www.mediawiki.org/wiki/Manual:External_editors Daugiau infuormacėjės.])',
 'tog-showjumplinks'           => 'Ijongtė „paršuoktė i“ pasėikiamoma nūruodas',
 'tog-uselivepreview'          => 'Nauduotė tėisiogėne parvėiza (JavaScript) (Eksperimentėnis)',
 'tog-forceeditsummary'        => 'Klaustė, kumet palėiku toščē pakeitėma kuomentara',
@@ -95,6 +97,7 @@ $messages = array(
 'tog-watchlisthideminor'      => 'Kavuotė mažos pakeitėmos keravuojamu sarašė',
 'tog-watchlisthideliu'        => 'Kavuotė prisėjongosium nauduotuojum keitėmus keravuojamu sārošė',
 'tog-watchlisthideanons'      => 'Kavuotė anonimėniu nauduotuoju keitėmus keravuojamu sarašė',
+'tog-watchlisthidepatrolled'  => 'Kavuotė parveizietos pakeitėmos keravuojamu sārašė',
 'tog-nolangconversion'        => 'Ėšjongtė variantu keitėma',
 'tog-ccmeonemails'            => 'Siōstė mon gromatu kopėjės, katros siontiu kėtėims nauduotojams',
 'tog-diffonly'                => 'Neruodītė poslapė torėnė puo skėrtomās',
@@ -104,6 +107,10 @@ $messages = array(
 'underline-always'  => 'Visumet',
 'underline-never'   => 'Nikumet',
 'underline-default' => 'Palē naršīklės nostatīmos',
+
+# Font style option in Special:Preferences
+'editfont-style'   => 'Redagavėma longa teksta stėlios:',
+'editfont-default' => 'Palē naršīklės nostatīmos',
 
 # Dates
 'sunday'        => 'sekma dėina',
@@ -158,16 +165,23 @@ $messages = array(
 'dec'           => 'grd',
 
 # Categories related messages
-'pagecategories'           => '{{PLURAL:$1|Kateguorėjė|Kateguorėjės|Kateguorėju}}',
-'category_header'          => 'Kateguorėjės „$1“ straipsnē',
-'subcategories'            => 'Subkateguorėjės',
-'category-media-header'    => 'Abruozdielis kateguorėjuo „$1“',
-'category-empty'           => "''Šėta kateguorėjė nūnā netor nė vėina straipsnė a faila.''",
-'hidden-categories'        => '{{PLURAL:$1|Pakavuota kateguorėjė|Pakavuotas kateguorėjės}}',
-'hidden-category-category' => 'Pakavuotas kateguorėjės',
-'category-subcat-count'    => '{{PLURAL:$2|Tuo kateguorėjuo īr vėina subkateguorėjė.|{{PLURAL:$1|Ruodoma|Ruodomas|Ruodoma}} $1 {{PLURAL:$1|subkateguorėjė|subkateguorėjės|subkateguorėju}} (ėš vėsa īr $2 {{PLURAL:$2|subkateguorėjė|subkateguorėjės|subkateguorėju}}).}}',
-'category-article-count'   => '{{PLURAL:$2|Tuo kateguorėjuo īr vėins poslapis.|{{PLURAL:$1|Ruodoms|Ruodomė|Ruodoma}} $1 tuos kateguorėjės {{PLURAL:$1|poslapis|poslapē|poslapiu}} (ėš vėsa kateguorėjuo īr $2 {{PLURAL:$2|poslapis|poslapē|poslapiu}}).}}',
-'listingcontinuesabbrev'   => 'tes.',
+'pagecategories'                 => '{{PLURAL:$1|Kateguorėjė|Kateguorėjės|Kateguorėju}}',
+'category_header'                => 'Kateguorėjės „$1“ straipsnē',
+'subcategories'                  => 'Subkateguorėjės',
+'category-media-header'          => 'Abruozdielis kateguorėjuo „$1“',
+'category-empty'                 => "''Šėta kateguorėjė nūnā netor nė vėina straipsnė a faila.''",
+'hidden-categories'              => '{{PLURAL:$1|Pakavuota kateguorėjė|Pakavuotas kateguorėjės}}',
+'hidden-category-category'       => 'Pakavuotas kateguorėjės',
+'category-subcat-count'          => '{{PLURAL:$2|Tuo kateguorėjuo īr vėina subkateguorėjė.|{{PLURAL:$1|Ruodoma|Ruodomas|Ruodoma}} $1 {{PLURAL:$1|subkateguorėjė|subkateguorėjės|subkateguorėju}} (ėš vėsa īr $2 {{PLURAL:$2|subkateguorėjė|subkateguorėjės|subkateguorėju}}).}}',
+'category-subcat-count-limited'  => 'Tuo kateguorėjuo īr {{PLURAL:$1|subkateguorėjė|subkateguorėjės|subkateguorėju}}.',
+'category-article-count'         => '{{PLURAL:$2|Tuo kateguorėjuo īr vėins poslapis.|{{PLURAL:$1|Ruodoms|Ruodomė|Ruodoma}} $1 tuos kateguorėjės {{PLURAL:$1|poslapis|poslapē|poslapiu}} (ėš vėsa kateguorėjuo īr $2 {{PLURAL:$2|poslapis|poslapē|poslapiu}}).}}',
+'category-article-count-limited' => '{{PLURAL:$1|Ruodoms|Ruodomė|Ruodom}} $1 tuos kateguorėjės {{PLURAL:$1|poslapis|poslapē|poslapiu}}.',
+'category-file-count'            => '{{PLURAL:$2|Tuo kateguorėjuo īr vėins poslapis.|{{PLURAL:$1|Ruodoms|Ruodomė|Ruodoma}} $1 tuos kateguorėjės {{PLURAL:$1|fails|failā|failu}} (ėš vėsa kateguorėjuo īr $2 {{PLURAL:$2|poslapis|poslapē|poslapiu}}).}}',
+'category-file-count-limited'    => '{{PLURAL:$1|Ruodoms|Ruodomė|Ruodom}} $1 tuos kateguorėjės {{PLURAL:$1|fails|failā|failu}}.',
+'listingcontinuesabbrev'         => 'tes.',
+'index-category'                 => 'Indeksoutė poslapē',
+'noindex-category'               => 'Neindeksoutė poslapē',
+'broken-file-category'           => 'Poslapē, katrėi tor neteisingas nūruodas i failus',
 
 'about'         => 'Aple',
 'article'       => 'Straipsnis',
@@ -197,7 +211,7 @@ $messages = array(
 'vector-action-move'       => 'Parvadintė',
 'vector-action-protect'    => 'Ožrakintė',
 'vector-action-undelete'   => 'Atkortė',
-'vector-action-unprotect'  => 'Atrakintė',
+'vector-action-unprotect'  => 'Keistė apsauga',
 'vector-view-create'       => 'Sokortė',
 'vector-view-edit'         => 'Taisītė',
 'vector-view-history'      => 'Veizietė istuorėjė',
@@ -218,21 +232,23 @@ $messages = array(
 'history'           => 'Poslapė istuorėjė',
 'history_short'     => 'Istuorėjė',
 'updatedmarker'     => 'atnaujėnta nu paskotėnė mona apsėlonkīma',
-'info_short'        => 'Infuormacėjė',
 'printableversion'  => 'Versėjė spausdintė',
 'permalink'         => 'Nulatėnė nūruoda',
 'print'             => 'Spausdėntė',
+'view'              => 'Veizietė',
 'edit'              => 'Taisītė',
 'create'            => 'Sokortė',
 'editthispage'      => 'Taisītė ton poslapė',
 'create-this-page'  => 'Sokortė ta poslapi',
 'delete'            => 'Trintė',
 'deletethispage'    => 'Trintė ton poslapė',
+'undelete_short'    => 'Atstatītė $1 {{PLURAL:$1:redagavėma|redagavėmus|redagavėmu}}',
+'viewdeleted_short' => 'Veizietė $1 {{PLURAL:$1|ėštrinta keitėma|ėštrintus keitėmus|ėštrintū keitėmu}}',
 'protect'           => 'Ožrakintė',
 'protect_change'    => 'pakeistė',
 'protectthispage'   => 'Ožrakintė šėta poslapi',
-'unprotect'         => 'Atrakintė',
-'unprotectthispage' => 'Atrakintė šėta poslapi',
+'unprotect'         => 'Keistė apsauga',
+'unprotectthispage' => 'Keistė tuo poslapė apsauga',
 'newpage'           => 'Naus poslapis',
 'talkpage'          => 'Aptartė šėta poslapi',
 'talkpagelinktext'  => 'Aptarėms',
@@ -260,6 +276,12 @@ $messages = array(
 'jumpto'            => 'Paršuoktė i:',
 'jumptonavigation'  => 'navėgacėjė',
 'jumptosearch'      => 'paėiška',
+'view-pool-error'   => 'Atsėprašuom, bat serverē daba īr perkrautė.
+Nuognē pardaug nauduotoju skait ton poslapi.
+Prašuom palaukat ė mieginkat i ton poslapi patekt vieliau.
+
+$1',
+'pool-errorunknown' => 'Nežėnuoma klaida',
 
 # All link text and link target definitions of links into project namespace that get used by other message strings, with the exception of user group pages (see grouppage) and the disambiguation template definition (see disambiguations).
 'aboutsite'            => 'Aple {{SITENAME}}',
@@ -352,20 +374,19 @@ Prašuom aple šėtā paskelbtė [[Special:ListUsers/sysop|adminėstratoriō]], 
 'filenotfound'         => 'Nepavīkst rastė faila „$1“.',
 'fileexistserror'      => 'Nepavīkst irašītė i faila „$1“: tas fails jau īr',
 'unexpected'           => 'Natėkieta raikšmie: „$1“=„$2“.',
-'cannotdelete'         => 'Nepavīka ėštrintė nuruodīta poslapė a faila. (Mažo kažkas padarė pėrmesnis šėta)',
+'cannotdelete'         => 'Nepavīka ėštrintė nuruodīta poslapė a faila "$1". (Mažo kažkas padarė pėrmesnis šėta)',
 'badtitle'             => 'Bluogs pavadėnėms',
 'badtitletext'         => 'Nuruodīts poslapė pavadėnėms bova neleistėns, toščės a neteisėngā sojongts terpkalbinis a terppruojektėnis pavadėnėms. Anamė gal būtė vėins a daugiau sėmbuoliu, neleistėnū pavadėnėmūs',
-'perfcachedts'         => 'Ruodoma ėšsauguota doumenū kopėjė, katra bova atnaujėnta $1.',
+'perfcachedts'         => 'Ruodoma ėšsauguota doumenū kopėjė, katra bova atnaujėnta $1. Daugiausē $4 {{PLURAL:$4|rezoltats|rezoltatā|rezoltatu}} īr sauguoma.',
 'querypage-no-updates' => 'Atnaujėnėmā tam poslapiō nūnā ėšjongtė īr. Doumenīs nūnā čė nebus atnaujėntė.',
 'wrong_wfQuery_params' => 'Netaisingė parametrā i funkcėjė wfQuery()<br />
 Funkcėjė: $1<br />
 Ožklausėms: $2',
 'viewsource'           => 'Veizėtė kuoda',
-'viewsourcefor'        => 'poslapiō $1',
 'protectedpagetext'    => 'Šėts poslapis īr ožrakints, saugont anū nū redagavėma.',
 'viewsourcetext'       => 'Tomsta galėt veizietė ėr kopėjoutė poslapė kuoda:',
 'protectedinterface'   => 'Šėtom poslapi īr pruogramėnės ironguos sasajuos teksts katros īr apsauguots, kū neprietelē anū nasogadėntu.',
-'editinginterface'     => "'''Diemesė:''' Tamsta keitat poslapi, katros īr nauduojams programėnės irongas sōsajės tekstė. Pakeitėmā tamė poslapū tēpuogi pakeis nauduotuojė sōsajės ėšruoda ė kėtėims nauduotujams. Jēgo nuorėt pargoldītė, siūluom pasėnauduotė [http://translatewiki.net/wiki/Main_Page?setlang=bat-smg „translatewiki.net“], „MediaWiki“ lokalėzacėjės pruojėktu.",
+'editinginterface'     => "'''Diemesė:''' Tamsta keitat poslapi, katros īr nauduojams programėnės irongas sōsajės tekstė. Pakeitėmā tamė poslapū tēpuogi pakeis nauduotuojė sōsajės ėšruoda ė kėtėims nauduotujams. Jēgo nuorėt pargoldītė, siūluom pasėnauduotė [//translatewiki.net/wiki/Main_Page?setlang=bat-smg „translatewiki.net“], „MediaWiki“ lokalėzacėjės pruojėktu.",
 'sqlhidden'            => '(SQL ožklausa pakavuota)',
 'namespaceprotected'   => "Tamsta netorėt teisiu keistė poslapiu '''$1''' srėtī.",
 'ns-specialprotected'  => 'Specēlė̅ jė poslapē negal būtė keitamė.',
@@ -373,20 +394,21 @@ Ožklausėms: $2',
 # Login and logout pages
 'logouttext'                 => "'''Daba Tamsta esat atsėjongės.'''
 
-Galėt ė tuoliau nauduotė {{SITENAME}} anuonimėškā aba prisėjonkėt ėš naujė šėtuo patiu a kėto nauduotuojė vardu.
+Galat ė tuoliau nauduotė {{SITENAME}} anuonimėškā aba [[Special:UserLogin|prisėjonkat]] ėš naujė šėtuo patiu a kėto nauduotuojė vardu.
 Pastebiejims: katruos nekatruos poslapiuos ė tuoliau gal ruodītė būktā būtomiet prisėjongės lėgė tuol, kumet ėšvalīsėt sava naršīklės dietovė (''cache'').",
 'welcomecreation'            => '== Svēkė, $1! ==
 
-Tamstas paskīra bova sokorta. Neožmėrškėt pakeistė sava {{SITENAME}} nustatīmu.',
+Tamstas paskīra bova sokorta. Neožmėrškėt pakeistė sava [[Special:Preferences|{{SITENAME}} nustatīmu]].',
 'yourname'                   => 'Nauduotuojė vards:',
 'yourpassword'               => 'Slaptažuodis:',
 'yourpasswordagain'          => 'Pakartuoket slaptažuodė:',
-'remembermypassword'         => 'Atmintė šėta infuormacėjė šėtom kuompioteri(for a maximum of $1 {{PLURAL:$1|day|days}})',
+'remembermypassword'         => 'Atmintė prisėjongėma infuormacėjė šėtom kuompioteri (daugiausē $1 {{PLURAL:$1|dėina|dėinė|dėinas}})',
 'yourdomainname'             => 'Tamstas domens:',
 'login'                      => 'Prisėjongtė',
 'nav-login-createaccount'    => 'Prėsėjongtė / sokortė paskīra',
 'loginprompt'                => 'Ijonkėt pakavukus, jēgo nuorėt prisėjongtė pri {{SITENAME}}.',
 'userlogin'                  => 'Prėsėjongtė / sokortė paskīra',
+'userloginnocreate'          => 'Prisėjongtė',
 'logout'                     => 'Atsėjongtė',
 'userlogout'                 => 'Atsėjongtė',
 'notloggedin'                => 'Neprisėjongis',
@@ -395,12 +417,16 @@ Tamstas paskīra bova sokorta. Neožmėrškėt pakeistė sava {{SITENAME}} nusta
 'createaccount'              => 'Sokortė paskīra',
 'gotaccount'                 => "Jau torėt paskīra? '''$1'''.",
 'gotaccountlink'             => 'Prisėjonkėt',
+'userlogin-resetlink'        => 'Ožmiršat sava prisėjongėma doumenis?',
+'createaccountmail'          => 'Par elektruonėni pašta',
+'createaccountreason'        => 'Prīžastis:',
 'badretype'                  => 'Ivestė slaptažuodē nesotamp.',
 'userexists'                 => 'Irašīts nauduotuojė vards jau īr nauduojams.
 Prašuom pasėrėnktė kėtuoki varda.',
 'loginerror'                 => 'Prisėjongėma klaida',
+'createaccounterror'         => 'Neėšiejė sokortė paskīruos: $1',
 'nocookiesnew'               => 'Nauduotuojė paskīra bova sokurta, ale Tamsta nēsot prisėjongis. {{SITENAME}} nauduo pakavukus, kū prijongtu nauduotuojus. Tamsta esot ėšjongis anūs. Prašuom ijongtė pakavukus, tumet prisėjonkėt so sava nauju nauduotuojė vardu ė slaptažuodiu.',
-'nocookieslogin'             => "Vikipedėjė nauduo pakavukus (''cookies''), kū prijongtu nauduotuojus. Tamsta esat ėšjongės anūs. Prašuom ijongtė pakavukus ė pamiegītė viel.",
+'nocookieslogin'             => "{{SITENAME}} nauduo pakavukus (''cookies''), kū prijongtu nauduotuojus. Tamsta esat ėšjongės anūs. Prašuom ijongtė pakavukus ė pamiegītė viel.",
 'loginsuccesstitle'          => 'Siekmingā prisėjongiet.',
 'loginsuccess'               => "'''Nūnā Tamsta esot prisėjongės pri {{SITENAME}} kāp „$1“.'''",
 'nosuchuser'                 => 'Nier anėjuokė nauduotuojė pavadėnta „$1“.
@@ -409,28 +435,33 @@ Patikrėnkėt rašība, aba [[Special:UserLogin/signup|sokorkėt naujė paskīra
 'nouserspecified'            => 'Tamstā rēk nuruodītė nauduotuojė varda.',
 'wrongpassword'              => 'Ivests neteisings slaptažuodis. Pameginket dā karta.',
 'wrongpasswordempty'         => 'Ivests slaptažuodis īr tošts. Pameginket vielėk.',
-'passwordtooshort'           => 'Tamstas slaptažuodis nier laistėns aba par tromps īr. Ans tor būtė nuors {{PLURAL:$1|1 sėmbuolė|$1 sėmbuoliu}} ėlgoma ė skėrtės nū Tamstas nauduotuojė varda.',
+'passwordtooshort'           => 'Tamstas slaptažuodis nier laistėns aba par tromps īr. Ans tor būtė nuors {{PLURAL:$1|1 sėmbuolė|$1 sėmbuoliu}} ėlgoma.',
+'password-name-match'        => 'Tamstas slaptažuodis tor skirtėis nu Tamstas nauduotuojė varda.',
+'password-login-forbidden'   => 'Tuo nauduotuojė varda ė slaptažuodė nauduojėms nie galėms.',
 'mailmypassword'             => 'Atsiōstė naujė slaptažuodi pašto',
 'passwordremindertitle'      => 'Laikėns {{SITENAME}} slaptažuodis',
-'passwordremindertext'       => 'Kažkastā (tėkriausē Tamsta, IP adreso $1)
+'passwordremindertext'       => 'Kažkastā (tėkriausē Tamsta, ėš IP adresa $1)
 paprašė, kū atsiōstomiet naujė slaptažuodi pruojektō {{SITENAME}} ($4).
 Laikėns slaptažuodis nauduotuojō „$2“ bova sokorts ėr nustatīts kāp „$3“.
 Jēgo Tamsta nuoriejot ana pakeistė tūmet torietomiet prisėjongtė ė daba pakeistė sava slaptažuodi.
+Tamstas laikėns slaptažuodis bengs galiuotė par {{PLURAL:$5|dėina|$5 dėinas}}.
 
 Jēgo kažkas kėts atlėka ta prašīma aba Tamsta prisėmėniet sava slaptažuodi ė
 nebnuorėt ana pakeistė, Tamsta galėt tėisiuog nekreiptė diemiesė ė šėta gruomata ė tuoliau
 nauduotis sava senu slaptažuodžiu.',
 'noemail'                    => 'Nier anėjuokė el. pašta adresa ivesta nauduotuojō „$1“.',
+'noemailcreate'              => 'Tamsta nuruodīkat elektruonėni pašta, katros vēk',
 'passwordsent'               => 'Naus slaptažuodis bova nusiōsts i el. pašta adresa,
 ožregėstrouta nauduotuojė „$1“.
 Prašuom prisėjongtė vielē, kumet Tamsta gausėt anū.',
 'blocked-mailpassword'       => 'Tamstas IP adresos īr ožblokouts nū redagavėma, tudie neleidama nauduotė slaptažuodė priminėma funkcėjės, kū apsėsauguotomė nū pėktnaudžēvėma.',
 'eauthentsent'               => 'Patvėrtėnėma gruomata bova nusiōsta i paskėrta el. pašta adresa.
 Prīš ėšsiontiant kėta gruomata i Tamstas diežote, Tamsta torėt vīkdītė nuruodīmus gruomatuo, kū patvėrtėntomiet, kū diežotė tėkrā īr Tamstas.',
-'throttled-mailpassword'     => 'Slaptažuodžė priminims jau bova ėšsiōsts, par paskotėnes $1 adīnas. Nuorint apsėsauguotė nū pėktnaudžēvėma, slaptažuodė priminims gal būt ėšsiōsts tėk kas $1 adīnas.',
+'throttled-mailpassword'     => 'Slaptažuodžė priminims jau bova ėšsiōsts, par paskotėnes {{PLURAL:$1|adīna|$1 adīnas}}. Nuorint apsėsauguotė nū pėktnaudžēvėma, slaptažuodė priminims gal būt ėšsiōsts tėk kas {{PLURAL:$1|adīna|$1 adīnas}}.',
 'mailerror'                  => 'Klaida siontiant pašta: $1',
-'acct_creation_throttle_hit' => 'Tamsta jau sokūriet $1 prisėjongėma varda. Daugiau nebgalėma.',
-'emailauthenticated'         => 'Tamstas el. pašta adresos bova ožtvirtėnts $1.',
+'acct_creation_throttle_hit' => 'Ton pruojekta lankītuojē, katrėi nauduo Tamstas IP adresa, padėrba {{PLURAL:$1|$1 paskīra|$1 paskīras|$1 paskīrū}} par paskotėnta dėina, a tas īr dėdliausis leidams skaitlios par ta čiesa.
+Tudie šėton čieso lankītuojē, katrėi nauduo ta IP adresa, daugiau paskīrū dėrbt negal.',
+'emailauthenticated'         => 'Tamstas el. pašta adresos bova ožtvirtėnts $2 d. $3.',
 'emailnotauthenticated'      => 'Tamstas el. pašta adresos da nier patvėrtėnts. Anėjuokės gruomatas
 nebus siontamas ni vėinam žemiau ėšvardėntam puoslaugiō.',
 'noemailprefs'               => 'Nuruodėkīt el. pašta adresa, kū vėiktu šėtos funkcėjės.',
@@ -440,7 +471,7 @@ nebus siontamas ni vėinam žemiau ėšvardėntam puoslaugiō.',
 'createaccount-title'        => '{{SITENAME}} paskīruos kūrėms',
 'loginlanguagelabel'         => 'Kalba: $1',
 
-# Password reset dialog
+# Change password dialog
 'resetpass'               => 'Keistė slaptažuodi',
 'resetpass_header'        => 'Keistė paskīruos slaptažuodi',
 'oldpassword'             => 'Sens slaptažuodis:',
@@ -461,8 +492,6 @@ nebus siontamas ni vėinam žemiau ėšvardėntam puoslaugiō.',
 'extlink_tip'     => 'Ėšuorėnė nūruoda (nepamėrškėt http:// priraša)',
 'headline_sample' => 'Skīrė pavadėnėms',
 'headline_tip'    => 'Ontra līgė skīrė pavadėnėms',
-'math_sample'     => 'Iveskėt fuormolė',
-'math_tip'        => 'Matematinė fuormolė (LaTeX fuormato)',
 'nowiki_sample'   => 'Iterpkėt nefuormouta teksta čė',
 'nowiki_tip'      => 'Ėgnoroutė wiki fuormata',
 'image_sample'    => 'Pavīzdīs.jpg',
@@ -517,9 +546,6 @@ Tamsta negalėt nauduotės fonkcėjė „Rašītė gruomata tam nauduotuojō“,
 Tamstas IP adresos īr $3, bluokavėma ID īr $5.
 Prašuom nuruodītė šėtūs doumenis visūmet, kumet kreipiatės diel bluokavėma.",
 'blockednoreason'                  => 'prīžastis nier nuruodīta',
-'blockedoriginalsource'            => "Žemiau īr ruodoms '''$1''' torėnīs:",
-'blockededitsource'                => "''Tamstas keitimu'' teksts poslapiui '''$1''' īr ruodoms žemiau:",
-'whitelistedittitle'               => 'Nuorėnt redagoutė rēk prisėjongtė',
 'whitelistedittext'                => 'Tamsta torėt $1, kū keistomėt poslapius.',
 'nosuchsectiontitle'               => 'Nier tuokė skīrė',
 'loginreqlink'                     => 'prisėjongtė',
@@ -538,7 +564,10 @@ Jēgo Tamsta esat anonimėnis nauduotuos ėr veizėt, kū kuomentarā nier skėr
 Tamsta galėt [[Special:Search/{{PAGENAME}}|ėiškuotė šėta poslapė pavadėnėma]] kėtūs poslapiūs,
 <span class="plainlinks">[{{fullurl:{{#Special:Log}}|page={{FULLPAGENAMEE}}}} ėiškuotė sosėjosiu regėstru],
 aba [{{fullurl:{{FULLPAGENAME}}|action=edit}} keistė ta poslapi]</span>.',
-'userpage-userdoesnotexist'        => 'Nauduotuojė paskīra „$1“ nier ožregėstrouta. Prašuom patikrėntė, a Tamsta nuorėt kortė/keistė ta poslapi.',
+'noarticletext-nopermission'       => 'Tuo čiesu tamė poslapī nier juokė teksta.
+Tamsta galėt [[Special:Search/{{PAGENAME}}|ėiškuotė šėta poslapė pavadėnėma]] kėtūs poslapiūs,
+<span class="plainlinks">[{{fullurl:{{#Special:Log}}|page={{FULLPAGENAMEE}}}} ėiškuotė sosėjosiu regėstru]</span>.',
+'userpage-userdoesnotexist'        => 'Nauduotuojė paskīra „<nowiki>$1</nowiki>“ nier ožregėstrouta. Prašuom patikrėntė, a Tamsta nuorėt kortė/keistė ta poslapi.',
 'clearyourcache'                   => "'''Diemesė:''' ėšsauguojus Tamstā gal prireiktė ėšvalītė Tamstas naršīklės rėnktovė, kū paveizėtomėt pakeitėmus. '''Mozilla / Safari / Konqueror:''' laikīdami ''Shift'' pasėrinkėt ''Atsiōstė ėš nauja'', a paspauskėt ''Ctrl-Shift-R'' (sėstemuo Apple Mac ''Cmd-Shift-R''); '''IE:''' laikīdamė ''Ctrl'' paspauskėt ''Atnaujėntė'', o paspauskėt ''Ctrl-F5''; '''Konqueror:''' paprastiausē paspauskėt ''Perkrautė'' mīgtoka, o paspauskėt ''F5''; '''Opera''' nauduotuojam gal prireiktė pėlnā ėšvalītė anū rėnktovė ''Rakondā→Nustatīmā''.",
 'usercssyoucanpreview'             => "'''Patarėms:''' Nauduokit „Ruodītė parvaiza“ mīgtoka, kū ėšmiegintomiet sava naujaji CSS priš ėšsaugont.",
 'userjsyoucanpreview'              => "'''Patarėms:''' Nauduokit „Ruodītė parvaiza“ mīgtoka, kū ėšmiegintomiet sava naujaji JS priš ėšsaugont.",
@@ -593,13 +622,21 @@ Tamsta galėt grīžtė ė redagoutė nūnā esonti poslapi, a [[Special:UserLog
 'permissionserrors'                => 'Teisiu klaida',
 'permissionserrorstext'            => 'Tamsta netorėt teisiu šėta darītė diel {{PLURAL:$1|tuos prīžastėis|tū prīžastiū}}:',
 'permissionserrorstext-withaction' => 'Tamsta netorėt leidėma $2 dielē {{PLURAL:$1|tos prīžastėis|tū prīžastiu}}:',
-'recreate-moveddeleted-warn'       => "'''Diemesė: Tomsta atkoriat poslapi, katros onkstiau bova ėštrints.'''
+'recreate-moveddeleted-warn'       => "'''Parspiejėms: Tamsta ikeliat faila, katros onkstiau bova ėštrėnts.'''
 
-Tomsta torėt nosprēst, a pritėnk tuoliau redagoutė šėta poslapi.
-Šėta poslapė šalėnėmu istuorėjė īr pateikta patuogoma vardan:",
+Tamsta torietomiet nusprēstė, a īr naudėnga tuoliau ikeldinietė ta faila.
+Tuo faila pašalinėma istuorėjė īr pateikta dielē patuogoma:",
 'moveddeleted-notice'              => 'Tas poslapis bova ėštrėnts.
 Ėštrėnta poslapė versėju sārašos īr pateikts paveiziejėmō žemiau.',
 'edit-conflict'                    => 'Redagavėma kuonflėktos',
+
+# Parser/template warnings
+'post-expand-template-inclusion-warning'  => 'Perspiejėms: Šabluonu īterpėma dėdoms īr par dėdelis.
+Kāp katrėi šabluonā nebus ītrauktė.',
+'post-expand-template-inclusion-category' => 'Poslapē, kur šabluonu īterpėma dėdoms viršėjams',
+'post-expand-template-argument-warning'   => 'Perspiejėms: Tas poslapis tor nuors vėina šabluona argomenta, katros tor per dėdli ėšplietėma dėdoma.
+Tė argomentā bova praleistė.',
+'post-expand-template-argument-category'  => 'Poslapē, katrėi tor praleistū šabluona argomentu',
 
 # "Undo" feature
 'undo-success' => 'Keitėms gal būtė atšaukts. Prašuom patėkrėntė palīgėnėma, asonti žemiau, kū patvėrtėntomiet, kū Tamsta šėta ė nuorėt padarītė, ė tumet ėšsauguokit pakeitėmos, asontios žemiau, kū ožbėngtomiet keitėma atšaukėma.',
@@ -630,6 +667,7 @@ $3 nuruodīta prīžastis īr ''$2''",
 Žīmiejimā: (dab) = palīginims so vielibiausė versėjė,
 (pask) = palīginims so priš ta bovosia versėjė, S = mažos pataisims.",
 'history-fieldset-title' => 'Naršītė istuorėjuo',
+'history-show-deleted'   => 'Tėktās ėštrintė',
 'histfirst'              => 'Seniausė',
 'histlast'               => 'Vielibė̅jė',
 'historysize'            => '($1 {{PLURAL:$1|baits|baitā|baitu}})',
@@ -649,8 +687,9 @@ Pamiegīkėt [[Special:Search|ėiškoutė pruojektė]] sosėjosiu naujū poslapi
 'revdelete-text'            => "'''Ėštrintuos versėjės ėr ivīkē vistėik da bus ruodomė poslapė istuorėjuo ėr specēliūju veiksmū istuorėjuo, no anū torėnė dalīs nabus vėišā pasėikiamos.'''
 Kėtė admėnėstratuorē šėtom pruojekte vėsdar galės pasėiktė pasliepta torėni ėr galės ana atkortė viel par šėta pate sasaja, nabent īr nostatītė papėlduomė aprėbuojėmā.",
 'revdelete-unsuppress'      => 'Šalėntė apribuojėmos atkortuos versėjės',
-'logdelete-logentry'        => 'pakeists [[$1]] atsėtėkima veiziemoms',
 'revdel-restore'            => 'Keistė veizėmuma',
+'revdel-restore-deleted'    => 'Ėštrintas versėjės',
+'revdel-restore-visible'    => 'Veizėmas versėjės',
 'revdelete-edit-reasonlist' => 'Keistė trīnėma prīžastis',
 
 # Suppression log
@@ -668,7 +707,7 @@ Kėtė admėnėstratuorē šėtom pruojekte vėsdar galės pasėiktė pasliepta 
 'lineno'                  => 'Eilotė $1:',
 'compareselectedversions' => 'Palīgintė pasėrinktas versėjės',
 'editundo'                => 'atšauktė',
-'diff-multi'              => '($1 {{PLURAL:$1|tarpėnis keitėms nier ruoduoms|tarpėnē keitėmā nier ruoduomė|tarpėniu keitėmu nier ruoduoma}}.)',
+'diff-multi'              => '($2 {{PLURAL:$2|nauduotoja|nauduotoju|naudotoju}} $1 {{PLURAL:$1|tarpėnis keitėms nier ruodomos|tarpėnē keitėmā nier ruodomė|tarpėniu keitėmu nier ruodoma}})',
 
 # Search results
 'searchresults'                    => 'Paėiškuos rezoltatā',
@@ -682,6 +721,9 @@ Kėtė admėnėstratuorē šėtom pruojekte vėsdar galės pasėiktė pasliepta 
 'notextmatches'                    => 'Juokiū poslapė teksta atitikmenū',
 'prevn'                            => 'onkstesnius {{PLURAL:$1|$1}}',
 'nextn'                            => 'paskesnius {{PLURAL:$1|$1}}',
+'prevn-title'                      => '{{PLURAL:$1|Onkstesnis $1 rezoltats|Onkstesnio $1 rezoltato|Onkstesni $1 rezoltatā}}',
+'nextn-title'                      => '{{PLURAL:$1|Kėts $1 rezoltats|Kėto $1 rezoltato|Kėti $1 rezoltatā}}',
+'shown-title'                      => 'Ruodītė $1 {{PLURAL:$1|rezoltata|rezultato|rezoltatus}} poslapī',
 'viewprevnext'                     => 'Veizėtė ($1 {{int:pipe-separator}} $2) ($3).',
 'searchmenu-legend'                => 'Paėiškuos nustatīmā',
 'searchmenu-exists'                => "'''Poslapis pavadėnts „[[$1]]“ šėtuo wiki'''",
@@ -689,15 +731,17 @@ Kėtė admėnėstratuorē šėtom pruojekte vėsdar galės pasėiktė pasliepta 
 'searchhelp-url'                   => 'Help:Torėnīs',
 'searchmenu-prefix'                => '[[Special:PrefixIndex/$1|Ėiškuotė poslapiu so šėtuom prīšdielio]]',
 'searchprofile-articles'           => 'Torėnė poslapē',
-'searchprofile-project'            => 'Pruojėkta poslapē',
-'searchprofile-images'             => 'Failā',
+'searchprofile-project'            => 'Pagelbas ė pruojekta poslapē',
+'searchprofile-images'             => 'Daugēlīpės terpės failā',
 'searchprofile-everything'         => 'Vėsks',
 'searchprofile-advanced'           => 'Prapliesta',
 'searchprofile-articles-tooltip'   => 'Ėiškuotė čiuonās: $1',
 'searchprofile-project-tooltip'    => 'Ėiškuotė čiuonās: $1',
 'searchprofile-images-tooltip'     => 'Ėiškuotė failu',
 'searchprofile-everything-tooltip' => 'Ėiškuotė vėsuo torėnė (tuom patėm ėr aptarėma poslapiu)',
+'searchprofile-advanced-tooltip'   => 'Ėiškoutė skėrtingūsė vardū sėtīsė',
 'search-result-size'               => '$1 ({{PLURAL:$2|1 žuodis|$2 žuodē|$2 žuodiu}})',
+'search-result-category-size'      => '{{PLURAL:$1|1 narīs|$1 nariū}} ({{PLURAL:$2|1 subkateguorėjuo|$2 subkateguorėju}}, {{PLURAL:$3|1 fails|$3 failu}})',
 'search-result-score'              => 'Tėnkamoms: $1%',
 'search-redirect'                  => '(paradresavėms $1)',
 'search-section'                   => '(skīrios $1)',
@@ -713,6 +757,7 @@ Kėtė admėnėstratuorē šėtom pruojekte vėsdar galės pasėiktė pasliepta 
 'searchall'                        => 'vėsė',
 'showingresults'                   => "Žemiau ruodoma lėgė '''$1''' {{PLURAL:$1|rezoltata|rezoltatu|rezoltatu}} pradedont #'''$2'''.",
 'showingresultsnum'                => "Žemiau ruodoma '''$3''' {{PLURAL:$3|rezoltata|rezoltatu|rezoltatu}} pradedant #'''$2'''.",
+'showingresultsheader'             => "{{PLURAL:$5|Rezoltats '''$1''' ėš '''$3'''|Rezoltatā '''$1 - $2''' ėš '''$3'''}} vagol paklausėma '''$4'''",
 'nonefound'                        => "'''Pastebiejėms''': Palē nutīliejėma ėiškuoma tėktās kāp katruosė vardū srėtīsė. Pamiegīkėt prirašītė prėišdieli ''all:'', jēgo nuorėt ėiškiuotė vėsa torėnė (tamė tarpė aptarėma poslapius, šabluonus ė tēp tuoliau), aba nauduokėt nuorėma vardū srėti kāp prėišdieli.",
 'search-nonefound'                 => 'Nier rezoltatu, katrėi atitėktu ožklausėma.',
 'powersearch'                      => 'Ėiškuotė',
@@ -735,14 +780,13 @@ Kėtė admėnėstratuorē šėtom pruojekte vėsdar galės pasėiktė pasliepta 
 'changepassword'            => 'Pakeistė slaptažuodė',
 'prefs-skin'                => 'Ėšruoda',
 'skin-preview'              => 'Parveiza',
-'prefs-math'                => 'Matematėka',
 'datedefault'               => 'Juokė pasėrėnkėma',
 'prefs-datetime'            => 'Data ė čiesos',
 'prefs-personal'            => 'Nauduotuojė pruopilis',
 'prefs-rc'                  => 'Vielībė̅jė pakeitėmā',
 'prefs-watchlist'           => 'Keravuojamu sārašos',
 'prefs-watchlist-days'      => 'Kėik dėinū ruodītė keravuojamu sārašė:',
-'prefs-watchlist-days-max'  => '(daugiausē 7 dėinas)',
+'prefs-watchlist-days-max'  => 'Maximum $1 {{PLURAL:$1|day|days}}',
 'prefs-watchlist-edits'     => 'Kėik pakeitėmu ruodītė ėšpliestiniam keravuojamu sārašė:',
 'prefs-watchlist-edits-max' => '(dėdliausias skaitlius: 1000)',
 'prefs-misc'                => 'Ivairė nustatīmā',
@@ -756,8 +800,6 @@ Kėtė admėnėstratuorē šėtom pruojekte vėsdar galės pasėiktė pasliepta 
 'columns'                   => 'Štolpalē:',
 'searchresultshead'         => 'Paėiškuos nostatīmā',
 'resultsperpage'            => 'Rezoltatu poslapie:',
-'contextlines'              => 'Eilotiu rezoltatė:',
-'contextchars'              => 'Konteksta sėmbuoliu eilotie:',
 'stub-threshold'            => 'Minimums <a href="#" class="stub">nabėngta poslapė</a> fuormatavėmō:',
 'recentchangesdays'         => 'Ruodomas dėinas vielībūju pakeitėmu sārašė:',
 'recentchangesdays-max'     => '(daugiausē $1 {{PLURAL:$1|dėina|dėinū|dėinas}})',
@@ -857,6 +899,10 @@ Ana gal sodarītė ne daugiau kāp $1 {{PLURAL:$1|sėmbuolis|sėmbuolē|sėmbuol
 'recentchanges-legend'              => 'Vielībuju pakeitėmu pasėrinkėmā',
 'recentchangestext'                 => 'Tamė poslapī īr patīs vielībė̅ jė paketėmā tom pruojėktė.',
 'recentchanges-feed-description'    => 'Keravuokėt patius vielībiausius pakeitėmus pruojektō tamė šaltėnī.',
+'recentchanges-label-newpage'       => 'Šėto keitėmo sukurts naus poslapis',
+'recentchanges-label-minor'         => 'Tas īr mažos pataisīms',
+'recentchanges-label-bot'           => 'Šėta keitėma padėrba autuomatėnė pruograma',
+'recentchanges-label-unpatrolled'   => 'Tas keitėms da nebova patikrints',
 'rcnote'                            => "Žemiau īr '''$1''' {{PLURAL:$1|paskotinis pakeitims|paskotinē pakeitimā|paskotiniu pakeitimu}} par $2 {{PLURAL:$2|paskotinė̅jė dėina|paskotėniasės '''$2''' dėinas|paskotėniuju '''$2''' dėinū}} skaitlioujant nū $4, $5.",
 'rcnotefrom'                        => 'Žemiau īr pakeitėma pradedant nū <b>$2</b> (ruodom lėgė <b>$1</b> pakeitėmu).',
 'rclistfrom'                        => 'Ruodītė naujus pakeitėmus pradedant nū $1',
@@ -903,9 +949,9 @@ Ana gal sodarītė ne daugiau kāp $1 {{PLURAL:$1|sėmbuolis|sėmbuolē|sėmbuol
 Nuoriedamė parveizietė ar ėiškuotė unkstiau ikeltū abruozdieliu, ēkėt i [[Special:FileList|ikeltū failu saraša]], ikielėmā ėr ėštrīnėmā īr ožregėstroujamė [[Special:Log/upload|ikielėmu istuorėjuo]], trīnėmā - [[Special:Log/delete|trīnėmu istuorėjuo]].
 
 Nuoriedamė panauduotė ikelta faila poslapī, nauduokėt tuokės nūoruodas:
-* '''<tt><nowiki>[[</nowiki>{{ns:file}}<nowiki>:File.jpg]]</nowiki></tt>'''
-* '''<tt><nowiki>[[</nowiki>{{ns:file}}<nowiki>:File.png|200px|thumb|left|alt text]]</nowiki></tt>''' aba
-* '''<tt><nowiki>[[</nowiki>{{ns:media}}<nowiki>:File.ogg]]</nowiki></tt>''' tėisiuogėnē nūruodā i faila.",
+* '''<code><nowiki>[[</nowiki>{{ns:file}}<nowiki>:File.jpg]]</nowiki></code>'''
+* '''<code><nowiki>[[</nowiki>{{ns:file}}<nowiki>:File.png|200px|thumb|left|alt text]]</nowiki></code>''' aba
+* '''<code><nowiki>[[</nowiki>{{ns:media}}<nowiki>:File.ogg]]</nowiki></code>''' tėisiuogėnē nūruodā i faila.",
 'upload-permitted'           => 'Laistėnė failu tėpā: $1.',
 'upload-preferred'           => 'Pageidajamė failu tėpā: $1.',
 'upload-prohibited'          => 'Oždraustė failu tėpā: $1.',
@@ -923,12 +969,12 @@ Nuoriedamė panauduotė ikelta faila poslapī, nauduokėt tuokės nūoruodas:
 'badfilename'                => 'Faila pavadinėms pakeists i „$1“.',
 'filetype-missing'           => 'Fails netor galūnės (kāp pavīzdīs „.jpg“).',
 'emptyfile'                  => 'Panašu, ka fails, katra ikieliet īr toščias. Tas gal būtė diel klaiduos faila pavadėnėmė. Pasėtėkrinkėt a tėkrā nuorėt ikeltė šėta faila.',
-'fileexists'                 => "Fails so tuokiu vardu jau īr, prašuom paveizėtė '''<tt>[[:$1]]</tt>''', jēgo nesat ožtėkrėnts, a nuorit ana parrašītė.
-[[$1|thumb]]",
-'fileexists-extension'       => "Fails so pavėdiu pavadinėmu jau īr: [[$2|thumb]]
-* Ikeliama faila pavadinėms: '''<tt>[[:$1]]</tt>'''
-* Jau esontė faila pavadinėms: '''<tt>[[:$2]]</tt>'''
-Prašuom ėšsėrėnktė kėta varda.",
+'fileexists'                 => 'Fails so tuokiu vardu jau īr, prašuom paveizėtė <strong>[[:$1]]</strong>, jēgo nesat ožtėkrėnts, a nuorit ana parrašītė.
+[[$1|thumb]]',
+'fileexists-extension'       => 'Fails so pavėdiu pavadinėmu jau īr: [[$2|thumb]]
+* Ikeliama faila pavadinėms: <strong>[[:$1]]</strong>
+* Jau esontė faila pavadinėms: <strong>[[:$2]]</strong>
+Prašuom ėšsėrėnktė kėta varda.',
 'file-exists-duplicate'      => 'Tas fails īr {{PLURAL:$1|šėta faila|šėtū failu}} doblėkats:',
 'uploadwarning'              => 'Diemesė',
 'savefile'                   => 'Ėšsauguotė faila',
@@ -941,10 +987,6 @@ Prašuom ėšsėrėnktė kėta varda.",
 'destfilename'               => 'Nuorims faila pavadinims',
 'upload-maxfilesize'         => 'Dėdliausias faila dėdoms: $1',
 'watchthisupload'            => 'Keravuotė šėta poslapė',
-'upload-wasdeleted'          => "'''Parspiejėms: Tamsta ikeliat faila, katros unkstiau bova ėštrėnts.'''
-
-Tamsta torietomiet nusprēstė, a īr naudėnga tuoliau ikeldinietė ta faila.
-Tuo faila pašalinėma istuorėjė īr pateikta dielē patuogoma:",
 'upload-success-subj'        => 'Ikelt siekmėngā',
 
 'upload-proto-error'      => 'Nateisėngs protuokols',
@@ -994,10 +1036,12 @@ Paspaude ont štolpelė ontraštės pakeisėt ėšruokavėma.',
 'filehist-dimensions'       => 'Mierā',
 'filehist-filesize'         => 'Faila dėdoms',
 'filehist-comment'          => 'Kuomentars',
-'imagelinks'                => 'Faila nūruodas',
+'imagelinks'                => 'Failu nūruodas',
 'linkstoimage'              => '{{PLURAL:$1|Šėts poslapis|Šėtė poslapē}} nuruod i šėta faila:',
 'nolinkstoimage'            => 'I faila neruod anėjuoks poslapis.',
 'sharedupload'              => 'Tas fails īr ėš $1 ė gal būtė nauduojams kėtūs pruojektūs.',
+'sharedupload-desc-here'    => 'Tas fails īr ėš $1 ė gal būtė nauduojams kėtūsė pruojektūsė.
+Infuormacėjė ėš [$2 faila aprašīma poslapė] īr pateikta žemiau.',
 'uploadnewversion-linktext' => 'Ikeltė nauja faila versėje',
 
 # File reversion
@@ -1024,7 +1068,7 @@ Paspaude ont štolpelė ontraštės pakeisėt ėšruokavėma.',
 
 # MIME search
 'mimesearch'         => 'MIME paėiška',
-'mimesearch-summary' => 'Šėts poslapis laid ruodīti failus vagol anū MIME tipa. Iveskėt: torėnėtips/potipis, pvz. <tt>image/jpeg</tt>.',
+'mimesearch-summary' => 'Šėts poslapis laid ruodīti failus vagol anū MIME tipa. Iveskėt: torėnėtips/potipis, pvz. <code>image/jpeg</code>.',
 'mimetype'           => 'MIME tips:',
 'download'           => 'parsėsiūstė',
 
@@ -1062,7 +1106,8 @@ Paspaude ont štolpelė ontraštės pakeisėt ėšruokavėma.',
 'statistics-users-active'  => 'Aktīviu nauduotuoju',
 'statistics-mostpopular'   => 'Daugiausē ruodītė poslapē',
 
-'disambiguations' => 'Daugiareikšmiu žuodiu poslapē',
+'disambiguations'     => 'Daugiareikšmiu žuodiu poslapē',
+'disambiguationspage' => 'Template:Tor daug reikšmiū',
 
 'doubleredirects'            => 'Dvėgobė paradresavėmā',
 'doubleredirectstext'        => 'Tėi paradresavėmā ruod i kėtus paradresavėma poslapius. Kuožnuo eilotē pamėnavuots pėrmasā ėr ontrasā paradresavėmā, tēpuogi ontrojė paradresavėma paskėrtis, katra paprastā ė paruod i tėkraji poslapi, i katra pėrmasā paradresavėms ė torietu ruodītė.',
@@ -1117,6 +1162,7 @@ Paspaude ont štolpelė ontraštės pakeisėt ėšruokavėma.',
 'protectedtitlesempty'    => 'Šėtou čieso nier anėjuokė pavadinėma, katros apsauguots tās parametrās.',
 'listusers'               => 'Sārašos nauduotuoju',
 'listusers-editsonly'     => 'Ruodītė tėktās nauduotuojus katrėi īr atlėkė pakeitėmus',
+'usercreated'             => 'Paskīra īr padėrbta $1 $2',
 'newpages'                => 'Naujausė straipsnē',
 'newpages-username'       => 'Nauduotuojė vards:',
 'ancientpages'            => 'Seniausė poslapē',
@@ -1174,9 +1220,10 @@ Also see [[Special:WantedCategories|wanted categories]].',
 'deletedcontributions-title' => 'Ėštrėnts nauduotuojė duovis',
 
 # Special:LinkSearch
-'linksearch'    => 'Ėšuorėnės nūruodas',
-'linksearch-ns' => 'Vardū srėtis:',
-'linksearch-ok' => 'Ėiškuotė',
+'linksearch'      => 'Ėšuorėnės nūruodas',
+'linksearch-ns'   => 'Vardū srėtis:',
+'linksearch-ok'   => 'Ėiškuotė',
+'linksearch-line' => '$1 īr sosėits ėš $2',
 
 # Special:ListUsers
 'listusersfrom'      => 'Ruodītė nauduotuojus pradedont nū:',
@@ -1184,9 +1231,7 @@ Also see [[Special:WantedCategories|wanted categories]].',
 'listusers-noresult' => 'Nerast anėjuokiū nauduotuoju.',
 
 # Special:Log/newusers
-'newuserlogpage'          => 'Nauduotuojė kūrėma regėstros',
-'newuserlog-byemail'      => 'slaptažuodis ėšsiōsts par el. pašta',
-'newuserlog-create-entry' => 'Naus nauduotuos',
+'newuserlogpage' => 'Nauduotuojė kūrėma regėstros',
 
 # Special:ListGroupRights
 'listgrouprights'         => 'Nauduotuoju gropiu teisės',
@@ -1215,16 +1260,15 @@ kū siōstomiet el. gruomatas kėtėm nauduotuojam.',
 # Watchlist
 'watchlist'            => 'Keravuojamė straipsnē',
 'mywatchlist'          => 'Keravuojamė poslapē',
+'watchlistfor2'        => 'Nauduotuojė $1 ($2)',
 'nowatchlist'          => 'Netorėt anėvėina keravuojama poslapė.',
 'watchlistanontext'    => 'Prašuom $1, ka parveizietomėt a pakeistomiet elementus sava keravuojamu sārašė.',
 'watchnologin'         => 'Neprisėjongės',
 'watchnologintext'     => 'Tamstā rēk būtė [[Special:UserLogin|prisėjongosiam]], ka pakeistomiet sava keravuojamu sāraša.',
-'addedwatch'           => 'Pridieta pri keravuojamu',
 'addedwatchtext'       => "Poslapis \"[[\$1]]\" idiets i [[Special:Watchlist|keravuojamu sāraša]].
 Būsantīs poslapė ėr atėtinkama aptarėma poslapė pakeitėmā bus paruoduomė keravuojamu poslapiu sārašė,
 tēpuogi bus '''parīškintė''' [[Special:RecentChanges|vielībūju pakeitėmu sārašė]], kū ėšsėskėrtom ėš kėtū straipsniu.
 Jēgo bikumet ožsėnuorietomiet liautėis keravuotė straipsnė, spauskat \"nebkeravuotė\" vėršotėniam meniū.",
-'removedwatch'         => 'Pašalėntė ėš keravuojamu',
 'removedwatchtext'     => 'Poslapis „[[:$1]]“ pašalėnts ėš [[Special:Watchlist|Tamstas keravuojamu sāraša]].',
 'watch'                => 'Keravuotė',
 'watchthispage'        => 'Keravuotė šėta poslapė',
@@ -1265,10 +1309,9 @@ Jēgo bikumet ožsėnuorietomiet liautėis keravuotė straipsnė, spauskat \"neb
 'confirmdeletetext'      => 'Tamsta pasėrėnkuot ėštrėntė poslapi a abruozdieli draugum so vėsa anuo istuorėjė.
 Prašuom patvėrtėntė, kū Tamsta tėkrā nuorėt šėtu padarītė, žėnuot aple galėmus padarėnius, ė kū Tamsta šėtā daruot atsėžvelgdamė i [[{{MediaWiki:Policy-url}}|puolitėka]].',
 'actioncomplete'         => 'Vēksmos atlėkts īr',
+'actionfailed'           => 'Veiksmos atšaukts īr',
 'deletedtext'            => '„$1“ ėštrints.
 Paskotiniu pašalinėmu istuorėjė - $2.',
-'deletedarticle'         => 'ėštrīnė „[[$1]]“',
-'suppressedarticle'      => 'apžabuots „[[$1]]“',
 'dellogpage'             => 'Pašalinėmu istuorėjė',
 'dellogpagetext'         => 'Žemiau īr pateikiams paskotiniu ėštrīnimu sārašos.',
 'deletionlog'            => 'pašalinėmu istuorėjė',
@@ -1379,10 +1422,10 @@ lėgė trīnima. Ėštrintū poslapiu tekstos īr galėmas tėk admėnėstratuor
 'undeleterevision-missing'   => 'Neteisėnga a dėngosė versėjė. Tamsta mažo torėt bluoga nūruoda, a versėjė bova atkorta a pašalėnta ėš arkīva.',
 'undeletebtn'                => 'Atkortė',
 'undeletelink'               => 'veizietė/atstatītė',
+'undeleteviewlink'           => 'veizietė',
 'undeletereset'              => 'Ėš naujė',
 'undeleteinvert'             => 'Žīmietė prīšėngā',
 'undeletecomment'            => 'Kuomentars:',
-'undeletedarticle'           => 'atkorta „[[$1]]“',
 'undeletedrevisions'         => 'atkorta $1 {{PLURAL:$1|versėjė|versėjės|versėju}}',
 'undeletedrevisions-files'   => 'atkorta $1 {{PLURAL:$1|versėjė|versėjės|versėju}} ėr $2 {{PLURAL:$2|fails|failā|failu}}',
 'undeletedfiles'             => 'atkorta $1 {{PLURAL:$1|fails|failā|failu}}',
@@ -1415,10 +1458,13 @@ Parveizėkiet [[Special:Log/delete|trīnimu sāraša]], nuoriedamė rastė pasko
 'sp-contributions-newbies-title' => 'Nauduotuoju keitėmā naujuoms paskīruoms',
 'sp-contributions-blocklog'      => 'Bluokavėmu istuorėjė',
 'sp-contributions-deleted'       => 'Panaikėnts nauduotuojė duovis',
+'sp-contributions-uploads'       => 'abruozdielē',
+'sp-contributions-logs'          => 'Specēliūju veiksmū istuorėjė',
 'sp-contributions-talk'          => 'Aptarėms',
 'sp-contributions-userrights'    => 'Nauduotuoju teisiu valdīms',
 'sp-contributions-search'        => 'Ėiškuotė duovė',
 'sp-contributions-username'      => 'IP adresos a nauduotuojė vards:',
+'sp-contributions-toponly'       => 'Ruodītė tėktās paskiausius keitėmus',
 'sp-contributions-submit'        => 'Ėiškuotė',
 
 # What links here
@@ -1430,7 +1476,7 @@ Parveizėkiet [[Special:Log/delete|trīnimu sāraša]], nuoriedamė rastė pasko
 'nolinkshere-ns'           => "Nurodītuo vardū srėtī anė vėins poslapis neruod i '''[[:$1]]'''.",
 'isredirect'               => 'nukreipēmasės poslapis',
 'istemplate'               => 'iterpims',
-'isimage'                  => 'abruozdielė nūruoda',
+'isimage'                  => 'faila nūruoda',
 'whatlinkshere-prev'       => '$1 {{PLURAL:$1|onkstesnis|onkstesni|onkstesniū}}',
 'whatlinkshere-next'       => '$1 {{PLURAL:$1|kėts|kėtė|kėtū}}',
 'whatlinkshere-links'      => '← nūruodas',
@@ -1445,7 +1491,6 @@ Parveizėkiet [[Special:Log/delete|trīnimu sāraša]], nuoriedamė rastė pasko
 'blockip-legend'              => 'Blokoutė nauduotuoja',
 'blockiptext'                 => 'Nauduokėt šėta fuorma noriedamė oždraustė redagavėma teises nuruodīto IP adreso a nauduotuojo. Tas torietu būt atlėikama tam, kū sostabdītomiet vandalėzma, ė vagol [[{{ns:project}}:Puolitėka|puolitėka]].
 Žemiau nuruodīkėt tėkslē prižastė.',
-'ipaddress'                   => 'IP adresos',
 'ipadressorusername'          => 'IP adresos a nauduotuojė vards',
 'ipbexpiry'                   => 'Galiuojėma čiesos',
 'ipbreason'                   => 'Prīžastis:',
@@ -1458,7 +1503,6 @@ Parveizėkiet [[Special:Log/delete|trīnimu sāraša]], nuoriedamė rastė pasko
 ** Gondinėmā/Pėktžuodiavėmā
 ** Pėktnaudžiavėms paskėruomis
 ** Netėnkams nauduotuojė vards',
-'ipbanononly'                 => 'Blokoutė tėktās anuonimėnius nauduotuojus',
 'ipbcreateaccount'            => 'Nelaistė kortė paskīrū',
 'ipbemailban'                 => 'Nelaistė nauduotuojō siōstė el. gruomatas',
 'ipbenableautoblock'          => 'Autuomatėškā blokoutė tuo nauduotuojė paskiausē nauduota IP adresa, ė bikuokius paskesnius IP adresus, ėš katrū ons miegin redagoutė',
@@ -1472,7 +1516,7 @@ Parveizėkiet [[Special:Log/delete|trīnimu sāraša]], nuoriedamė rastė pasko
 'badipaddress'                => 'Nelaistėns IP adresos',
 'blockipsuccesssub'           => 'Ožblokavėms pavīka',
 'blockipsuccesstext'          => '[[Special:Contributions/$1|$1]] bova ožblokouts.
-<br />Aplonkīkėt [[Special:IPBlockList|IP blokavėmu istuorėjė]] noriedamė ana parveizėtė.',
+<br />Aplonkīkėt [[Special:BlockList|IP blokavėmu istuorėjė]] noriedamė ana parveizėtė.',
 'ipb-edit-dropdown'           => 'Redagoutė blokavėmu prīžastis',
 'ipb-unblock-addr'            => 'Atblokoutė $1',
 'ipb-unblock'                 => 'Atblokoutė nauduotuojė varda a IP adresa',
@@ -1484,11 +1528,9 @@ onkstiau ožbluokoutam IP adresō a nauduotuojō.',
 'ipusubmit'                   => 'Atblokoutė šėta adresa',
 'unblocked'                   => '[[User:$1|$1]] bova atbluokouts',
 'unblocked-id'                => 'Bluokavėms $1 bova pašalėnts',
-'ipblocklist'                 => 'Blokoutė IP adresā ė nauduotuojē',
+'ipblocklist'                 => 'Ožblokoutė nauduotuojē',
 'ipblocklist-legend'          => 'Rastė ožblokouta nauduotuoja',
-'ipblocklist-username'        => 'Nauduotuos a IP adresos:',
 'ipblocklist-submit'          => 'Ėiškuotė',
-'blocklistline'               => '$1, $2 ožblokava $3 ($4)',
 'infiniteblock'               => 'neribuotā',
 'expiringblock'               => 'beng galiuotė $1 $2',
 'anononlyblock'               => 'vėn anuonėmā',
@@ -1505,7 +1547,7 @@ onkstiau ožbluokoutam IP adresō a nauduotuojō.',
 'blocklogpage'                => 'Ožblokavėmu istuorėjė',
 'blocklogentry'               => 'ožblokava „[[$1]]“, blokavėma čiesos - $2 $3',
 'reblock-logentry'            => 'pakeistė [[$1]] bluokavėma nustatīmā, naus bluokavėma čiesos īr $2 $3',
-'blocklogtext'                => 'Čė īr nauduotuoju blokavėma ėr atblokavėma sārašos. Autuomatėškā blokoutė IP adresā nier ėšvardėntė. Jeigu nuorėt paveizėtė nūnā blokoujamus adresus, veizėkėt [[Special:IPBlockList|IP ožbluokavėmu istuorėjė]].',
+'blocklogtext'                => 'Čė īr nauduotuoju blokavėma ėr atblokavėma sārašos. Autuomatėškā blokoutė IP adresā nier ėšvardėntė. Jeigu nuorėt paveizėtė nūnā blokoujamus adresus, veizėkėt [[Special:BlockList|IP ožbluokavėmu istuorėjė]].',
 'unblocklogentry'             => 'atbluokava $1',
 'block-log-flags-anononly'    => 'vėn anonėmėnē nauduotuojē',
 'block-log-flags-nocreate'    => 'privėlėju kūrėms ėšjungts',
@@ -1513,8 +1555,7 @@ onkstiau ožbluokoutam IP adresō a nauduotuojō.',
 'block-log-flags-noemail'     => 'e-pašts bluokouts īr',
 'ipb_expiry_invalid'          => 'Galiuojėma čiesos nelaistėns.',
 'ipb_already_blocked'         => '„$1“ jau ožblokouts',
-'ipb-needreblock'             => '== Jau ožblokouts ==
-$1 jau īr ožblokouts. A nuorėt pakeistė nustatīmus?',
+'ipb-needreblock'             => '$1 jau īr ožblokouts. A nuorėt pakeistė nustatīmus?',
 'proxyblocksuccess'           => 'Padarīt.',
 
 # Developer tools
@@ -1559,8 +1600,6 @@ pavadėnėma straipsnis jau tor aptarėmu poslapi.
 Prašuom sojongtė šėtuos poslapios.'''",
 'movedto'                 => 'parvadints i',
 'movetalk'                => 'Parkeltė sosėta aptarėma poslapi.',
-'1movedto2'               => 'Straipsnis [[$1]] parvadints i [[$2]]',
-'1movedto2_redir'         => '[[$1]] parvadints i [[$2]] (onkstiau bova nukrēpamāsis)',
 'movelogpage'             => 'Parvardinėmu istuorėjė',
 'movelogpagetext'         => 'Sārašos parvadintu poslapiu.',
 'movereason'              => 'Prīžastis:',
@@ -1660,6 +1699,7 @@ Paskėrties straipsnis „[[:$1]]“ jau īr. A nuorėt ana ėštrintė, kū gal
 'tooltip-recreate'                => 'Atkortė poslapi napaisant šėto, kū ans bova ėštrints',
 'tooltip-rollback'                => 'Atšauktė atmestus šėta poslapė keitėmus i vielībiause versėje par vėina paspaudėma',
 'tooltip-undo'                    => '"Anolioutė" atmeta ta keitėma ėr atidara unkstesnies versėjės redagavėma skvarma. Leid pridietė atmetėma prīžasti kuomentarūsė.',
+'tooltip-summary'                 => 'Īvestė trompa santrauka',
 
 # Attribution
 'anonymous'        => 'Neregėstrouts nauduotuos',
@@ -1677,24 +1717,6 @@ Paskėrties straipsnis „[[:$1]]“ jau īr. A nuorėt ana ėštrintė, kū gal
 'spam_reverting'      => 'Atkoriama i onkstesne versėje, katra nator nūruodu i $1',
 'spam_blanking'       => 'Vėsos versėjės toriejė nūruodu i $1. Ėšvaluoma',
 
-# Info page
-'numedits'     => 'Pakeitimu skaitlius (straipsnis): $1',
-'numtalkedits' => 'Pakeitėmu skaitlius (aptarėma poslapis): $1',
-'numwatchers'  => 'Keravuojantiu skaitlius: $1',
-
-# Math options
-'mw_math_png'    => 'Vėsumet fuormuotė PNG',
-'mw_math_simple' => 'HTML paprastās atvejās, kėtēp - PNG',
-'mw_math_html'   => 'HTML kumet imanuoma, kėtēp - PNG',
-'mw_math_source' => 'Paliktė TeX fuormata (tekstinems naršīklems)',
-'mw_math_modern' => 'Rekomendounama muodernioms naršīklems',
-'mw_math_mathml' => 'MathML jēgo imanuoma (ekspermentinis)',
-
-# Math errors
-'math_failure'          => 'Nepavīka apdoruotė',
-'math_unknown_error'    => 'nežinuoma klaida',
-'math_unknown_function' => 'nežinuoma funkcėjė',
-
 # Patrolling
 'markaspatrolleddiff'   => 'Žīmietė, kū patikrėnta',
 'markaspatrolledtext'   => 'Pažīmietė, ka poslapis patėkrėnts īr',
@@ -1703,9 +1725,6 @@ Paskėrties straipsnis „[[:$1]]“ jau īr. A nuorėt ana ėštrintė, kū gal
 
 # Patrol log
 'patrol-log-page'      => 'Patikrinėma istuorėjė',
-'patrol-log-line'      => 'Poslapė „$2“ $1 pažīmieta kāp patėkrinta $3',
-'patrol-log-auto'      => '(autuomatėškā)',
-'patrol-log-diff'      => 'versėjė $1',
 'log-show-hide-patrol' => '$1 patvirtėnėmu saraša',
 
 # Image deletion
@@ -1717,16 +1736,15 @@ Paskėrties straipsnis „[[:$1]]“ jau īr. A nuorėt ana ėštrintė, kū gal
 'nextdiff'     => 'Paskesinis pakeitėms →',
 
 # Media information
-'mediawarning'         => "'''Diemesė''': Šėts fails gal torietė kenksmėnga kuoda, anū palaidus Tamstas sėstėma gal būtė sogadinta.",
-'imagemaxsize'         => 'Rėbuotė abruozdieliu dėdoma anū aprašīma poslapī lėgė:',
-'thumbsize'            => 'Somažėntu pavēkslieliu didums:',
-'widthheightpage'      => '$1×$2, $3 {{PLURAL:$3|poslapis|poslapē|poslapiu}}',
-'file-info'            => 'faila dėdoms: $1, MIME tips: $2',
-'file-info-size'       => '$1 × $2 taškū, faila dėdoms: $3, MIME tips: $4',
-'file-nohires'         => '<small>Geresnis ėšraiškėms negalėms.</small>',
-'svg-long-desc'        => 'SVG fails, fuormalē $1 × $2 puškiu, faila dėdoms: $3',
-'show-big-image'       => 'Pėlns ėšraiškėms',
-'show-big-image-thumb' => '<small>Šėtuos parvaizos dėdums: $1 × $2 puškiu</small>',
+'mediawarning'    => "'''Diemesė''': Šėts fails gal torietė kenksmėnga kuoda, anū palaidus Tamstas sėstėma gal būtė sogadinta.",
+'imagemaxsize'    => 'Rėbuotė abruozdieliu dėdoma anū aprašīma poslapī lėgė:',
+'thumbsize'       => 'Somažėntu pavēkslieliu didums:',
+'widthheightpage' => '$1 × $2, $3 {{PLURAL:$3|poslapis|poslapē|poslapiu}}',
+'file-info'       => 'faila dėdoms: $1, MIME tips: $2',
+'file-info-size'  => '$1 × $2 taškū, faila dėdoms: $3, MIME tips: $4',
+'file-nohires'    => 'Geresnis ėšraiškėms negalėms.',
+'svg-long-desc'   => 'SVG fails, fuormalē $1 × $2 puškiu, faila dėdoms: $3',
+'show-big-image'  => 'Pėlns ėšraiškėms',
 
 # Special:NewFiles
 'newimages'             => 'Naujausiu abruozdieliu galerėjė',
@@ -1748,14 +1766,20 @@ Vėsas kėtas nūoruodas tuo patiuo eilotie īr laikomas ėšėmtim, tas rēšk 
 'metadata-help'     => 'Šėtom failė īr papėlduomos infuormacėjės, tikriausē pridietos skaitmeninės kameruos a skanėrė, katros bova nauduots anam sokortė a parkeltė i skaitmenėni fuormata. Jēgo fails bova pakeists ėš pradėnės versėjės, katruos nekatruos datalės gal nepėlnā atspėndietė nauja faila.',
 'metadata-expand'   => 'Ruodītė ėšpliestinė infuormacėjė',
 'metadata-collapse' => 'Kavuotė ėšpliestinė infuormacėjė',
-'metadata-fields'   => 'EXIF metadoumenū laukā, nuruodītė tamė pranešėmė, bus itrauktė i abruozdielė poslapi, kumet metadoumenū lentelė bus suskleista. Palē nutīliejėma kėtė laukā bus pakavuotė.
+'metadata-fields'   => 'Abruozdielė metadoumenū laukā, nuruodītė tamė pranešėmė, bus itrauktė i abruozdielė poslapi, kumet metadoumenū lentelė bus suskleista. Palē nutīliejėma kėtė laukā bus pakavuotė.
 * make
 * model
 * datetimeoriginal
 * exposuretime
 * fnumber
 * isospeedratings
-* focallength',
+* focallength
+* artist
+* copyright
+* imagedescription
+* gpslatitude
+* gpslongitude
+* gpsaltitude',
 
 # EXIF tags
 'exif-imagewidth'             => 'Platoms',
@@ -1793,14 +1817,12 @@ Vėsas kėtas nūoruodas tuo patiuo eilotie īr laikomas ėšėmtim, tas rēšk 
 
 # External editor support
 'edit-externally'      => 'Atdarītė ėšuoriniam redaktuorio',
-'edit-externally-help' => 'Nuoriedamė gautė daugiau infuormacėjės, veiziekėt [http://www.mediawiki.org/wiki/Manual:External_editors kruovėma instrokcėjės].',
+'edit-externally-help' => 'Nuoriedamė gautė daugiau infuormacėjės, veiziekėt [//www.mediawiki.org/wiki/Manual:External_editors kruovėma instrokcėjės].',
 
 # 'all' in various places, this might be different for inflected languages
-'recentchangesall' => 'vėsos',
-'imagelistall'     => 'vėsė',
-'watchlistall2'    => 'vėsos',
-'namespacesall'    => 'vėsas',
-'monthsall'        => 'vėsė',
+'watchlistall2' => 'vėsos',
+'namespacesall' => 'vėsas',
+'monthsall'     => 'vėsė',
 
 # E-mail address confirmation
 'confirmemail'           => 'Patvirtėnkėt el. pašta adresa',
@@ -1827,9 +1849,6 @@ $5
 
 Patvirtėnėma kods bengs galiuotė $4.',
 'invalidateemail'        => 'El. pašta patvirtėnėma atšaukėms',
-
-# Trackbacks
-'trackbackremove' => '([$1 Trintė])',
 
 # Delete conflict
 'deletedwhileediting' => 'Diemesė: Šėts poslapis ėštrints po šėta, kumet pradiejot redagoutė!',
@@ -1876,12 +1895,12 @@ Patvirtėnėma kods bengs galiuotė $4.',
 'watchlistedit-normal-legend'  => 'Šalėntė poslapios ėš keravuojamu sāraša',
 'watchlistedit-normal-explain' => 'Žemiau īr ruodomė poslapē Tamstas keravuojamu sārašė.
 Nuoriedamė pašalėntė poslapi, pri anuo oždiekėt varnale ė paspauskėt „Šalėntė poslapios“.
-Tamsta tēpuogi galėt [[Special:Watchlist/raw|redagoutė grīnaji keravuojamu sāraša]].',
+Tamsta tēpuogi galėt [[Special:EditWatchlist/raw|redagoutė grīnaji keravuojamu sāraša]].',
 'watchlistedit-normal-submit'  => 'Šalėntė poslapios',
 'watchlistedit-normal-done'    => '$1 {{PLURAL:$1|poslapis bova pašalėnts|poslapē bova pašalėntė|poslapiu bova pašalėnta}} ėš Tamstas keravuojamu saraša:',
 'watchlistedit-raw-title'      => 'Keistė grīnōjė keravuojamu sāraša',
 'watchlistedit-raw-legend'     => 'Keistė grīnōjė keravuojamu sāraša',
-'watchlistedit-raw-explain'    => 'Žemiau ruodomė poslapē Tamstas keravuojamu sārašė, ė gal būtė pridietė i a pašalėntė ėš sāraša; vėins poslapis eilotie. Bėngė paspauskėt „Atnaujėntė keravuojamu sāraša“. Tamsta tēpuogi galėt [[Special:Watchlist/edit|nauduotė standartėni radaktuoriu]].',
+'watchlistedit-raw-explain'    => 'Žemiau ruodomė poslapē Tamstas keravuojamu sārašė, ė gal būtė pridietė i a pašalėntė ėš sāraša; vėins poslapis eilotie. Bėngė paspauskėt „Atnaujėntė keravuojamu sāraša“. Tamsta tēpuogi galėt [[Special:EditWatchlist|nauduotė standartėni radaktuoriu]].',
 'watchlistedit-raw-titles'     => 'Poslapē:',
 'watchlistedit-raw-submit'     => 'Atnaujėntė keravuojamu sāraša',
 'watchlistedit-raw-done'       => 'Tamstas keravuojamu sārošos bova atnaujėnts.',
@@ -1929,7 +1948,28 @@ Tamsta tēpuogi galėt [[Special:Watchlist/raw|redagoutė grīnaji keravuojamu s
 # Special:BlankPage
 'blankpage' => 'Toščias poslapis',
 
+# External image whitelist
+'external_image_whitelist' => ' #Palikėt ta eilotė, tuokė kāp īr <pre>
+#Īrašīkat standartėniu ėšraišku fragmentus (tėktās dali terp //)
+#Anūs bus miegėnama sotapatintė so ėšuorėniu abruozdieliu adresās
+#Tė, katrėi sotaps, bus ruodomė kāp abruozdielē, a kėtė bus ruodomė tėktās kāp nūoruodas
+#Raidiu dėdoms nier svarbos
+#Eilotės, katuos prasided # īr kuomentarā 
+
+#Īterpkat vėsus standartiėniu ėšraišku fragmentus prīš šėta eilote. Palikat šėta eilote, tuokė kāp ana īr </pre>',
+
 # Special:Tags
-'tags-edit' => 'taisītė',
+'tag-filter' => '[[Special:Tags|Žīmiejėmu]] filtros:',
+'tags-edit'  => 'taisītė',
+
+# New logging system
+'logentry-move-move'                  => '$1 pervadėna poslapi $3 i $4',
+'logentry-move-move-noredirect'       => '$1 pervadėna poslapi $3 i $4, nepalikdams nukreipėma',
+'logentry-move-move_redir'            => '$1 pervadėna poslapi $3 i $4, vėituo buvosė nukreipėma',
+'logentry-move-move_redir-noredirect' => '$1 pervadėna poslapi $3 i $4, vėituo buvosė nukreipėma, bat nepadėrbdams naujė',
+'logentry-newusers-newusers'          => '$1 padėrba nauduotuojė paskīra',
+'logentry-newusers-create2'           => '$1 padėrba nauduotuojė paskīra $3',
+'logentry-newusers-autocreate'        => 'Paskīra $1 bova padėrbta autuomatėškā',
+'newuserlog-byemail'                  => 'slaptažuodis ėšsiōsts par el. pašta',
 
 );

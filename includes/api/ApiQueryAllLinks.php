@@ -1,6 +1,6 @@
 <?php
 /**
- * API for MediaWiki 1.8+
+ *
  *
  * Created on July 7, 2007
  *
@@ -23,11 +23,6 @@
  *
  * @file
  */
-
-if ( !defined( 'MEDIAWIKI' ) ) {
-	// Eclipse helper - will be ignored in production
-	require_once( 'ApiQueryBase.php' );
-}
 
 /**
  * Query module to enumerate links from all pages together.
@@ -52,6 +47,10 @@ class ApiQueryAllLinks extends ApiQueryGeneratorBase {
 		$this->run( $resultPageSet );
 	}
 
+	/**
+	 * @param $resultPageSet ApiPageSet
+	 * @return void
+	 */
 	private function run( $resultPageSet = null ) {
 		$db = $this->getDB();
 		$params = $this->extractRequestParams();
@@ -90,27 +89,22 @@ class ApiQueryAllLinks extends ApiQueryGeneratorBase {
 			);
 		}
 
-		if ( !is_null( $params['from'] ) ) {
-			$this->addWhere( 'pl_title>=' . $db->addQuotes( $this->titlePartToKey( $params['from'] ) ) );
-		}
-		if ( !is_null( $params['to'] ) ) {
-			$this->addWhere( 'pl_title<=' . $db->addQuotes( $this->titlePartToKey( $params['to'] ) ) );
-		}
+		$from = ( is_null( $params['from'] ) ? null : $this->titlePartToKey( $params['from'] ) );
+		$to = ( is_null( $params['to'] ) ? null : $this->titlePartToKey( $params['to'] ) );
+		$this->addWhereRange( 'pl_title', 'newer', $from, $to );
+
 		if ( isset( $params['prefix'] ) ) {
 			$this->addWhere( 'pl_title' . $db->buildLike( $this->titlePartToKey( $params['prefix'] ), $db->anyString() ) );
 		}
 
-		$this->addFields( array(
-			'pl_title',
-		) );
+		$this->addFields( 'pl_title' );
 		$this->addFieldsIf( 'pl_from', !$params['unique'] );
 
 		$this->addOption( 'USE INDEX', 'pl_namespace' );
 		$limit = $params['limit'];
 		$this->addOption( 'LIMIT', $limit + 1 );
-		if ( $params['unique'] ) {
-			$this->addOption( 'ORDER BY', 'pl_title' );
-		} else {
+
+		if ( !$params['unique'] ) {
 			$this->addOption( 'ORDER BY', 'pl_title, pl_from' );
 		}
 
@@ -222,13 +216,17 @@ class ApiQueryAllLinks extends ApiQueryGeneratorBase {
 		) );
 	}
 
-	protected function getExamples() {
+	public function getExamples() {
 		return array(
 			'api.php?action=query&list=alllinks&alunique=&alfrom=B',
 		);
 	}
 
+	public function getHelpUrls() {
+		return 'https://www.mediawiki.org/wiki/API:Alllinks';
+	}
+
 	public function getVersion() {
-		return __CLASS__ . ': $Id: ApiQueryAllLinks.php 77192 2010-11-23 22:05:27Z btongminh $';
+		return __CLASS__ . ': $Id$';
 	}
 }

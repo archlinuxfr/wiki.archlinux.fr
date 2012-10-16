@@ -80,6 +80,9 @@ class PostgresInstaller extends DatabaseInstaller {
 		if ( !$status->isOK() ) {
 			return $status;
 		}
+		/**
+		 * @var $conn DatabaseBase
+		 */
 		$conn = $status->value;
 
 		// Check version
@@ -115,7 +118,6 @@ class PostgresInstaller extends DatabaseInstaller {
 	protected function openConnectionWithParams( $user, $password, $dbName ) {
 		$status = Status::newGood();
 		try {
-			$GLOBALS['wgDBport'] = $this->getVar( 'wgDBport' );
 			$db = new DatabasePostgres(
 				$this->getVar( 'wgDBserver' ),
 				$user,
@@ -130,7 +132,7 @@ class PostgresInstaller extends DatabaseInstaller {
 
 	/**
 	 * Get a special type of connection
-	 * @param $type See openPgConnection() for details.
+	 * @param $type string See openPgConnection() for details.
 	 * @return Status
 	 */
 	protected function getPgConnection( $type ) {
@@ -140,6 +142,9 @@ class PostgresInstaller extends DatabaseInstaller {
 		$status = $this->openPgConnection( $type );
 
 		if ( $status->isOK() ) {
+			/**
+			 * @var $conn DatabaseBase
+			 */
 			$conn = $status->value;
 			$conn->clearFlag( DBO_TRX );
 			$conn->commit();
@@ -152,41 +157,44 @@ class PostgresInstaller extends DatabaseInstaller {
 	 * Get a connection of a specific PostgreSQL-specific type. Connections
 	 * of a given type are cached.
 	 *
-	 * PostgreSQL lacks cross-database operations, so after the new database is 
-	 * created, you need to make a separate connection to connect to that 
-	 * database and add tables to it. 
+	 * PostgreSQL lacks cross-database operations, so after the new database is
+	 * created, you need to make a separate connection to connect to that
+	 * database and add tables to it.
 	 *
-	 * New tables are owned by the user that creates them, and MediaWiki's 
-	 * PostgreSQL support has always assumed that the table owner will be 
-	 * $wgDBuser. So before we create new tables, we either need to either 
-	 * connect as the other user or to execute a SET ROLE command. Using a 
-	 * separate connection for this allows us to avoid accidental cross-module 
+	 * New tables are owned by the user that creates them, and MediaWiki's
+	 * PostgreSQL support has always assumed that the table owner will be
+	 * $wgDBuser. So before we create new tables, we either need to either
+	 * connect as the other user or to execute a SET ROLE command. Using a
+	 * separate connection for this allows us to avoid accidental cross-module
 	 * dependencies.
 	 *
 	 * @param $type The type of connection to get:
 	 *    - create-db:     A connection for creating DBs, suitable for pre-
 	 *                     installation.
-	 *    - create-schema: A connection to the new DB, for creating schemas and 
+	 *    - create-schema: A connection to the new DB, for creating schemas and
 	 *                     other similar objects in the new DB.
 	 *    - create-tables: A connection with a role suitable for creating tables.
 	 *
-	 * @return A Status object. On success, a connection object will be in the 
+	 * @return A Status object. On success, a connection object will be in the
 	 *   value member.
 	 */
 	protected function openPgConnection( $type ) {
 		switch ( $type ) {
 			case 'create-db':
 				return $this->openConnectionToAnyDB(
-					$this->getVar( '_InstallUser' ), 
+					$this->getVar( '_InstallUser' ),
 					$this->getVar( '_InstallPassword' ) );
 			case 'create-schema':
-				return $this->openConnectionWithParams( 
+				return $this->openConnectionWithParams(
 					$this->getVar( '_InstallUser' ),
 					$this->getVar( '_InstallPassword' ),
 					$this->getVar( 'wgDBname' ) );
 			case 'create-tables':
 				$status = $this->openPgConnection( 'create-schema' );
 				if ( $status->isOK() ) {
+					/**
+					 * @var $conn DatabaseBase
+					 */
 					$conn = $status->value;
 					$safeRole = $conn->addIdentifierQuotes( $this->getVar( 'wgDBuser' ) );
 					$conn->query( "SET ROLE $safeRole" );
@@ -205,10 +213,10 @@ class PostgresInstaller extends DatabaseInstaller {
 		if ( !in_array( $this->getVar( 'wgDBname' ), $dbs ) ) {
 			array_unshift( $dbs, $this->getVar( 'wgDBname' ) );
 		}
+		$conn = false;
 		$status = Status::newGood();
 		foreach ( $dbs as $db ) {
 			try {
-				$GLOBALS['wgDBport'] = $this->getVar( 'wgDBport' );
 				$conn = new DatabasePostgres(
 					$this->getVar( 'wgDBserver' ),
 					$user,
@@ -235,10 +243,13 @@ class PostgresInstaller extends DatabaseInstaller {
 		if ( !$status->isOK() ) {
 			return false;
 		}
+		/**
+		 * @var $conn DatabaseBase
+		 */
 		$conn = $status->value;
 		$superuser = $this->getVar( '_InstallUser' );
 
-		$row = $conn->selectRow( '"pg_catalog"."pg_roles"', '*', 
+		$row = $conn->selectRow( '"pg_catalog"."pg_roles"', '*',
 			array( 'rolname' => $superuser ), __METHOD__ );
 		return $row;
 	}
@@ -256,7 +267,7 @@ class PostgresInstaller extends DatabaseInstaller {
 		if ( !$perms ) {
 			return false;
 		}
-		return $perms->rolsuper === 't';		
+		return $perms->rolsuper === 't';
 	}
 
 	public function getSettingsForm() {
@@ -313,15 +324,15 @@ class PostgresInstaller extends DatabaseInstaller {
 		}
 
 		// Existing web account. Test the connection.
-		$status = $this->openConnectionToAnyDB( 
+		$status = $this->openConnectionToAnyDB(
 			$this->getVar( 'wgDBuser' ),
 			$this->getVar( 'wgDBpassword' ) );
 		if ( !$status->isOK() ) {
 			return $status;
 		}
 
-		// The web user is conventionally the table owner in PostgreSQL 
-		// installations. Make sure the install user is able to create 
+		// The web user is conventionally the table owner in PostgreSQL
+		// installations. Make sure the install user is able to create
 		// objects on behalf of the web user.
 		if ( $same || $this->canCreateObjectsForWebUser() ) {
 			return Status::newGood();
@@ -385,6 +396,10 @@ class PostgresInstaller extends DatabaseInstaller {
 	}
 
 	public function preInstall() {
+		$createDbAccount = array(
+			'name' => 'user',
+			'callback' => array( $this, 'setupUser' ),
+		);
 		$commitCB = array(
 			'name' => 'pg-commit',
 			'callback' => array( $this, 'commitChanges' ),
@@ -397,15 +412,13 @@ class PostgresInstaller extends DatabaseInstaller {
 			'name' => 'schema',
 			'callback' => array( $this, 'setupSchema' )
 		);
+
+		if( $this->getVar( '_CreateDBAccount' ) ) {
+			$this->parent->addInstallStep( $createDbAccount, 'database' );
+		}
 		$this->parent->addInstallStep( $commitCB, 'interwiki' );
 		$this->parent->addInstallStep( $plpgCB, 'database' );
 		$this->parent->addInstallStep( $schemaCB, 'database' );
-		if( $this->getVar( '_CreateDBAccount' ) ) {
-			$this->parent->addInstallStep( array(
-				'name' => 'user',
-				'callback' => array( $this, 'setupUser' ),
-			) );
-		}
 	}
 
 	function setupDatabase() {
@@ -416,10 +429,10 @@ class PostgresInstaller extends DatabaseInstaller {
 		$conn = $status->value;
 
 		$dbName = $this->getVar( 'wgDBname' );
-		$schema = $this->getVar( 'wgDBmwschema' );
-		$user = $this->getVar( 'wgDBuser' );
-		$safeschema = $conn->addIdentifierQuotes( $schema );
-		$safeuser = $conn->addIdentifierQuotes( $user );
+		//$schema = $this->getVar( 'wgDBmwschema' );
+		//$user = $this->getVar( 'wgDBuser' );
+		//$safeschema = $conn->addIdentifierQuotes( $schema );
+		//$safeuser = $conn->addIdentifierQuotes( $user );
 
 		$exists = $conn->selectField( '"pg_catalog"."pg_database"', '1',
 			array( 'datname' => $dbName ), __METHOD__ );
@@ -446,14 +459,14 @@ class PostgresInstaller extends DatabaseInstaller {
 			try {
 				$conn->query( "CREATE SCHEMA $safeschema AUTHORIZATION $safeuser" );
 			} catch ( DBQueryError $e ) {
-				return Status::newFatal( 'config-install-pg-schema-failed', 
+				return Status::newFatal( 'config-install-pg-schema-failed',
 					$this->getVar( '_InstallUser' ), $schema );
 			}
 		}
 
 		// If we created a user, alter it now to search the new schema by default
 		if ( $this->getVar( '_CreateDBAccount' ) ) {
-			$conn->query( "ALTER ROLE $safeuser SET search_path = $safeschema, public", 
+			$conn->query( "ALTER ROLE $safeuser SET search_path = $safeschema, public",
 				__METHOD__ );
 		}
 
@@ -463,7 +476,7 @@ class PostgresInstaller extends DatabaseInstaller {
 	}
 
 	function commitChanges() {
-		$this->db->query( 'COMMIT' );
+		$this->db->commit();
 		return Status::newGood();
 	}
 
@@ -478,10 +491,10 @@ class PostgresInstaller extends DatabaseInstaller {
 		}
 		$conn = $status->value;
 
-		$schema = $this->getVar( 'wgDBmwschema' );
+		//$schema = $this->getVar( 'wgDBmwschema' );
 		$safeuser = $conn->addIdentifierQuotes( $this->getVar( 'wgDBuser' ) );
 		$safepass = $conn->addQuotes( $this->getVar( 'wgDBpassword' ) );
-		$safeschema = $conn->addIdentifierQuotes( $schema );
+		//$safeschema = $conn->addIdentifierQuotes( $schema );
 
 		// Check if the user already exists
 		$userExists = $conn->roleExists( $this->getVar( 'wgDBuser' ) );
@@ -489,8 +502,8 @@ class PostgresInstaller extends DatabaseInstaller {
 			// Create the user
 			try {
 				$sql = "CREATE ROLE $safeuser NOCREATEDB LOGIN PASSWORD $safepass";
-				
-				// If the install user is not a superuser, we need to make the install 
+
+				// If the install user is not a superuser, we need to make the install
 				// user a member of the new user's group, so that the install user will
 				// be able to create a schema and other objects on behalf of the new user.
 				if ( !$this->isSuperUser() ) {
@@ -499,7 +512,7 @@ class PostgresInstaller extends DatabaseInstaller {
 
 				$conn->query( $sql, __METHOD__ );
 			} catch ( DBQueryError $e ) {
-				return Status::newFatal( 'config-install-user-create-failed', 
+				return Status::newFatal( 'config-install-user-create-failed',
 					$this->getVar( 'wgDBuser' ), $e->getMessage() );
 			}
 		}
@@ -532,10 +545,15 @@ class PostgresInstaller extends DatabaseInstaller {
 		if ( !$status->isOK() ) {
 			return $status;
 		}
+
+		/**
+		 * @var $conn DatabaseBase
+		 */
 		$conn = $status->value;
 
 		if( $conn->tableExists( 'user' ) ) {
 			$status->warning( 'config-install-tables-exist' );
+			$this->enableLB();
 			return $status;
 		}
 
@@ -545,7 +563,7 @@ class PostgresInstaller extends DatabaseInstaller {
 			$status->fatal( 'config-install-pg-schema-not-exist' );
 			return $status;
 		}
-		$error = $conn->sourceFile( $conn->getSchema() );
+		$error = $conn->sourceFile( $conn->getSchemaPath() );
 		if( $error !== true ) {
 			$conn->reportQueryError( $error, 0, '', __METHOD__ );
 			$conn->rollback( __METHOD__ );
@@ -561,12 +579,15 @@ class PostgresInstaller extends DatabaseInstaller {
 	}
 
 	public function setupPLpgSQL() {
-		// Connect as the install user, since it owns the database and so is 
+		// Connect as the install user, since it owns the database and so is
 		// the user that needs to run "CREATE LANGAUGE"
 		$status = $this->getPgConnection( 'create-schema' );
 		if ( !$status->isOK() ) {
 			return $status;
 		}
+		/**
+		 * @var $conn DatabaseBase
+		 */
 		$conn = $status->value;
 
 		$exists = $conn->selectField( '"pg_catalog"."pg_language"', 1,
@@ -576,7 +597,7 @@ class PostgresInstaller extends DatabaseInstaller {
 			return Status::newGood();
 		}
 
-		// plpgsql is not installed, but if we have a pg_pltemplate table, we 
+		// plpgsql is not installed, but if we have a pg_pltemplate table, we
 		// should be able to create it
 		$exists = $conn->selectField(
 			array( '"pg_catalog"."pg_class"', '"pg_catalog"."pg_namespace"' ),

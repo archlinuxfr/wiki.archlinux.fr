@@ -1,5 +1,5 @@
 <?php
-/** Church Slavic (Словѣ́ньскъ / ⰔⰎⰑⰂⰡⰐⰠⰔⰍⰟ)
+/** Church Slavic (словѣ́ньскъ / ⰔⰎⰑⰂⰡⰐⰠⰔⰍⰟ)
  *
  * See MessagesQqq.php for message documentation incl. usage of parameters
  * To improve a translation please visit http://translatewiki.net
@@ -22,22 +22,22 @@ $separatorTransformTable = array(
 $linkPrefixExtension = true;
 
 $namespaceNames = array(
-	NS_MEDIA            => 'Срѣ́дьства',
-	NS_SPECIAL          => 'Наро́чьна',
-	NS_TALK             => 'Бєсѣ́да',
-	NS_USER             => 'По́льꙃєватєл҄ь',
-	NS_USER_TALK        => 'По́льꙃєватєлꙗ_бєсѣ́да',
-	NS_PROJECT_TALK     => '{{GRAMMAR:genitive|$1}}_бєсѣ́да',
-	NS_FILE             => 'Дѣ́ло',
-	NS_FILE_TALK        => 'Дѣ́ла_бєсѣ́да',
+	NS_MEDIA            => 'Срѣдьства',
+	NS_SPECIAL          => 'Нарочьна',
+	NS_TALK             => 'Бєсѣда',
+	NS_USER             => 'Польꙃєватєл҄ь',
+	NS_USER_TALK        => 'Польꙃєватєлꙗ_бєсѣда',
+	NS_PROJECT_TALK     => '{{GRAMMAR:genitive|$1}}_бєсѣда',
+	NS_FILE             => 'Дѣло',
+	NS_FILE_TALK        => 'Дѣла_бєсѣда',
 	NS_MEDIAWIKI        => 'MediaWiki',
-	NS_MEDIAWIKI_TALK   => 'MediaWiki_бєсѣ́да',
-	NS_TEMPLATE         => 'Обраꙁь́ць',
-	NS_TEMPLATE_TALK    => 'Обраꙁьца́_бєсѣ́да',
-	NS_HELP             => 'По́мощь',
-	NS_HELP_TALK        => 'По́мощи бєсѣ́да',
-	NS_CATEGORY         => 'Катигорі́ꙗ',
-	NS_CATEGORY_TALK    => 'Катигорі́ѩ_бєсѣ́да',
+	NS_MEDIAWIKI_TALK   => 'MediaWiki_бєсѣда',
+	NS_TEMPLATE         => 'Обраꙁьць',
+	NS_TEMPLATE_TALK    => 'Обраꙁьца_бєсѣда',
+	NS_HELP             => 'Помощь',
+	NS_HELP_TALK        => 'Помощи_бєсѣда',
+	NS_CATEGORY         => 'Катигорїꙗ',
+	NS_CATEGORY_TALK    => 'Катигорїѩ_бєсѣда',
 );
 
 $namespaceAliases = array(
@@ -61,8 +61,8 @@ $namespaceAliases = array(
 );
 
 $magicWords = array(
-	'redirect'              => array( '0', '#ПРѢНАПРАВЛЄНИѤ', '#REDIRECT' ),
-	'language'              => array( '0', '#ѨꙀꙐКЪ:', '#LANGUAGE:' ),
+	'redirect'                => array( '0', '#ПРѢНАПРАВЛЄНИѤ', '#REDIRECT' ),
+	'language'                => array( '0', '#ѨꙀꙐКЪ:', '#LANGUAGE:' ),
 );
 
 $defaultDateFormat = 'mdy';
@@ -145,6 +145,7 @@ $messages = array(
 'category_header'        => 'катигорїѩ ⁖ $1 ⁖ страницѧ',
 'subcategories'          => 'подъкатигорїѩ',
 'hidden-categories'      => '{{PLURAL:$1|съкрꙑта катигорїꙗ|съкрꙑти катигорїи|съкрꙑтꙑ катигорїѩ}}',
+'category-subcat-count'  => '{{PLURAL:$2|Сѥи катигорїи тъкъмо сꙗ подъкатигорїꙗ ѥстъ|Сѥи катигорїи {{PLURAL:$1|ѥдина подъкатигорїꙗ ѥстъ|2 подъкатигорїи ѥстє|$1 подъкатигорїѩ сѫтъ}} · а вьсѩ жє подъкатигорїѩ число $2 ѥстъ}}',
 'listingcontinuesabbrev' => '· вѧщє',
 
 'linkprefix' => '/^(.*?)(„|«)$/sD',
@@ -163,19 +164,21 @@ $messages = array(
 'qbpageoptions'  => 'си страни́ца',
 'qbmyoptions'    => 'моꙗ страницѧ',
 'qbspecialpages' => 'нарочьнꙑ страницѧ',
+'faq'            => 'чѧстꙑ въпросꙑ',
 
 # Vector skin
-'vector-action-delete'    => 'поничьжєниѥ',
-'vector-action-move'      => 'прѣимєнованиѥ',
-'vector-action-protect'   => 'ꙁабранѥниѥ',
-'vector-action-unprotect' => 'поущєниѥ',
-'vector-view-create'      => 'сътворѥниѥ',
-'vector-view-edit'        => 'исправи',
-'vector-view-history'     => 'їсторїꙗ',
-'vector-view-view'        => 'чьтѥниѥ',
-'vector-view-viewsource'  => 'страницѧ источьнъ обраꙁъ',
-'actions'                 => 'дѣиства',
-'namespaces'              => 'имєнъ просторꙑ',
+'vector-action-addsection' => 'новꙑ бєсѣдꙑ чѧсти сътворѥниѥ',
+'vector-action-delete'     => 'поничьжєниѥ',
+'vector-action-move'       => 'прѣимєнованиѥ',
+'vector-action-protect'    => 'ꙁабранѥниѥ',
+'vector-action-unprotect'  => 'иꙁмѣни ꙁабранѥниꙗ обраꙁъ',
+'vector-view-create'       => 'сътворѥниѥ',
+'vector-view-edit'         => 'исправи',
+'vector-view-history'      => 'їсторїꙗ',
+'vector-view-view'         => 'чьтѥниѥ',
+'vector-view-viewsource'   => 'страницѧ источьнъ обраꙁъ',
+'actions'                  => 'дѣиства',
+'namespaces'               => 'имєнъ просторꙑ',
 
 'errorpagetitle'    => 'блаꙁна',
 'tagline'           => '{{grammar:genitive|{{SITENAME}}}} страница',
@@ -186,7 +189,6 @@ $messages = array(
 'searcharticle'     => 'прѣиди',
 'history'           => 'страницѧ їсторїꙗ',
 'history_short'     => 'їсторїꙗ',
-'info_short'        => 'плирофорїꙗ',
 'printableversion'  => 'пєчатьнъ обраꙁъ',
 'permalink'         => 'въиньна съвѧꙁь',
 'print'             => 'пєчатаниѥ',
@@ -199,7 +201,7 @@ $messages = array(
 'protect'           => 'ꙁабранѥниѥ',
 'protect_change'    => 'иꙁмѣнѥниѥ',
 'protectthispage'   => 'си страницѧ ꙁабранєниѥ',
-'unprotect'         => 'поущєниѥ',
+'unprotect'         => 'ꙁабранѥниꙗ обраꙁа иꙁмѣнѥниѥ',
 'newpage'           => 'нова страница',
 'talkpage'          => 'си страницѧ бєсѣда',
 'talkpagelinktext'  => 'бєсѣда',
@@ -233,6 +235,7 @@ $messages = array(
 'portal'               => 'обьщєниꙗ съвѣтъ',
 'portal-url'           => 'Project:Обьщєниꙗ съвѣтъ',
 
+'pagetitle'           => '$1 · {{SITENAME}}',
 'retrievedfrom'       => 'поѩто иꙁ ⁖ $1 ⁖',
 'youhavenewmessages'  => '$1 тєбѣ напьсанꙑ сѫтъ ($2)',
 'newmessageslink'     => 'нови напьсаниꙗ',
@@ -262,9 +265,8 @@ $messages = array(
 'nstab-category'  => 'катигорїꙗ',
 
 # General errors
-'error'         => 'блаꙁна',
-'viewsource'    => 'страницѧ источьнъ обраꙁъ',
-'viewsourcefor' => '$1 дѣлꙗ',
+'error'      => 'блаꙁна',
+'viewsource' => 'страницѧ источьнъ обраꙁъ',
 
 # Login and logout pages
 'yourname'                => 'твоѥ имѧ',
@@ -287,18 +289,21 @@ $messages = array(
 'accountcreated'          => 'мѣсто сътворєно ѥстъ',
 'loginlanguagelabel'      => 'ѩꙁꙑкъ : $1',
 
-# Password reset dialog
+# Change password dialog
 'resetpass'                 => 'таина словєсє иꙁмѣнѥниѥ',
 'oldpassword'               => 'старо таино слово :',
 'newpassword'               => 'ново таино слово :',
 'resetpass-submit-loggedin' => 'таина словєсє иꙁмѣнѥниѥ',
+
+# Special:PasswordReset
+'passwordreset-username' => 'польꙃєватєлꙗ имѧ :',
 
 # Edit page toolbar
 'link_sample'    => 'съвѧꙁи имѧ',
 'link_tip'       => 'вънѫтрьнꙗ съвѧꙁь',
 'extlink_sample' => 'http://www.example.com съвѧꙁи имѧ',
 'extlink_tip'    => 'вънѣщьнꙗ съвѧꙁь (помьни о http://)',
-'math_tip'       => 'маѳиматїчьна формоула (LaTeX)',
+'media_tip'      => 'дѣла съвѧꙁь',
 'sig_tip'        => 'твои аѵтографъ и нꙑнѣшьна врѣмѧ и дьнь',
 
 # Edit pages
@@ -317,24 +322,34 @@ $messages = array(
 'noarticletext-nopermission' => 'нꙑнѣ с̑ьдє ничєсожє нє напьсано ѥстъ ⁙
 [[Special:Search/{{PAGENAME}}|си страницѧ имѧ искати]] дроугꙑ страницѧ или
 <span class="plainlinks">[{{fullurl:{{#Special:Log}}|page={{FULLPAGENAMEE}}}} съвѧꙁанꙑ їсторїѩ видѣти]</span> можєши',
-'clearyourcache'             => 'НАРОЧИТО: По съхранѥнии можєши обити своѥго съмотрила съхранъ да видѣлъ би мѣнꙑ ⁙ Mozilla ли Firefox ли Safari ли жьмꙑи Shift а мꙑшиѭ жьми Reload или жьми Ctrl-Shift-R (Cmd-Shift-R вън Apple Mac)  ⁙ Konqueror ли жьми кромѣ Reload или F5 ⁙ Опєрꙑ польꙃєватєльмъ можєть бꙑти ноужда пльнѣ поничьжити ихъ съмотрила съхранъ въ Tools > Preferences ⁙ IE ли жьмꙑи Ctrl а мꙑшиѭ жьми Refresh или жьми Ctrl-F5',
+'userpage-userdoesnotexist'  => 'польꙃєватєльска мѣста ⁖ $1 ⁖ нꙑнѣ нѣстъ ⁙
+прѣдъ сътворѥниѥмь или исправлѥниѥмь си страницѧ помꙑсли жє ащє исто тъ дѣиство ноуждьно ли',
+'clearyourcache'             => "'''НАРОЧИТО''': По съхранѥнии можєши обити своѥго съмотрила съхранъ да видѣлъ би мѣнꙑ
+* '''Mozilla ли Firefox ли Safari''' ли жьмꙑи Shift а мꙑшиѭ жьми Reload или жьми Ctrl-Shift-R (⌘-R вън Apple Mac)
+* '''Google Chrome:''' ли жьмꙑи Ctrl-Shift-R (⌘-Shift-R въ Mac)
+* '''Internet Explorer''' ли жьмꙑи Ctrl а мꙑшиѭ жьми Refresh или жьми Ctrl-F5
+* '''Konqueror''' ли жьми кромѣ Reload или F5 
+* '''Опєрꙑ''' польꙃєватєльмъ можєть бꙑти ноужда пльнѣ поничьжити ихъ съмотрила съхранъ въ Tools → Preferences ⁙",
 'note'                       => "'''НАРОЧИТО:'''",
 'editing'                    => 'исправлѥниѥ: $1',
 'editingsection'             => 'исправлѥниѥ ⁖ $1 ⁖ (чѧсть)',
 'editingcomment'             => 'исправлѥниѥ ⁖ $1 ⁖ (нова чѧсть)',
 'templatesused'              => 'сѥѩ страницѧ {{PLURAL:$1|сь обраꙁьць польꙃоуѥтъ сѧ ѥстъ|с҄и обраꙁьца польꙃоуѭтъ сѧ ѥстє|с҄и обраꙁьци польꙃоуѭтъ сѧ сѫтъ}} :',
 'template-protected'         => '(ꙁабранєно ѥстъ)',
+'template-semiprotected'     => '(чѧстьно ꙁабранѥно)',
 
 # History pages
-'viewpagelogs' => 'си страницѧ їсторїѩ',
-'cur'          => 'нꙑ҃н',
-'last'         => 'пс҃лд',
-'page_first'   => 'прьва страница',
-'page_last'    => 'послѣдьнꙗ страница',
-'histfirst'    => 'прьвꙑ',
-'histlast'     => 'послѣдьнꙗ',
-'historysize'  => '{{PLURAL:$1|1 баитъ|$1 баита|$1 баитъ}}',
-'historyempty' => '(поусто)',
+'viewpagelogs'           => 'си страницѧ їсторїѩ',
+'cur'                    => 'нꙑ҃н',
+'last'                   => 'пс҃лд',
+'page_first'             => 'прьва страница',
+'page_last'              => 'послѣдьнꙗ страница',
+'history-fieldset-title' => 'виждь мѣнъ їсторїѭ',
+'history-show-deleted'   => 'тъкъмо поничьжєнꙑ мѣнꙑ',
+'histfirst'              => 'прьвꙑ',
+'histlast'               => 'послѣдьнꙗ',
+'historysize'            => '{{PLURAL:$1|1 баитъ|$1 баита|$1 баитъ}}',
+'historyempty'           => '(поусто)',
 
 # Revision feed
 'history-feed-title'          => 'мѣнъ їсторїꙗ',
@@ -349,8 +364,6 @@ $messages = array(
 'revdelete-log'              => 'какъ съмꙑслъ :',
 'pagehist'                   => 'страницѧ їсторїꙗ',
 'deletedhist'                => 'поничьжєна їсторїꙗ',
-'revdelete-summary'          => 'мѣнꙑ опьсаниѥ',
-'revdelete-uname'            => 'польꙃєватєлꙗ имѧ',
 'revdelete-otherreason'      => 'инъ или допльнитєл҄ьнъ съмꙑслъ :',
 'revdelete-reasonotherlist'  => 'инъ съмꙑслъ',
 
@@ -361,6 +374,7 @@ $messages = array(
 'searchresults'                  => 'исканиꙗ слѣдьствиѥ',
 'searchresults-title'            => 'исканиꙗ ⁖ $1 ⁖ слѣдьствиѥ',
 'viewprevnext'                   => 'виждь ($1 {{int:pipe-separator}} $2) ($3)',
+'searchmenu-exists'              => "'''страница имєньмь ⁖ [[:$1]] ⁖ ѥстъ створѥна ю'''",
 'searchmenu-new'                 => "'''страницѫ ⁖ [[:$1]] ⁖ сътворити можєши'''",
 'searchhelp-url'                 => 'Help:Каталогъ',
 'searchprofile-articles'         => 'члѣни',
@@ -421,10 +435,10 @@ $messages = array(
 'group-sysop'      => 'съмотритєлє',
 'group-bureaucrat' => 'чинодатєлє',
 
-'group-user-member'       => 'польꙃєватєл҄ь',
-'group-bot-member'        => 'аѵтоматъ',
-'group-sysop-member'      => 'съмотритєл҄ь',
-'group-bureaucrat-member' => 'чинодатєл҄ь',
+'group-user-member'       => '{{GENDER:$1|польꙃєватєл҄ь|польꙃєватєл҄ьница}}',
+'group-bot-member'        => '{{GENDER:$1|аѵтоматъ}}',
+'group-sysop-member'      => '{{GENDER:$1|съмотритєл҄ь}}',
+'group-bureaucrat-member' => '{{GENDER:$1|чинодатєл҄ь}}',
 
 'grouppage-user'       => '{{ns:project}}:Польꙃєватєлє',
 'grouppage-bot'        => '{{ns:project}}:Аѵтомати',
@@ -497,7 +511,7 @@ $messages = array(
 'filehist-user'      => 'польꙃєватєл҄ь',
 'filehist-filesize'  => 'дѣла мѣра',
 'filehist-comment'   => 'опьсаниѥ',
-'imagelinks'         => 'дѣла съвѧꙁи',
+'imagelinks'         => 'дѣла польꙃєваниѥ',
 'sharedupload'       => 'сѥ дѣло въ $1 съхранѥно ѥстъ дѣла · ѥгожє дроугꙑ опꙑтьствованиѩ польꙃєвати могѫтъ',
 
 # File reversion
@@ -530,8 +544,9 @@ $messages = array(
 'statistics-articles'     => 'истиньнꙑ члѣни',
 'statistics-pages'        => 'страницѧ',
 'statistics-files'        => 'положєнꙑ дѣла',
+'statistics-users-active' => 'дѣꙗтєльнꙑ польꙃєватєлє',
 
-'disambiguations'     => 'мъногосъмꙑслиꙗ',
+'disambiguations'     => 'страницѧ ижє съвѧꙁи съ мъногосъмꙑслиꙗ имѫтъ',
 'disambiguationspage' => 'Template:мъногосъмꙑслиѥ',
 
 'brokenredirects-edit'   => 'исправи',
@@ -540,8 +555,10 @@ $messages = array(
 # Miscellaneous special pages
 'nbytes'            => '$1 {{PLURAL:$1|баитъ|баита|баитъ}}',
 'nlinks'            => '$1 {{PLURAL:$1|съвѧꙁь|съвѧꙁи|съвѧꙁии}}',
+'nmembers'          => '$1 {{PLURAL:$1|члѣнъ|члѣна|члѣни|члѣнъ}}',
 'shortpages'        => 'кратъкꙑ страницѧ',
 'listusers'         => 'польꙃєватєлъ каталогъ',
+'usercreated'       => '{{GENDER:$3|сътворилъ|сътворила}} мѣсто $1 въ $2',
 'newpages'          => 'нови члѣни',
 'newpages-username' => 'польꙃєватєлꙗ имѧ :',
 'move'              => 'прѣимєнованиѥ',
@@ -571,16 +588,14 @@ $messages = array(
 'deletedcontributions-title' => 'поничьжєнꙑ добродѣꙗниꙗ',
 
 # Special:LinkSearch
-'linksearch'    => 'вънѣщьнѩ съвѧꙁи',
+'linksearch'    => 'вънѣщьн҄ь съвѧꙁь исканиѥ',
 'linksearch-ok' => 'ищи',
 
 # Special:ListUsers
 'listusers-submit' => 'виждь',
 
 # Special:Log/newusers
-'newuserlogpage'              => 'новъ мѣстъ сътворѥниꙗ їсторїꙗ',
-'newuserlog-create-entry'     => 'новъ польꙃєватєл҄ь',
-'newuserlog-autocreate-entry' => 'польꙃєватєлꙗ мѣсто аѵтоматичьно сътворєно ѥстъ',
+'newuserlogpage' => 'новъ мѣстъ сътворѥниꙗ їсторїꙗ',
 
 # E-mail user
 'emailuser' => 'посъли єпїстолѫ',
@@ -588,7 +603,6 @@ $messages = array(
 # Watchlist
 'watchlist'        => 'моꙗ блюдєниꙗ',
 'mywatchlist'      => 'моꙗ блюдєниꙗ',
-'addedwatch'       => 'страница нꙑнѣ подъ твоимь блюдєниѥмь ѥстъ',
 'addedwatchtext'   => "страница ⁖ [[:$1]] ⁖ нꙑнѣ подъ твоимь [[Special:Watchlist|блюдєниѥмь]] ѥстъ ⁙
 всꙗ ѥѩ и ѥѩжє бєсѣдꙑ мѣнꙑ страницѧ ⁖ [[Special:Watchlist|моꙗ блюдєниꙗ]] ⁖ покаꙁанꙑ сѫтъ и  [[Special:RecentChanges|послѣдьнъ мѣнъ]] каталоꙃѣ '''чрьнꙑимъ''' сѧ авлꙗѭтъ",
 'removedwatchtext' => 'страница ⁖ [[:$1]] ⁖ нꙑнѣ твоѥго [[Special:Watchlist|блюдєниꙗ]] иꙁнєсєна ѥстъ',
@@ -608,19 +622,20 @@ $messages = array(
 'excontentauthor' => "вънѫтри бѣ : '$1' (и послѣдьн҄ии дѣтєл҄ь бѣ '[[Special:Contributions/$2|$2]]')",
 'delete-legend'   => 'поничьжєниѥ',
 'actioncomplete'  => 'дѣиство сътворєно ѥстъ',
-'deletedtext'     => 'страница ⁖ <nowiki>$1</nowiki> ⁖ поничьжєна ѥстъ ⁙
+'deletedtext'     => 'страница ⁖ $1 ⁖ поничьжєна ѥстъ ⁙
 виждь ⁖ $2 ⁖ послѣдьнъ поничьжєниѩ дѣлꙗ',
-'deletedarticle'  => '⁖ [[$1]] ⁖ поничьжєнъ ѥстъ',
 'dellogpage'      => 'поничьжєниꙗ їсторїꙗ',
 'deletionlog'     => 'поничьжєниꙗ їсторїꙗ',
 'deletecomment'   => 'какъ съмꙑслъ :',
 
 # Protect
-'protectlogpage'      => 'ꙁабранѥниꙗ їсторїꙗ',
-'protectedarticle'    => '⁖ [[$1]] ⁖ ꙁабранѥна ѥстъ',
-'prot_1movedto2'      => '⁖ [[$1]] ⁖ нарєчєнъ ⁖ [[$2]] ⁖ ѥстъ',
-'protectcomment'      => 'какъ съмꙑслъ :',
-'protect-level-sysop' => 'толико съмотритєлє',
+'protectlogpage'         => 'ꙁабранѥниꙗ їсторїꙗ',
+'protectedarticle'       => '⁖ [[$1]] ⁖ ꙁабранѥна ѥстъ',
+'prot_1movedto2'         => '⁖ [[$1]] ⁖ нарєчєнъ ⁖ [[$2]] ⁖ ѥстъ',
+'protectcomment'         => 'какъ съмꙑслъ :',
+'protect-level-sysop'    => 'толико съмотритєлє',
+'protect-expiry-options' => '1 часъ:1 hour,1 дьнь:1 day,1 сєдмица:1 week,2 сєдмици:2 weeks,1 мѣсѧць:1 month,3 мѣсѧць:3 months,6 мѣсѧць:6 months,1 лѣто:1 year,вѣчьно:infinite',
+'pagesize'               => '(баитъ)',
 
 # Restrictions (nouns)
 'restriction-edit'   => 'исправи',
@@ -644,6 +659,8 @@ $messages = array(
 
 'sp-contributions-blocklog' => 'ꙁаграждєниꙗ їсторїꙗ',
 'sp-contributions-deleted'  => 'поничьжєнꙑ добродѣꙗниꙗ',
+'sp-contributions-uploads'  => 'положєнꙑ дѣла',
+'sp-contributions-logs'     => 'їсторїѩ',
 'sp-contributions-talk'     => 'бєсѣда',
 'sp-contributions-username' => 'IP число или польꙃєватєлꙗ имѧ :',
 'sp-contributions-submit'   => 'ищи',
@@ -654,6 +671,7 @@ $messages = array(
 'whatlinkshere-page'       => 'страница :',
 'isredirect'               => 'прѣнаправлѥниѥ',
 'istemplate'               => 'внѫтри страницѧ',
+'isimage'                  => 'дѣла съвѧꙁь',
 'whatlinkshere-links'      => '← съвѧꙁи',
 'whatlinkshere-hideredirs' => '$1 прѣнаправлѥниꙗ',
 'whatlinkshere-hidelinks'  => '$1 съвѧꙁи',
@@ -662,8 +680,11 @@ $messages = array(
 'blockip'            => 'ꙁагради польꙃєватєл҄ь',
 'ipadressorusername' => 'IP число или польꙃєватєлꙗ имѧ :',
 'ipbreason'          => 'какъ съмꙑслъ :',
+'ipboptions'         => '2 часа:2 hours,1 дьнь:1 day,3 дьни:3 days,1 сєдмица:1 week,2 сєдмици:2 weeks,1 мѣсѧць:1 month,3 мѣсѧць:3 months,6 мѣсѧць:6 months,1 лѣто:1 year,вѣчьно:infinite',
 'ipblocklist'        => 'ꙁаграждєнꙑ польꙃєватєлє',
+'blocklist-reason'   => 'какъ съмꙑслъ',
 'ipblocklist-submit' => 'исканиѥ',
+'infiniteblock'      => 'вѣчьно',
 'blocklink'          => 'ꙁагради',
 'contribslink'       => 'добродѣꙗниꙗ',
 'blocklogpage'       => 'ꙁаграждєниꙗ їсторїꙗ',
@@ -680,8 +701,6 @@ $messages = array(
 'movepage-moved-redirect' => 'прѣнаправлѥниѥ сътворѥно бѣ',
 'movedto'                 => 'прѣимєновано въ',
 'movetalk'                => 'си страницѧ бєсѣдꙑ прѣимєнованиѥ',
-'1movedto2'               => '⁖ [[$1]] ⁖ нарєчєнъ ⁖ [[$2]] ⁖ ѥстъ',
-'1movedto2_redir'         => '[[$1]] нарєчєнъ [[$2]] врьхоу прѣнаправлѥниꙗ ѥстъ.',
 'movelogpage'             => 'прѣимєнованиꙗ їсторїꙗ',
 'movereason'              => 'какъ съмꙑслъ :',
 'move-leave-redirect'     => 'прѣнаправлѥниꙗ сътворѥниѥ',
@@ -715,6 +734,11 @@ $messages = array(
 'tooltip-ca-nstab-special'       => 'си нарочьна страница ѥстъ · ѥѩжє иꙁмѣнꙗти нє можєши',
 'tooltip-watch'                  => 'си страницѧ блюдєниѥ',
 
+# Info page
+'pageinfo-header-watchlist' => 'блюдєниꙗ',
+'pageinfo-subjectpage'      => 'страница',
+'pageinfo-talkpage'         => 'бєсѣда',
+
 # Media information
 'file-info-size' => '$1 × $2 п҃ѯ · дѣла мѣра : $3 · MIME тѷпъ : $4',
 'svg-long-desc'  => 'дѣло SVG · обꙑчьнъ обраꙁъ : $1 × $2 п҃ѯ · дѣла мѣра : $3',
@@ -743,7 +767,11 @@ $messages = array(
 'autosumm-new' => 'нова страница ⁖ $1 ⁖ сътворєна  ѥстъ',
 
 # Size units
-'size-bytes' => '$1 Б҃',
+'size-bytes'     => '$1 Б҃',
+'size-kilobytes' => '$1 Х҃Б',
+
+# Signatures
+'signature' => '[[{{ns:user}}:$1|$2]] ([[{{ns:user_talk}}:$1|бєсѣда]])',
 
 # Special:Version
 'version'                  => 'MediaWiki обраꙁъ',
@@ -762,5 +790,17 @@ $messages = array(
 
 # Special:Tags
 'tags-edit' => 'исправи',
+
+# Database error messages
+'dberr-header' => 'Вики тєхнїчьнꙑ отѧжєниꙗ имѣтъ',
+
+# New logging system
+'logentry-delete-delete'        => '$1 поничьжихъ страницѫ ⁖ $3 ⁖',
+'logentry-move-move'            => '$1 нарєчє страницѫ ⁖ $3 ⁖ имєньмь ⁖ $4 ⁖',
+'logentry-move-move-noredirect' => '$1 нарєчє страницѫ ⁖ $3 ⁖ имєньмь ⁖ $4 ⁖ бєꙁ прѣнаправлєниꙗ сътворѥниꙗ',
+'logentry-newusers-create'      => '$1 сътворихъ польꙃєватєльско мѣсто',
+
+# API errors
+'api-error-unknownerror' => 'нєвѣдома блаꙁна : ⁖ $1 ⁖',
 
 );

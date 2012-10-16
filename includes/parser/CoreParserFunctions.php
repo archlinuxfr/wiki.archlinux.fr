@@ -10,6 +10,10 @@
  * @ingroup Parser
  */
 class CoreParserFunctions {
+	/**
+	 * @param $parser Parser
+	 * @return void
+	 */
 	static function register( $parser ) {
 		global $wgAllowDisplayTitle, $wgAllowSlowParserFunctions;
 
@@ -31,6 +35,8 @@ class CoreParserFunctions {
 		$parser->setFunctionHook( 'localurle',        array( __CLASS__, 'localurle'        ), SFH_NO_HASH );
 		$parser->setFunctionHook( 'fullurl',          array( __CLASS__, 'fullurl'          ), SFH_NO_HASH );
 		$parser->setFunctionHook( 'fullurle',         array( __CLASS__, 'fullurle'         ), SFH_NO_HASH );
+		$parser->setFunctionHook( 'canonicalurl',     array( __CLASS__, 'canonicalurl'     ), SFH_NO_HASH );
+		$parser->setFunctionHook( 'canonicalurle',    array( __CLASS__, 'canonicalurle'    ), SFH_NO_HASH );
 		$parser->setFunctionHook( 'formatnum',        array( __CLASS__, 'formatnum'        ), SFH_NO_HASH );
 		$parser->setFunctionHook( 'grammar',          array( __CLASS__, 'grammar'          ), SFH_NO_HASH );
 		$parser->setFunctionHook( 'gender',           array( __CLASS__, 'gender'           ), SFH_NO_HASH );
@@ -83,18 +89,27 @@ class CoreParserFunctions {
 		}
 	}
 
+	/**
+	 * @param $parser Parser
+	 * @param string $part1
+	 * @return array
+	 */
 	static function intFunction( $parser, $part1 = '' /*, ... */ ) {
 		if ( strval( $part1 ) !== '' ) {
 			$args = array_slice( func_get_args(), 2 );
-			$message = wfMsgGetKey( $part1, true, $parser->getOptions()->getUserLang(), false );
-			$message = wfMsgReplaceArgs( $message, $args );
-			$message = $parser->replaceVariables( $message ); // like $wgMessageCache->transform()
-			return $message;
+			$message = wfMessage( $part1, $args )->inLanguage( $parser->getOptions()->getUserLangObj() )->plain();
+			return array( $message, 'noparse' => false );
 		} else {
 			return array( 'found' => false );
 		}
 	}
 
+	/**
+	 * @param $parser Parser
+	 * @param  $date
+	 * @param null $defaultPref
+	 * @return mixed|string
+	 */
 	static function formatDate( $parser, $date, $defaultPref = null ) {
 		$df = DateFormatter::getInstance();
 
@@ -126,7 +141,11 @@ class CoreParserFunctions {
 	}
 
 	static function nse( $parser, $part1 = '' ) {
-		return wfUrlencode( str_replace( ' ', '_', self::ns( $parser, $part1 ) ) );
+		$ret = self::ns( $parser, $part1 );
+		if ( is_string( $ret ) ) {
+			$ret = wfUrlencode( str_replace( ' ', '_', $ret ) );
+		}
+		return $ret;
 	}
 
 	/**
@@ -149,17 +168,21 @@ class CoreParserFunctions {
 
 			// Encode as though it's a wiki page, '_' for ' '.
 			case 'url_wiki':
-				return wfUrlencode( str_replace( ' ', '_', $s ) );
+				$func = 'wfUrlencode';
+				$s = str_replace( ' ', '_', $s );
+				break;
 
 			// Encode for an HTTP Path, '%20' for ' '.
 			case 'url_path':
-				return rawurlencode( $s );
+				$func = 'rawurlencode';
+				break;
 
 			// Encode for HTTP query, '+' for ' '.
 			case 'url_query':
 			default:
-				return urlencode( $s );
+				$func = 'urlencode';
 		}
+		return $parser->markerSkipCallback( $s, $func );
 	}
 
 	static function lcfirst( $parser, $s = '' ) {
@@ -172,28 +195,32 @@ class CoreParserFunctions {
 		return $wgContLang->ucfirst( $s );
 	}
 
+	/**
+	 * @param $parser Parser
+	 * @param string $s
+	 * @return
+	 */
 	static function lc( $parser, $s = '' ) {
 		global $wgContLang;
-		if ( is_callable( array( $parser, 'markerSkipCallback' ) ) ) {
-			return $parser->markerSkipCallback( $s, array( $wgContLang, 'lc' ) );
-		} else {
-			return $wgContLang->lc( $s );
-		}
+		return $parser->markerSkipCallback( $s, array( $wgContLang, 'lc' ) );
 	}
 
+	/**
+	 * @param $parser Parser
+	 * @param string $s
+	 * @return
+	 */
 	static function uc( $parser, $s = '' ) {
 		global $wgContLang;
-		if ( is_callable( array( $parser, 'markerSkipCallback' ) ) ) {
-			return $parser->markerSkipCallback( $s, array( $wgContLang, 'uc' ) );
-		} else {
-			return $wgContLang->uc( $s );
-		}
+		return $parser->markerSkipCallback( $s, array( $wgContLang, 'uc' ) );
 	}
 
 	static function localurl( $parser, $s = '', $arg = null ) { return self::urlFunction( 'getLocalURL', $s, $arg ); }
 	static function localurle( $parser, $s = '', $arg = null ) { return self::urlFunction( 'escapeLocalURL', $s, $arg ); }
 	static function fullurl( $parser, $s = '', $arg = null ) { return self::urlFunction( 'getFullURL', $s, $arg ); }
 	static function fullurle( $parser, $s = '', $arg = null ) { return self::urlFunction( 'escapeFullURL', $s, $arg ); }
+	static function canonicalurl( $parser, $s = '', $arg = null ) { return self::urlFunction( 'getCanonicalURL', $s, $arg ); }
+	static function canonicalurle( $parser, $s = '', $arg = null ) { return self::urlFunction( 'escapeCanonicalURL', $s, $arg ); }
 
 	static function urlFunction( $func, $s = '', $arg = null ) {
 		$title = Title::newFromText( $s );
@@ -219,43 +246,77 @@ class CoreParserFunctions {
 		}
 	}
 
-	static function formatNum( $parser, $num = '', $raw = null) {
-		if ( self::israw( $raw ) ) {
-			return $parser->getFunctionLang()->parseFormattedNumber( $num );
+	/**
+	 * @param $parser Parser
+	 * @param string $num
+	 * @param null $raw
+	 * @return
+	 */
+	static function formatnum( $parser, $num = '', $raw = null) {
+		if ( self::isRaw( $raw ) ) {
+			$func = array( $parser->getFunctionLang(), 'parseFormattedNumber' );
 		} else {
-			return $parser->getFunctionLang()->formatNum( $num );
+			$func = array( $parser->getFunctionLang(), 'formatNum' );
 		}
+		return $parser->markerSkipCallback( $num, $func );
 	}
 
+	/**
+	 * @param $parser Parser
+	 * @param string $case
+	 * @param string $word
+	 * @return
+	 */
 	static function grammar( $parser, $case = '', $word = '' ) {
+		$word = $parser->killMarkers( $word );
 		return $parser->getFunctionLang()->convertGrammar( $word, $case );
 	}
 
-	static function gender( $parser, $user ) {
+	/**
+	 * @param $parser Parser
+	 * @param $username string
+	 * @return
+	 */
+	static function gender( $parser, $username ) {
 		wfProfileIn( __METHOD__ );
-		$forms = array_slice( func_get_args(), 2);
+		$forms = array_slice( func_get_args(), 2 );
+
+		// Some shortcuts to avoid loading user data unnecessarily
+		if ( count( $forms ) === 0 ) {
+			return '';
+		} elseif ( count( $forms ) === 1 ) {
+			return $forms[0];
+		}
+
+		$username = trim( $username );
 
 		// default
 		$gender = User::getDefaultOption( 'gender' );
 
 		// allow prefix.
-		$title = Title::newFromText( $user );
+		$title = Title::newFromText( $username );
 
-		if ( is_object( $title ) && $title->getNamespace() == NS_USER )
-			$user = $title->getText();
+		if ( $title && $title->getNamespace() == NS_USER ) {
+			$username = $title->getText();
+		}
 
-		// check parameter, or use $wgUser if in interface message
-		$user = User::newFromName( $user );
+		// check parameter, or use the ParserOptions if in interface message
+		$user = User::newFromName( $username );
 		if ( $user ) {
 			$gender = $user->getOption( 'gender' );
-		} elseif ( $parser->getOptions()->getInterfaceMessage() ) {
-			global $wgUser;
-			$gender = $wgUser->getOption( 'gender' );
+		} elseif ( $username === '' && $parser->getOptions()->getInterfaceMessage() ) {
+			$gender = $parser->getOptions()->getUser()->getOption( 'gender' );
 		}
 		$ret = $parser->getFunctionLang()->gender( $gender, $forms );
 		wfProfileOut( __METHOD__ );
 		return $ret;
 	}
+
+	/**
+	 * @param $parser Parser
+	 * @param string $text
+	 * @return
+	 */
 	static function plural( $parser, $text = '' ) {
 		$forms = array_slice( func_get_args(), 2 );
 		$text = $parser->getFunctionLang()->parseFormattedNumber( $text );
@@ -396,10 +457,11 @@ class CoreParserFunctions {
 			return '';
 		return wfUrlencode( $t->getSubjectNsText() );
 	}
-	/*
+
+	/**
 	 * Functions to get and normalize pagenames, corresponding to the magic words
 	 * of the same names
-	*/
+	 */
 	static function pagename( $parser, $title = null ) {
 		$t = Title::newFromText( $title );
 		if ( is_null( $t ) )
@@ -410,7 +472,7 @@ class CoreParserFunctions {
 		$t = Title::newFromText( $title );
 		if ( is_null( $t ) )
 			return '';
-		return $t->getPartialURL();
+		return wfEscapeWikiText( $t->getPartialURL() );
 	}
 	static function fullpagename( $parser, $title = null ) {
 		$t = Title::newFromText( $title );
@@ -422,31 +484,31 @@ class CoreParserFunctions {
 		$t = Title::newFromText( $title );
 		if ( is_null( $t ) || !$t->canTalk() )
 			return '';
-		return $t->getPrefixedURL();
+		return wfEscapeWikiText( $t->getPrefixedURL() );
 	}
 	static function subpagename( $parser, $title = null ) {
 		$t = Title::newFromText( $title );
 		if ( is_null( $t ) )
 			return '';
-		return $t->getSubpageText();
+		return wfEscapeWikiText( $t->getSubpageText() );
 	}
 	static function subpagenamee( $parser, $title = null ) {
 		$t = Title::newFromText( $title );
 		if ( is_null( $t ) )
 			return '';
-		return $t->getSubpageUrlForm();
+		return wfEscapeWikiText( $t->getSubpageUrlForm() );
 	}
 	static function basepagename( $parser, $title = null ) {
 		$t = Title::newFromText( $title );
 		if ( is_null( $t ) )
 			return '';
-		return $t->getBaseText();
+		return wfEscapeWikiText( $t->getBaseText() );
 	}
 	static function basepagenamee( $parser, $title = null ) {
 		$t = Title::newFromText( $title );
 		if ( is_null( $t ) )
 			return '';
-		return wfUrlEncode( str_replace( ' ', '_', $t->getBaseText() ) );
+		return wfEscapeWikiText( wfUrlEncode( str_replace( ' ', '_', $t->getBaseText() ) ) );
 	}
 	static function talkpagename( $parser, $title = null ) {
 		$t = Title::newFromText( $title );
@@ -458,7 +520,7 @@ class CoreParserFunctions {
 		$t = Title::newFromText( $title );
 		if ( is_null( $t ) || !$t->canTalk() )
 			return '';
-		return $t->getTalkPage()->getPrefixedUrl();
+		return wfEscapeWikiText( $t->getTalkPage()->getPrefixedUrl() );
 	}
 	static function subjectpagename( $parser, $title = null ) {
 		$t = Title::newFromText( $title );
@@ -470,7 +532,7 @@ class CoreParserFunctions {
 		$t = Title::newFromText( $title );
 		if ( is_null( $t ) )
 			return '';
-		return $t->getSubjectPage()->getPrefixedUrl();
+		return wfEscapeWikiText( $t->getSubjectPage()->getPrefixedUrl() );
 	}
 
 	/**
@@ -503,12 +565,17 @@ class CoreParserFunctions {
 	 * Return the size of the given page, or 0 if it's nonexistent.  This is an
 	 * expensive parser function and can't be called too many times per page.
 	 *
-	 * @todo Fixme: This doesn't work correctly on preview for getting the size
+	 * @todo FIXME: This doesn't work correctly on preview for getting the size
 	 *   of the current page.
-	 * @todo Fixme: Title::getLength() documentation claims that it adds things
+	 * @todo FIXME: Title::getLength() documentation claims that it adds things
 	 *   to the link cache, so the local cache here should be unnecessary, but
 	 *   in fact calling getLength() repeatedly for the same $page does seem to
 	 *   run one query for each call?
+	 * @todo Document parameters
+	 *
+	 * @param $parser Parser
+	 * @param $page String TODO DOCUMENT (Default: empty string)
+	 * @param $raw TODO DOCUMENT (Default: null)
 	 */
 	static function pagesize( $parser, $page = '', $raw = null ) {
 		static $cache = array();
@@ -546,16 +613,32 @@ class CoreParserFunctions {
 		return implode( $restrictions, ',' );
 	}
 
-	static function language( $parser, $arg = '' ) {
+	/**
+	 * Gives language names.
+	 * @param $parser Parser
+	 * @param $code String  Language code
+	 * @param $language String  Language code
+	 * @return String
+	 */
+	static function language( $parser, $code = '', $language = '' ) {
 		global $wgContLang;
-		$lang = $wgContLang->getLanguageName( strtolower( $arg ) );
-		return $lang != '' ? $lang : $arg;
+		$code = strtolower( $code );
+		$language = strtolower( $language );
+
+		if ( $language !== '' ) {
+			$names = Language::getTranslatedLanguageNames( $language );
+			return isset( $names[$code] ) ? $names[$code] : wfBCP47( $code );
+		}
+
+		$lang = $wgContLang->getLanguageName( $code );
+		return $lang !== '' ? $lang : wfBCP47( $code );
 	}
 
 	/**
 	 * Unicode-safe str_pad with the restriction that $length is forced to be <= 500
- 	 */
-	static function pad( $string, $length, $padding = '0', $direction = STR_PAD_RIGHT ) {
+	 */
+	static function pad( $parser, $string, $length, $padding = '0', $direction = STR_PAD_RIGHT ) {
+		$padding = $parser->killMarkers( $padding );
 		$lengthOfPadding = mb_strlen( $padding );
 		if ( $lengthOfPadding == 0 ) return $string;
 
@@ -579,19 +662,25 @@ class CoreParserFunctions {
 	}
 
 	static function padleft( $parser, $string = '', $length = 0, $padding = '0' ) {
-		return self::pad( $string, $length, $padding, STR_PAD_LEFT );
+		return self::pad( $parser, $string, $length, $padding, STR_PAD_LEFT );
 	}
 
 	static function padright( $parser, $string = '', $length = 0, $padding = '0' ) {
-		return self::pad( $string, $length, $padding );
+		return self::pad( $parser, $string, $length, $padding );
 	}
 
+	/**
+	 * @param $parser Parser
+	 * @param  $text
+	 * @return string
+	 */
 	static function anchorencode( $parser, $text ) {
+		$text = $parser->killMarkers( $text );
 		return substr( $parser->guessSectionNameFromWikiText( $text ), 1);
 	}
 
 	static function special( $parser, $text ) {
-		list( $page, $subpage ) = SpecialPage::resolveAliasWithSubpage( $text );
+		list( $page, $subpage ) = SpecialPageFactory::resolveAlias( $text );
 		if ( $page ) {
 			$title = SpecialPage::getTitleFor( $page, $subpage );
 			return $title;
@@ -600,27 +689,75 @@ class CoreParserFunctions {
 		}
 	}
 
-	public static function defaultsort( $parser, $text ) {
+	/**
+	 * @param $parser Parser
+	 * @param $text String The sortkey to use
+	 * @param $uarg String Either "noreplace" or "noerror" (in en)
+	 *   both suppress errors, and noreplace does nothing if
+	 *   a default sortkey already exists.
+	 * @return string
+	 */
+	public static function defaultsort( $parser, $text, $uarg = '' ) {
+		static $magicWords = null;
+		if ( is_null( $magicWords ) ) {
+			$magicWords = new MagicWordArray( array( 'defaultsort_noerror', 'defaultsort_noreplace' ) );
+		}
+		$arg = $magicWords->matchStartToEnd( $uarg );
+
 		$text = trim( $text );
 		if( strlen( $text ) == 0 )
 			return '';
 		$old = $parser->getCustomDefaultSort();
-		$parser->setDefaultSort( $text );
-		if( $old === false || $old == $text )
+		if ( $old === false || $arg !== 'defaultsort_noreplace' ) {
+			$parser->setDefaultSort( $text );
+		}
+
+		if( $old === false || $old == $text || $arg ) {
 			return '';
-		else
+		} else {
 			return( '<span class="error">' .
 				wfMsgForContent( 'duplicate-defaultsort',
 						 htmlspecialchars( $old ),
 						 htmlspecialchars( $text ) ) .
 				'</span>' );
+		}
 	}
 
-	public static function filepath( $parser, $name='', $option='' ) {
+	// Usage {{filepath|300}}, {{filepath|nowiki}}, {{filepath|nowiki|300}} or {{filepath|300|nowiki}}
+	public static function filepath( $parser, $name='', $argA='', $argB='' ) {
 		$file = wfFindFile( $name );
-		if( $file ) {
+		$size = '';
+		$argA_int = intval( $argA );
+		$argB_int = intval( $argB );
+
+		if ( $argB_int > 0 ) {
+			// {{filepath: | option | size }}
+			$size = $argB_int;
+			$option = $argA;
+
+		} elseif ( $argA_int > 0 ) {
+			// {{filepath: | size [|option] }}
+			$size = $argA_int;
+			$option = $argB;
+
+		} else {
+			// {{filepath: [|option] }}
+			$option = $argA;
+		}
+
+		if ( $file ) {
 			$url = $file->getFullUrl();
-			if( $option == 'nowiki' ) {
+
+			// If a size is requested...
+			if ( is_integer( $size ) ) {
+				$mto = $file->transform( array( 'width' => $size ) );
+				// ... and we can
+				if ( $mto && !$mto->isError() ) {
+					// ... change the URL to point to a thumbnail.
+					$url = wfExpandUrl( $mto->getUrl(), PROTO_RELATIVE );
+				}
+			}
+			if ( $option == 'nowiki' ) {
 				return array( $url, 'nowiki' => true );
 			}
 			return $url;

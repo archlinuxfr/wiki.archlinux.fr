@@ -25,11 +25,6 @@
  * @file
  */
 
-if ( !defined( 'MEDIAWIKI' ) ) {
-	// Eclipse helper - will be ignored in production
-	require_once( "ApiQueryBase.php" );
-}
-
 /**
  * This gives links pointing to the given interwiki
  * @ingroup API
@@ -48,6 +43,10 @@ class ApiQueryIWBacklinks extends ApiQueryGeneratorBase {
 		$this->run( $resultPageSet );
 	}
 
+	/**
+	 * @param $resultPageSet ApiPageSet
+	 * @return void
+	 */
 	public function run( $resultPageSet = null ) {
 		$params = $this->extractRequestParams();
 
@@ -115,11 +114,10 @@ class ApiQueryIWBacklinks extends ApiQueryGeneratorBase {
 			if ( !is_null( $resultPageSet ) ) {
 				$pages[] = Title::newFromRow( $row );
 			} else {
-				$entry = array();
+				$entry = array( 'pageid' => $row->page_id );
 
-				$entry['pageid'] = intval( $row->page_id );
-				$entry['ns'] = intval( $row->page_namespace );
-				$entry['title'] = $row->page_title;
+				$title = Title::makeTitle( $row->page_namespace, $row->page_title );
+				ApiQueryBase::addTitleInfo( $entry, $title );
 
 				if ( $row->page_is_redirect ) {
 					$entry['redirect'] = '';
@@ -204,7 +202,7 @@ class ApiQueryIWBacklinks extends ApiQueryGeneratorBase {
 		) );
 	}
 
-	protected function getExamples() {
+	public function getExamples() {
 		return array(
 			'api.php?action=query&list=iwbacklinks&iwbltitle=Test&iwblprefix=wikibooks',
 			'api.php?action=query&generator=iwbacklinks&giwbltitle=Test&iwblprefix=wikibooks&prop=info'
@@ -212,6 +210,6 @@ class ApiQueryIWBacklinks extends ApiQueryGeneratorBase {
 	}
 
 	public function getVersion() {
-		return __CLASS__ . ': $Id: ApiQueryIWBacklinks.php 70647 2010-08-07 19:59:42Z ialex $';
+		return __CLASS__ . ': $Id$';
 	}
 }

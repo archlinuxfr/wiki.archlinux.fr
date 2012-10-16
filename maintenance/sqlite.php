@@ -35,25 +35,26 @@ class SqliteMaintenance extends Maintenance {
 	/**
 	 * While we use database connection, this simple lie prevents useless --dbpass and
 	 * --dbuser options from appearing in help message for this script.
+	 *
+	 * @return int DB constant
 	 */
 	public function getDbType() {
 		return Maintenance::DB_NONE;
 	}
 
 	public function execute() {
-		global $wgDBtype;
-
 		// Should work even if we use a non-SQLite database
 		if ( $this->hasOption( 'check-syntax' ) ) {
 			$this->checkSyntax();
-		}
-
-		if ( $wgDBtype != 'sqlite' ) {
-			$this->error( "This maintenance script requires a SQLite database.\n" );
 			return;
 		}
 
 		$this->db = wfGetDB( DB_MASTER );
+
+		if ( $this->db->getType() != 'sqlite' ) {
+			$this->error( "This maintenance script requires a SQLite database.\n" );
+			return;
+		}
 
 		if ( $this->hasOption( 'vacuum' ) ) {
 			$this->vacuum();

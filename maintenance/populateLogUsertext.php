@@ -25,15 +25,23 @@
 
 require_once( dirname( __FILE__ ) . '/Maintenance.php' );
 
-class PopulateLogUsertext extends Maintenance {
+class PopulateLogUsertext extends LoggedUpdateMaintenance {
 	public function __construct() {
 		parent::__construct();
-		$this->mDescription = "Populates the log_user_text";
+		$this->mDescription = "Populates the log_user_text field";
 		$this->setBatchSize( 100 );
 	}
 
-	public function execute() {
-		$db = wfGetDB( DB_MASTER );
+	protected function getUpdateKey() {
+		return 'populate log_usertext';
+	}
+
+	protected function updateSkippedMessage() {
+		return 'log_user_text column of logging table already populated.';
+	}
+
+	protected function doDBUpdates() {
+		$db = $this->getDB( DB_MASTER );
 		$start = $db->selectField( 'logging', 'MIN(log_id)', false, __METHOD__ );
 		if ( !$start ) {
 			$this->output( "Nothing to do.\n" );
@@ -59,21 +67,10 @@ class PopulateLogUsertext extends Maintenance {
 			$db->commit();
 			$blockStart += $this->mBatchSize;
 			$blockEnd += $this->mBatchSize;
-			wfWaitForSlaves( 5 );
+			wfWaitForSlaves();
 		}
-		if ( $db->insert(
-				'updatelog',
-				array( 'ul_key' => 'populate log_usertext' ),
-				__METHOD__,
-				'IGNORE'
-			)
-		) {
-			$this->output( "log_usertext population complete.\n" );
-			return true;
-		} else {
-			$this->output( "Could not insert log_usertext population row.\n" );
-			return false;
-		}
+		$this->output( "Done populating log_user_text field.\n" );
+		return true;
 	}
 }
 

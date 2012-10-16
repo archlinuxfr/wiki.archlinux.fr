@@ -55,26 +55,26 @@ $namespaceAliases = array(
 );
 
 $specialPageAliases = array(
-	'Userlogin'                 => array( 'Antrar' ),
-	'Userlogout'                => array( 'Salir' ),
 	'CreateAccount'             => array( 'Criar Cuonta' ),
 	'Lonelypages'               => array( 'Páiginas Uorfanas' ),
 	'Uncategorizedcategories'   => array( 'Catadories sien catadories' ),
 	'Uncategorizedimages'       => array( 'Eimaiges sien catadories' ),
+	'Userlogin'                 => array( 'Antrar' ),
+	'Userlogout'                => array( 'Salir' ),
 );
 
 $magicWords = array(
-	'redirect'              => array( '0', '#ANCAMINAR', '#REDIRECIONAMENTO', '#REDIRECT' ),
-	'img_right'             => array( '1', 'dreita', 'direita', 'right' ),
-	'img_left'              => array( '1', 'squierda', 'esquerda', 'left' ),
-	'img_none'              => array( '1', 'nanhun', 'nenhum', 'none' ),
-	'img_center'            => array( '1', 'centro', 'center', 'centre' ),
-	'img_middle'            => array( '1', 'meio', 'middle' ),
-	'language'              => array( '0', '#LHENGUA:', '#IDIOMA:', '#LANGUAGE:' ),
-	'filepath'              => array( '0', 'CAMINOFEXEIRO:', 'CAMINHODOARQUIVO', 'FILEPATH:' ),
-	'tag'                   => array( '0', 'eitiqueta', 'tag' ),
-	'pagesize'              => array( '1', 'TAMANHOFEXEIRO', 'TAMANHODAPAGINA', 'TAMANHODAPÁGINA', 'PAGESIZE' ),
-	'staticredirect'        => array( '1', '_ANCAMINARSTATICO_', '__REDIRECIONAMENTOESTATICO__', '__REDIRECIONAMENTOESTÁTICO__', '__STATICREDIRECT__' ),
+	'redirect'                => array( '0', '#ANCAMINAR', '#REDIRECIONAMENTO', '#REDIRECT' ),
+	'img_right'               => array( '1', 'dreita', 'direita', 'right' ),
+	'img_left'                => array( '1', 'squierda', 'esquerda', 'left' ),
+	'img_none'                => array( '1', 'nanhun', 'nenhum', 'none' ),
+	'img_center'              => array( '1', 'centro', 'center', 'centre' ),
+	'img_middle'              => array( '1', 'meio', 'middle' ),
+	'language'                => array( '0', '#LHENGUA:', '#IDIOMA:', '#LANGUAGE:' ),
+	'filepath'                => array( '0', 'CAMINOFEXEIRO:', 'CAMINHODOARQUIVO', 'FILEPATH:' ),
+	'tag'                     => array( '0', 'eitiqueta', 'tag' ),
+	'pagesize'                => array( '1', 'TAMANHOFEXEIRO', 'TAMANHODAPAGINA', 'TAMANHODAPÁGINA', 'PAGESIZE' ),
+	'staticredirect'          => array( '1', '_ANCAMINARSTATICO_', '__REDIRECIONAMENTOESTATICO__', '__REDIRECIONAMENTOESTÁTICO__', '__STATICREDIRECT__' ),
 );
 
 $messages = array(
@@ -228,7 +228,6 @@ $messages = array(
 'searcharticle'     => 'Bota',
 'history'           => 'Stórico de la Páigina',
 'history_short'     => 'Stórico',
-'info_short'        => 'Anformaçon',
 'printableversion'  => 'Berson pa Ampremir',
 'permalink'         => 'Lhigaçon pa siempre',
 'print'             => 'Ampremir',
@@ -361,7 +360,6 @@ Por fabor, diç esto a un [[Special:ListUsers/sysop|admenistrador]], dezindo la 
 'badtitletext'         => 'La páigina que pediste ye ambálida, bazia, ó ua lhigaçon mal feita dun títalo antre-lhéngua ó antre-biqui.
 Puode tener un ó mais carateres que nun puoden ser outelizados an títalos.',
 'viewsource'           => 'Ber código',
-'viewsourcefor'        => 'pa $1',
 'actionthrottled'      => 'Acion lhemitada',
 'viewsourcetext'       => 'Tu puodes ber i copiar l código desta páigina:',
 
@@ -394,7 +392,7 @@ Puode tener un ó mais carateres que nun puoden ser outelizados an títalos.',
 'nosuchuser'              => 'Num eisiste nanhun outelizador cul nome "$1".
 Ls nomes de outelizador son defrentes an lhetra grande ó pequeinha.
 Bei cumo screbiste, ó [[Special:UserLogin/signup|cria ua nuoba cuonta]].',
-'nosuchusershort'         => 'Nun eisiste nanhun outelizador cul nome "<nowiki>$1</nowiki>".
+'nosuchusershort'         => 'Nun eisiste nanhun outelizador cul nome "$1".
 Bei se l screbiste bien.',
 'nouserspecified'         => 'Tenes que dezir un nome de outelizador.',
 'wrongpassword'           => 'La palabra chabe ye ambálida.
@@ -421,7 +419,7 @@ de modo a cunfirmar que la cuonta ye mesmo la tue.',
 'emailconfirmlink'        => 'Cunfirma la tue morada de correio eiletrónico',
 'loginlanguagelabel'      => 'Lhéngua: $1',
 
-# Password reset dialog
+# Change password dialog
 'resetpass' => 'Demudar palabra-chabe',
 'retypenew' => 'Pon outra beç la nuoba palabra chabe:',
 
@@ -436,8 +434,6 @@ de modo a cunfirmar que la cuonta ye mesmo la tue.',
 'extlink_tip'     => 'Lhigaçon sterna (lembra-te de l perfixo http://)',
 'headline_sample' => 'Testo de cabeçailho',
 'headline_tip'    => 'Cacho de nible 2',
-'math_sample'     => 'Poner fórmula eiqui',
-'math_tip'        => 'Fórmula matemática (LaTeX)',
 'nowiki_sample'   => 'Poner testo nun-formatado eiqui',
 'nowiki_tip'      => 'Nun fazer causo de la formataçon biqui',
 'image_tip'       => 'Fexeiro ambutido',
@@ -485,7 +481,8 @@ Tu puodes [[Special:Search/{{PAGENAME}}|percurar pul títalo desta páigina]] no
 <span class="plainlinks">[{{fullurl:{{#Special:Log}}|page={{FULLPAGENAMEE}}}} percurar ls registros que téngan a ber],
 ó [{{fullurl:{{FULLPAGENAME}}|action=edit}} eiditar esta páigina]</span>.',
 'note'                             => "'''Abiso:'''",
-'previewnote'                      => "'''Esto ye solo ua amostra; las altaraçones inda nun fúrun grabadas!'''",
+'previewnote'                      => "'''Lhembra-te qu'esto ye solo ua amostra.'''
+Las altaraçones inda nun fúrun grabadas!",
 'editing'                          => 'A eiditar $1',
 'editingsection'                   => 'A eiditar $1 (cacho)',
 'yourtext'                         => 'L tou testo',
@@ -532,10 +529,8 @@ Legenda: (atu) = defrénças de la berson atual,
 'history-feed-item-nocomment' => '$1 a $2',
 
 # Revision deletion
-'rev-delundel'      => 'amostrar/scunder',
-'revdel-restore'    => 'Demudar besiblidade',
-'revdelete-content' => 'cuntenido',
-'revdelete-uname'   => 'nome de outelizador',
+'rev-delundel'   => 'amostrar/scunder',
+'revdel-restore' => 'Demudar besiblidade',
 
 # History merging
 'mergehistory-submit' => 'Misturar eidiçones',
@@ -589,7 +584,6 @@ Legenda: (atu) = defrénças de la berson atual,
 'mypreferences'             => 'Las mies perfréncias',
 'prefs-skin'                => 'Maçcarilha',
 'skin-preview'              => 'Amostrar',
-'prefs-math'                => 'Matemática',
 'prefs-datetime'            => 'Data i hora',
 'prefs-personal'            => 'Calantriç',
 'prefs-rc'                  => 'Redadeiras alteraçones',
@@ -858,8 +852,7 @@ Páiginas que steian ne ls [[Special:Watchlist|tous begiados]] son amostradas an
 'listusers-submit' => 'Amostrar',
 
 # Special:Log/newusers
-'newuserlogpage'          => 'Registro de criaçon de outelizadores',
-'newuserlog-create-entry' => 'Nuobo outelizador',
+'newuserlogpage' => 'Registro de criaçon de outelizadores',
 
 # Special:ListGroupRights
 'listgrouprights-rights'  => 'Dreitos',
@@ -873,10 +866,8 @@ Páiginas que steian ne ls [[Special:Watchlist|tous begiados]] son amostradas an
 # Watchlist
 'watchlist'         => 'Ls mius begiados',
 'mywatchlist'       => 'Las mies páiginas begiadas',
-'addedwatch'        => 'Ajuntada a las páiginas begiadas',
 'addedwatchtext'    => "La páigina \"[[:\$1]]\" fui ajuntada a la tue [[Special:Watchlist|lista de páiginas begiadas]].
 Altaraçones feturas na tal páigina i páiginas de çcusson a eilha associadas seran listadas alhá, cun la páigina aparecendo a '''negrito''' na [[Special:RecentChanges|lista de redadeiras altaraçones]], para que se pouda ancuntrar cun maior facelidade.",
-'removedwatch'      => 'Botada fuora de las begiadas',
 'removedwatchtext'  => 'La páigina "[[:$1]]" fui botada fuora de la [[Special:Watchlist|tue lista de páiginas begiadas]].',
 'watch'             => 'Begiar',
 'watchthispage'     => 'Begiar esta páigina',
@@ -900,9 +891,8 @@ Altaraçones feturas na tal páigina i páiginas de çcusson a eilha associadas 
 'confirmdeletetext'     => "Stás quaije a botar fuora para siempre ua páigina ó ua eimaige i todos ls sous stóricos.
 Por fabor, bei se ye esso que quieres fazer, que antendes las cunsequéncias i se esso stá d'acordo culas [[{{MediaWiki:Policy-url}}|políticas]].",
 'actioncomplete'        => 'Acion acabada',
-'deletedtext'           => '"<nowiki>$1</nowiki>" fue elhiminada.
+'deletedtext'           => '"$1" fue elhiminada.
 Consulte $2 para um registo de eliminações recentes.',
-'deletedarticle'        => 'botado pa la rue "[[$1]]"',
 'dellogpage'            => 'Registro de botado fuora',
 'deletecomment'         => 'Rezon:',
 'deleteotherreason'     => 'Rezon adicional:',
@@ -921,7 +911,7 @@ Consulte $2 para um registo de eliminações recentes.',
 'protectexpiry'               => 'Data de balidade:',
 'protect_expiry_invalid'      => 'La data de balidade ye ambálido.',
 'protect_expiry_old'          => 'La data de balidade stá ne l passado.',
-'protect-text'                => "Tu eiqui puodes ber i demudar ls nibles de porteçon pa esta páigina '''<nowiki>$1</nowiki>'''.",
+'protect-text'                => "Tu eiqui puodes ber i demudar ls nibles de porteçon pa esta páigina '''$1'''.",
 'protect-locked-access'       => "La tue cuonta nun ten permissones pa demudar ls nibles de porteçon dua páigina.
 Esta ye la cunfiguraçon atual pa la páigina '''$1''':",
 'protect-cascadeon'           => 'Esta páigina ancontra-se portegida, ua beç que se ancontra ancluída {{PLURAL:$1|na páigina listada a seguir, portegida|nas páiginas listadas a seguir, portegidas}} cun la "porteçon porgressiba" atibada. Tu puodes demudar l nible de porteçon desta páigina, mas esso nun terá eifeito na "porteçon an cachon".',
@@ -942,9 +932,8 @@ Esta ye la cunfiguraçon atual pa la páigina '''$1''':",
 'restriction-move' => 'Arrastrar',
 
 # Undelete
-'undeletebtn'      => 'Recuperar',
-'undeletelink'     => 'ber/restourar',
-'undeletedarticle' => 'restourado "[[$1]]"',
+'undeletebtn'  => 'Recuperar',
+'undeletelink' => 'ber/restourar',
 
 # Namespace form on various pages
 'namespace'      => 'Spácio de nomes:',
@@ -1026,8 +1015,6 @@ Por fabor, scuolhe outro nome.',
 'talkexists'       => "'''La páigina an si fui arrastrada cun éisito. Inda assi, la páigina de çcusson nun fui arrastrada, ua beç que yá eisistie ua cun este títalo. Por fabor, ajunta-las a la mano.'''",
 'movedto'          => 'arrastrado pa',
 'movetalk'         => 'Arrastrar tamien la páigina de çcusson associada.',
-'1movedto2'        => '[[$1]] fui arrastrado pa [[$2]]',
-'1movedto2_redir'  => 'arrastreste [[$1]] pa [[$2]] nun ancaminamiento',
 'movelogpage'      => "Registro d'arrastros",
 'movereason'       => 'Rezon:',
 'revertmove'       => 'poner al robés',
@@ -1120,11 +1107,10 @@ Premite ajuntar la rezon de la eidiçon ne l sumário.',
 'nextdiff'     => 'Redadeira eidiçon →',
 
 # Media information
-'file-info-size'       => '$1 × $2 pixel, tamanho: $3, tipo MIME: $4',
-'file-nohires'         => '<small>Sin resoluçon maior çponible.</small>',
-'svg-long-desc'        => 'fexeiro SVG, de $1 × $2 pixeles, tamanho: $3',
-'show-big-image'       => 'Resoluçon cumpleta',
-'show-big-image-thumb' => '<small>Tamanho desta prebison: $1 × $2 pixeles</small>',
+'file-info-size' => '$1 × $2 pixel, tamanho: $3, tipo MIME: $4',
+'file-nohires'   => 'Sin resoluçon maior çponible.',
+'svg-long-desc'  => 'fexeiro SVG, de $1 × $2 pixeles, tamanho: $3',
+'show-big-image' => 'Resoluçon cumpleta',
 
 # Special:NewFiles
 'newimages' => 'Galerie de nuobos fexeiros',
@@ -1150,7 +1136,13 @@ Causo l fexeiro tenga sido demudado a partir de l sou stado oureginal, alguns de
 * exposuretime
 * fnumber
 * isospeedratings
-* focallength',
+* focallength
+* artist
+* copyright
+* imagedescription
+* gpslatitude
+* gpslongitude
+* gpsaltitude',
 
 # EXIF tags
 'exif-imagewidth'       => 'Ancho',
@@ -1180,14 +1172,12 @@ Causo l fexeiro tenga sido demudado a partir de l sou stado oureginal, alguns de
 
 # External editor support
 'edit-externally'      => 'Eiditar este fexeiro outelizando ua aplicaçon sterna',
-'edit-externally-help' => '(Bei las [http://www.mediawiki.org/wiki/Manual:External_editors anstruçones de anstalaçon] pa mais anformaçon).',
+'edit-externally-help' => '(Bei las [//www.mediawiki.org/wiki/Manual:External_editors anstruçones de anstalaçon] pa mais anformaçon).',
 
 # 'all' in various places, this might be different for inflected languages
-'recentchangesall' => 'todo',
-'imagelistall'     => 'todo',
-'watchlistall2'    => 'todas',
-'namespacesall'    => 'todas',
-'monthsall'        => 'todos',
+'watchlistall2' => 'todas',
+'namespacesall' => 'todas',
+'monthsall'     => 'todos',
 
 # action=purge
 'confirm_purge_button' => 'Stá bien',

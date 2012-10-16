@@ -3,7 +3,7 @@
  * Implements Special:Listusers
  *
  * Copyright © 2004 Brion Vibber, lcrocker, Tim Starling,
- * Domas Mituzas, Ashar Voultoiz, Jens Frank, Zhengzhu,
+ * Domas Mituzas, Antoine Musso, Jens Frank, Zhengzhu,
  * 2006 Rob Church <robchur@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -34,25 +34,30 @@
  */
 class UsersPager extends AlphabeticPager {
 
-	function __construct( $par=null ) {
-		global $wgRequest;
-		$parms = explode( '/', ($par = ( $par !== null ) ? $par : '' ) );
+	function __construct( IContextSource $context = null, $par = null ) {
+		if ( $context ) {
+			$this->setContext( $context );
+		}
+
+		$request = $this->getRequest();
+		$par = ( $par !== null ) ? $par : '';
+		$parms = explode( '/', $par );
 		$symsForAll = array( '*', 'user' );
 		if ( $parms[0] != '' && ( in_array( $par, User::getAllGroups() ) || in_array( $par, $symsForAll ) ) ) {
 			$this->requestedGroup = $par;
-			$un = $wgRequest->getText( 'username' );
-		} else if ( count( $parms ) == 2 ) {
+			$un = $request->getText( 'username' );
+		} elseif ( count( $parms ) == 2 ) {
 			$this->requestedGroup = $parms[0];
 			$un = $parms[1];
 		} else {
-			$this->requestedGroup = $wgRequest->getVal( 'group' );
-			$un = ( $par != '' ) ? $par : $wgRequest->getText( 'username' );
+			$this->requestedGroup = $request->getVal( 'group' );
+			$un = ( $par != '' ) ? $par : $request->getText( 'username' );
 		}
 		if ( in_array( $this->requestedGroup, $symsForAll ) ) {
 			$this->requestedGroup = '';
 		}
-		$this->editsOnly = $wgRequest->getBool( 'editsOnly' );
-		$this->creationSort = $wgRequest->getBool( 'creationSort' );
+		$this->editsOnly = $request->getBool( 'editsOnly' );
+		$this->creationSort = $request->getBool( 'creationSort' );
 
 		$this->requestedUser = '';
 		if ( $un != '' ) {
@@ -64,23 +69,24 @@ class UsersPager extends AlphabeticPager {
 		parent::__construct();
 	}
 
-
 	function getIndexField() {
 		return $this->creationSort ? 'user_id' : 'user_name';
 	}
 
 	function getQueryInfo() {
-		global $wgUser;
 		$dbr = wfGetDB( DB_SLAVE );
 		$conds = array();
 		// Don't show hidden names
-		if( !$wgUser->isAllowed('hideuser') )
+		if( !$this->getUser()->isAllowed('hideuser') ) {
 			$conds[] = 'ipb_deleted IS NULL';
+		}
+
+		$options = array();
+
 		if( $this->requestedGroup != '' ) {
 			$conds['ug_group'] = $this->requestedGroup;
-			$useIndex = '';
 		} else {
-			$useIndex = $dbr->useIndexClause( $this->creationSort ? 'PRIMARY' : 'user_name');
+			//$options['USE INDEX'] = $this->creationSort ? 'PRIMARY' : 'user_name';
 		}
 		if( $this->requestedUser != '' ) {
 			# Sorted either by account creation or name
@@ -94,11 +100,10 @@ class UsersPager extends AlphabeticPager {
 			$conds[] = 'user_editcount > 0';
 		}
 
-		list ($user,$user_groups,$ipblocks) = $dbr->tableNamesN('user','user_groups','ipblocks');
+		$options['GROUP BY'] = $this->creationSort ? 'user_id' : 'user_name';
 
 		$query = array(
-			'tables' => " $user $useIndex LEFT JOIN $user_groups ON user_id=ug_user
-				LEFT JOIN $ipblocks ON user_id=ipb_user AND ipb_deleted=1 AND ipb_auto=0 ",
+			'tables' => array( 'user', 'user_groups', 'ipblocks'),
 			'fields' => array(
 				$this->creationSort ? 'MAX(user_name) AS user_name' : 'user_name',
 				$this->creationSort ? 'user_id' : 'MAX(user_id) AS user_id',
@@ -108,7 +113,11 @@ class UsersPager extends AlphabeticPager {
 				'MIN(user_registration) AS creation',
 				'MAX(ipb_deleted) AS ipb_deleted' // block/hide status
 			),
-			'options' => array('GROUP BY' => $this->creationSort ? 'user_id' : 'user_name'),
+			'options' => $options,
+			'join_conds' => array(
+				'user_groups' => array( 'LEFT JOIN', 'user_id=ug_user' ),
+				'ipblocks' => array( 'LEFT JOIN', 'user_id=ipb_user AND ipb_deleted=1 AND ipb_auto=0' ),
+			),
 			'conds' => $conds
 		);
 
@@ -117,32 +126,32 @@ class UsersPager extends AlphabeticPager {
 	}
 
 	function formatRow( $row ) {
-		global $wgLang;
-
 		if ($row->user_id == 0) #Bug 16487
 			return '';
 
 		$userPage = Title::makeTitle( NS_USER, $row->user_name );
-		$name = $this->getSkin()->link( $userPage, htmlspecialchars( $userPage->getText() ) );
+		$name = Linker::link( $userPage, htmlspecialchars( $userPage->getText() ) );
+
+		$lang = $this->getLanguage();
 
 		$groups_list = self::getGroups( $row->user_id );
 		if( count( $groups_list ) > 0 ) {
 			$list = array();
 			foreach( $groups_list as $group )
-				$list[] = self::buildGroupLink( $group );
-			$groups = $wgLang->commaList( $list );
+				$list[] = self::buildGroupLink( $group, $userPage->getText() );
+			$groups = $lang->commaList( $list );
 		} else {
 			$groups = '';
 		}
 
-		$item = wfSpecialList( $name, $groups );
+		$item = $lang->specialList( $name, $groups );
 		if( $row->ipb_deleted ) {
 			$item = "<span class=\"deleted\">$item</span>";
 		}
 
 		global $wgEdititis;
 		if ( $wgEdititis ) {
-			$editCount = $wgLang->formatNum( $row->edits );
+			$editCount = $lang->formatNum( $row->edits );
 			$edits = ' [' . wfMsgExt( 'usereditcount', array( 'parsemag', 'escape' ), $editCount ) . ']';
 		} else {
 			$edits = '';
@@ -151,10 +160,9 @@ class UsersPager extends AlphabeticPager {
 		$created = '';
 		# Some rows may be NULL
 		if( $row->creation ) {
-			$d = $wgLang->date( wfTimestamp( TS_MW, $row->creation ), true );
-			$t = $wgLang->time( wfTimestamp( TS_MW, $row->creation ), true );
-			$created = ' (' . wfMsg( 'usercreated', $d, $t ) . ')';
-			$created = htmlspecialchars( $created );
+			$d = $lang->date( wfTimestamp( TS_MW, $row->creation ), true );
+			$t = $lang->time( wfTimestamp( TS_MW, $row->creation ), true );
+			$created = ' (' . wfMsgExt( 'usercreated', array( 'parsemag', 'escape' ), $d, $t, $row->user_name ) . ')';
 		}
 
 		wfRunHooks( 'SpecialListusersFormatRow', array( &$item, $row ) );
@@ -177,12 +185,13 @@ class UsersPager extends AlphabeticPager {
 
 	function getPageHeader( ) {
 		global $wgScript;
-		$self = $this->getTitle();
+		// @todo Add a PrefixedBaseDBKey
+		list( $self ) = explode( '/', $this->getTitle()->getPrefixedDBkey() );
 
 		# Form tag
 		$out  = Xml::openElement( 'form', array( 'method' => 'get', 'action' => $wgScript, 'id' => 'mw-listusers-form' ) ) .
 			Xml::fieldset( wfMsg( 'listusers' ) ) .
-			Html::hidden( 'title', $self->getPrefixedDbKey() );
+			Html::hidden( 'title', $self );
 
 		# Username field
 		$out .= Xml::label( wfMsg( 'listusersfrom' ), 'offset' ) . ' ' .
@@ -247,7 +256,7 @@ class UsersPager extends AlphabeticPager {
 	 */
 	protected static function getGroups( $uid ) {
 		$user = User::newFromId( $uid );
-		$groups = array_diff( $user->getEffectiveGroups(), $user->getImplicitGroups() );
+		$groups = array_diff( $user->getEffectiveGroups(), User::getImplicitGroups() );
 		return $groups;
 	}
 
@@ -255,36 +264,49 @@ class UsersPager extends AlphabeticPager {
 	 * Format a link to a group description page
 	 *
 	 * @param $group String: group name
+	 * @param $username String Username
 	 * @return string
 	 */
-	protected static function buildGroupLink( $group ) {
-		static $cache = array();
-		if( !isset( $cache[$group] ) )
-			$cache[$group] = User::makeGroupLinkHtml( $group, htmlspecialchars( User::getGroupMember( $group ) ) );
-		return $cache[$group];
+	protected static function buildGroupLink( $group, $username ) {
+		return User::makeGroupLinkHtml( $group, htmlspecialchars( User::getGroupMember( $group, $username ) ) );
 	}
 }
 
 /**
- * constructor
- * $par string (optional) A group to list users from
+ * @ingroup SpecialPage
  */
-function wfSpecialListusers( $par = null ) {
-	global $wgOut;
+class SpecialListUsers extends SpecialPage {
 
-	$up = new UsersPager($par);
+	/**
+	 * Constructor
+	 */
+	public function __construct() {
+		parent::__construct( 'Listusers' );
+	}
 
-	# getBody() first to check, if empty
-	$usersbody = $up->getBody();
-	$s = Xml::openElement( 'div', array('class' => 'mw-spcontent') );
-	$s .= $up->getPageHeader();
-	if( $usersbody ) {
-		$s .=	$up->getNavigationBar();
-		$s .=	'<ul>' . $usersbody . '</ul>';
-		$s .=	$up->getNavigationBar() ;
-	} else {
-		$s .=	'<p>' . wfMsgHTML('listusers-noresult') . '</p>';
-	};
-	$s .= Xml::closeElement( 'div' );
-	$wgOut->addHTML( $s );
+	/**
+	 * Show the special page
+	 *
+	 * @param $par string (optional) A group to list users from
+	 */
+	public function execute( $par ) {
+		$this->setHeaders();
+		$this->outputHeader();
+
+		$up = new UsersPager( $this->getContext(), $par );
+
+		# getBody() first to check, if empty
+		$usersbody = $up->getBody();
+
+		$s = $up->getPageHeader();
+		if( $usersbody ) {
+			$s .= $up->getNavigationBar();
+			$s .= Html::rawElement( 'ul', array(), $usersbody );
+			$s .= $up->getNavigationBar();
+		} else {
+			$s .= wfMessage( 'listusers-noresult' )->parseAsBlock();
+		}
+
+		$this->getOutput()->addHTML( $s );
+	}
 }

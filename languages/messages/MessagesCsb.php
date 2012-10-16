@@ -1,5 +1,5 @@
 <?php
-/** Kashubian (Kaszëbsczi)
+/** Kashubian (kaszëbsczi)
  *
  * See MessagesQqq.php for message documentation incl. usage of parameters
  * To improve a translation please visit http://translatewiki.net
@@ -163,8 +163,6 @@ $messages = array(
 'category-article-count'        => '{{PLURAL:$2|Na kategòrëjô zamëkôw w se blós jedną starnã.|Niżi mómë $1 westrzód $2 starów w ti kategòrëji.}}',
 'listingcontinuesabbrev'        => 'kònt.',
 
-'mainpagetext' => "'''MediaWiki òsta zainstalowónô.'''",
-
 'about'         => 'Ò serwise',
 'article'       => 'Artikel',
 'newwindow'     => '(òtmëkô sã w nowim òczenkù)',
@@ -215,7 +213,6 @@ $messages = array(
 'history'           => 'Historëjô starnë',
 'history_short'     => 'Historëjô',
 'updatedmarker'     => 'zaktualnioné òd mòji slédny gòscënë',
-'info_short'        => 'Wëdowiédza',
 'printableversion'  => 'Wersëjô do drëkù',
 'permalink'         => 'Prosti lënk',
 'print'             => 'Drëkùjë',
@@ -354,9 +351,8 @@ Mòże to zgłoszëc [[Special:ListUsers/sysop|sprôwnikòwi]], pòdając adres�
 'badtitle'           => 'Òchëbny titel',
 'badtitletext'       => 'Pòdóny titel starnë je òchëbny. Gwësno są w nim znaczi, chtërnëch brëkòwanié je zakôzané abò je pùsti.',
 'viewsource'         => 'Zdrojowi tekst',
-'viewsourcefor'      => 'dlô $1',
 'editinginterface'   => "'''ÒSTRZÉGA:''' Editëjesz starnã, jakô zamëkô w se tekst interfejsu softwôrë. Wszëtczé zmianë tu zrobioné bãdze widzec na interfejse jinszëch brëkòwników.
-Przemëszlë dolmaczënié na [http://translatewiki.net/wiki/Main_Page?setlang=csb translatewiki.net], ekstra ùdbie lokalizacëji softwôrë MediaWiki.",
+Przemëszlë dolmaczënié na [//translatewiki.net/wiki/Main_Page?setlang=csb translatewiki.net], ekstra ùdbie lokalizacëji softwôrë MediaWiki.",
 
 # Login and logout pages
 'logouttext'                 => "'''Jes wëlogòwóny.'''
@@ -416,7 +412,7 @@ Ni mòżesz miec ju wicy.',
 'createaccount-title'        => 'Kònto ùsôdzoné dlô {{SITENAME}}',
 'loginlanguagelabel'         => 'Jãzëk: $1',
 
-# Password reset dialog
+# Change password dialog
 'resetpass'                 => 'Zmieni parolã',
 'oldpassword'               => 'Stôrô parola:',
 'newpassword'               => 'Nowô parola',
@@ -435,8 +431,6 @@ Ni mòżesz miec ju wicy.',
 'extlink_tip'     => 'Bùtnowi lënk (pamiãtôj ò http:// prefiks)',
 'headline_sample' => 'Tekst nagłówka',
 'headline_tip'    => 'Nagłówk 2 lédżi',
-'math_sample'     => 'Wstôwi tuwò fòrmùłã',
-'math_tip'        => 'Matematicznô fòrmùła (LaTeX)',
 'nowiki_sample'   => 'Wstôw tuwò niesfòrmatowóny tekst',
 'nowiki_tip'      => 'Ignorëjë wiki-fòrmatowanié',
 'image_sample'    => 'Przëmiôr.jpg',
@@ -473,9 +467,6 @@ Bë zgwësnic sprawã zablokòwaniô mòżesz skòntaktowac sã z $1 abò jińsz
 Boczë, że të ni mòżesz stądka sélac e-mailów, jeżlë nié môsz jesz zaregisterowóné e-mailowé adresë w [[Special:Preferences|nastôwach]].
 Twòjô aktualnô adresa IP to $3, a zablokòwónô adresa ID to #$5.
 Proszëmë pòdac wëższé pòdôłczi przë wszëtczich pëtaniach.",
-'blockedoriginalsource'            => "Zdrój '''$1''' je niżi:",
-'blockededitsource'                => "Tekst '''Twòjëch edicëji''' do '''$1''' je niżi:",
-'whitelistedittitle'               => 'Bë editowac je nót sã wlogòwac',
 'loginreqlink'                     => 'Wlogùjë',
 'loginreqpagetext'                 => '$1 sã, żebë przezérac jinszé starnë.',
 'accmailtitle'                     => 'Parola wësłónô.',
@@ -558,15 +549,6 @@ Administrator, chtëren jã zablokòwôł, pòdôł przëczënã: $1",
 'revdel-restore-visible'     => 'widzawné wersëje',
 'pagehist'                   => 'Historëjô starnë',
 'deletedhist'                => 'Rëmniãtô historëjô edicëji',
-'revdelete-content'          => 'zamkłosc',
-'revdelete-summary'          => 'òpisënk zjinaczi',
-'revdelete-uname'            => 'miono brëkòwnika',
-'revdelete-restricted'       => 'nastôwi ògrańczenia dlô sprôwników',
-'revdelete-unrestricted'     => 'rëmôj ògrańczenia dlô sprôwników',
-'revdelete-hid'              => 'zatacë $1',
-'revdelete-unhid'            => 'nie tacë $1',
-'revdelete-log-message'      => '$1 - $2 {{PLURAL:$2|wersëjô|wersëji}}',
-'logdelete-log-message'      => '$1 – $2 {{PLURAL:$2|zdarzenié|zdarzenia|zdarzeniów}}',
 'revdelete-hide-current'     => 'Pòkôza sã fela przë taceniu wersëji datowóny na $2, $1. To je nônowszô wersëjô starnë, chtërnô ni mòże bëc zataconô.',
 'revdelete-show-no-access'   => 'Pòkôza sã fela przë próbie wëskrzënieniô elementu datowónegò na $2, $1. Widzawnota negò elementu òsta ògrańczonô - ni môsz przëstãpù.',
 
@@ -621,7 +603,6 @@ Spróbùjë szëkbë z przëdôwkã ''all:'' dlô całowny zamkłoscë starnów 
 'changepassword'            => 'Zmiana parolë',
 'prefs-skin'                => 'Wëzdrzatk',
 'skin-preview'              => 'Pòdzérk',
-'prefs-math'                => 'Matematika',
 'datedefault'               => 'Felëje preferencëji',
 'prefs-datetime'            => 'Datum ë czas',
 'prefs-personal'            => 'Pòdôwczi brëkòwnika',
@@ -637,8 +618,6 @@ Spróbùjë szëkbë z przëdôwkã ''all:'' dlô całowny zamkłoscë starnów 
 'columns'                   => 'Kòlumnów:',
 'searchresultshead'         => 'Szëkba',
 'resultsperpage'            => 'Rezultatów na starnã:',
-'contextlines'              => 'Régów na rezultat:',
-'contextchars'              => 'Kòntekstów na régã:',
 'stub-threshold'            => 'Greńca dlô fòrmatowaniô <a href="#" class="stub">lënków stubów</a>:',
 'recentchangesdays'         => 'Kùli dni pòkazëwac w slédnëch edicëjach:',
 'recentchangescount'        => 'Domëslnô wielëna wëskrzëniónych edicëjów',
@@ -705,7 +684,7 @@ Mòżesz zezwòlëc jinszim brëkòwniką na łączbã z Tobą przez Twòją sta
 'group-suppress'      => 'Rewizorzë',
 'group-all'           => '(wszëtcë)',
 
-'group-user-member'          => 'Brëkòwnik',
+'group-user-member'          => '{{GENDER:$1|Brëkòwnik}}',
 'group-autoconfirmed-member' => 'aùtomatno zacwierdzony brëkòwnik',
 'group-bot-member'           => 'bòt',
 'group-sysop-member'         => 'sprôwnik',
@@ -774,15 +753,14 @@ Mòżesz zezwòlëc jinszim brëkòwniką na łączbã z Tobą przez Twòją sta
 'rc-enhanced-hide'               => 'Zatacë detale',
 
 # Recent changes linked
-'recentchangeslinked'          => 'Zmianë w dolënkòwónëch',
-'recentchangeslinked-feed'     => 'Zmianë w dolënkòwónëch',
-'recentchangeslinked-toolbox'  => 'Zmianë w dolënkòwónëch',
-'recentchangeslinked-title'    => 'Zjinaczi w lënkòwónëch z "$1"',
-'recentchangeslinked-backlink' => '← $1',
-'recentchangeslinked-summary'  => "Niżi nachôdô sã lësta slédnëch zjinaków na lënkòwónëch starnach z pòdóny starnë (abò we wszëtczich starnach przënôleżącëch do pòdóny kategòrëji).
+'recentchangeslinked'         => 'Zmianë w dolënkòwónëch',
+'recentchangeslinked-feed'    => 'Zmianë w dolënkòwónëch',
+'recentchangeslinked-toolbox' => 'Zmianë w dolënkòwónëch',
+'recentchangeslinked-title'   => 'Zjinaczi w lënkòwónëch z "$1"',
+'recentchangeslinked-summary' => "Niżi nachôdô sã lësta slédnëch zjinaków na lënkòwónëch starnach z pòdóny starnë (abò we wszëtczich starnach przënôleżącëch do pòdóny kategòrëji).
 Starnë z [[Special:Watchlist|lëstë ùzérónëch artiklów]] są '''pògrëbioné'''.",
-'recentchangeslinked-page'     => 'Miono starnë:',
-'recentchangeslinked-to'       => 'Wëskrzëni zjinaczi nié na lënkòwónëch starnach, blós na starnach lënkùjącëch do pòdóny starnë',
+'recentchangeslinked-page'    => 'Miono starnë:',
+'recentchangeslinked-to'      => 'Wëskrzëni zjinaczi nié na lënkòwónëch starnach, blós na starnach lënkùjącëch do pòdóny starnë',
 
 # Upload
 'upload'              => 'Wladënk lopka',
@@ -792,9 +770,9 @@ Starnë z [[Special:Watchlist|lëstë ùzérónëch artiklów]] są '''pògrëbi
 Jeżlë chcesz przezdrzec abò szëkac w dotenczas wladowónëch lopkach, biéj do [[Special:FileList|lësta lopków]]. Kòżdi wladënk je registrowóny w [[Special:Log/upload|registrze wladënkù]], a rëmniãcé w [[Special:Log/delete|registrze rëmaniô]].
 
 Abë dodac lopk do starnë, ùżëjë ùniższegò lënka wedle nôslédnëch mùstrów:
-* '''<tt><nowiki>[[</nowiki>{{ns:file}}<nowiki>:Lopk.jpg]]</nowiki></tt>''' wëskrzëni całi lopk
-* '''<tt><nowiki>[[</nowiki>{{ns:file}}<nowiki>:Lopk.png|200px|thumb|left|pòdpisënk òbrôzka]]</nowiki></tt>''' wëskrzëni z lewi starnë, przë ùbrzégù, miniaturkã w szérzë 200 pikslów w ramie, z nôdpisã 'pòdpisënk òbrôzka'
-* '''<tt><nowiki>[[</nowiki>{{ns:media}}<nowiki>:Lopk.ogg]]</nowiki></tt>''' òtemknie prosti lënk do lopka bez wëskrzënianiô sómegò lopka",
+* '''<code><nowiki>[[</nowiki>{{ns:file}}<nowiki>:Lopk.jpg]]</nowiki></code>''' wëskrzëni całi lopk
+* '''<code><nowiki>[[</nowiki>{{ns:file}}<nowiki>:Lopk.png|200px|thumb|left|pòdpisënk òbrôzka]]</nowiki></code>''' wëskrzëni z lewi starnë, przë ùbrzégù, miniaturkã w szérzë 200 pikslów w ramie, z nôdpisã 'pòdpisënk òbrôzka'
+* '''<code><nowiki>[[</nowiki>{{ns:media}}<nowiki>:Lopk.ogg]]</nowiki></code>''' òtemknie prosti lënk do lopka bez wëskrzënianiô sómegò lopka",
 'uploadlog'           => 'Lësta wladënków',
 'uploadlogpage'       => 'Dołączoné',
 'uploadlogpagetext'   => 'Hewò je lësta slédno wladowónëch lopków.
@@ -916,8 +894,7 @@ Mòżesz zawãżëc wëszłosc przez wëbranié ôrtu registru, miona brëkòwni
 'linksearch' => 'Bùtnowé lënczi',
 
 # Special:Log/newusers
-'newuserlogpage'          => 'Nowi brëkòwnicë',
-'newuserlog-create-entry' => 'Nowé kònto brëkòwnika',
+'newuserlogpage' => 'Nowi brëkòwnicë',
 
 # Special:ListGroupRights
 'listgrouprights-members' => '(lësta nôlëżników karna)',
@@ -938,12 +915,10 @@ Mòżesz zawãżëc wëszłosc przez wëbranié ôrtu registru, miona brëkòwni
 'watchlist'            => 'Lësta ùzérónëch artiklów',
 'mywatchlist'          => 'Lësta ùzérónëch artiklów',
 'watchnologin'         => 'Felënk logòwóniô',
-'addedwatch'           => 'Dodónô do lëstë ùzérónëch',
 'addedwatchtext'       => "Starna \"[[:\$1]]\" òsta dodónô do twòji [[Special:Watchlist|lëstë ùzérónëch artiklów]].
 Na ti lësce są registre przińdnëch zjinak ti starne ë na ji starnie dyskùsëji, a samò miono starnë mdze '''wëtłëszczone''' na [[Special:RecentChanges|lësce slédnich edicëji]], bë të mògł to òbaczëc.
 
 Czej chcesz remôc starnã z lëste ùzéronëch artiklów, klikni ''Òprzestôj ùzérac''.",
-'removedwatch'         => 'Rëmóné z lëstë ùzérónëch',
 'removedwatchtext'     => 'Starna "[[:$1]]" òsta rëmniãtô z Twòji [[Special:Watchlist|lëstë ùzérónych]].',
 'watch'                => 'Ùzérôj',
 'watchthispage'        => 'Ùzérôj ną starnã',
@@ -974,9 +949,8 @@ Czej chcesz remôc starnã z lëste ùzéronëch artiklów, klikni ''Òprzestôj
 'confirmdeletetext'     => 'Chcesz rëmnąc starnã do grëpë z ji całowną historëją.
 Ùgwësni sã, czë na gwës chcesz to zrobic, rozmiejąc kònsekwencëje ti òperacëji ë że robisz to zgòdno z [[{{MediaWiki:Policy-url}}|reglama]].',
 'actioncomplete'        => 'Òperacëjô wëkònónô',
-'deletedtext'           => '^<nowiki>$1</nowiki>" òstôł rëmniãti.
+'deletedtext'           => '^$1" òstôł rëmniãti.
 Òbôczë na starnie $2 register slédnych rëmniãców.',
-'deletedarticle'        => 'rëmniãté przez "[[$1]]"',
 'dellogpage'            => 'Rëmóné',
 'deletionlog'           => 'register rëmaniów',
 'deletecomment'         => 'Przëczëna:',
@@ -1003,7 +977,7 @@ Slédnym ùsódzcą starnë bëł [[User:$3|$3]] ([[User talk:$3|Diskùsëjô]]{
 'protectexpiry'               => 'Wëgasô pò:',
 'protect_expiry_invalid'      => 'Lëchi czas wëgasniãcô.',
 'protect_expiry_old'          => 'Czas wëgasniãcô leżi w przińdnocë.',
-'protect-text'                => "Mòżesz tuwò sprôwdzëc ë zjinaczëc légã zazychrowaniô starnë '''<nowiki>$1</nowiki>'''.",
+'protect-text'                => "Mòżesz tuwò sprôwdzëc ë zjinaczëc légã zazychrowaniô starnë '''$1'''.",
 'protect-locked-access'       => "Ni môsz dosc prawa do zjinaczi lédżi zazychrowaniô starnë. Aktualny nastôw dlô starnë '''$1''':",
 'protect-cascadeon'           => 'Na starna je zazychrowónô przed edicëją, dlôte że je brëkòwónô przez {{PLURAL:$1|nôslédną starnã, chtërnô òsta zazychrowónô|nôslédné starnë, chtërné òstałe zazychrowóné}} z aktiwną kaskadową òpatcëją zazychrowëwaniô.
 Mòżesz zmienic légã zazychrowaniô, nie bãdze to równak miało cëskù na kaskadowé zazychrowanié.',
@@ -1022,7 +996,6 @@ Mòżesz zmienic légã zazychrowaniô, nie bãdze to równak miało cëskù na 
 'viewdeletedpage'           => 'Òbaczë rëmóne starnë',
 'undeletebtn'               => 'Doprowôdzë nazôd',
 'undeletelink'              => 'wëskrzëni abò doprowôdzë nazôd',
-'undeletedarticle'          => 'dobëté nazôd "[[$1]]"',
 'undelete-show-file-submit' => 'Jo',
 
 # Namespace form on various pages
@@ -1076,9 +1049,8 @@ Mòżesz zmienic légã zazychrowaniô, nie bãdze to równak miało cëskù na 
 'badipaddress'             => 'IP-adresa nie je richtich pòdónô.',
 'blockipsuccesssub'        => 'Zascëgónié dało sã',
 'blockipsuccesstext'       => 'Brëkòwnik [[Special:Contributions/$1|$1]] òstał zascëgóny.<br />
-Biéj do [[Special:IPBlockList|lëstë zascëgónëch adresów IP]] abë òbaczëc zascëdżi.',
+Biéj do [[Special:BlockList|lëstë zascëgónëch adresów IP]] abë òbaczëc zascëdżi.',
 'ipblocklist'              => 'Lësta zablokòwónëch adresów IP ë mionów brëkòwników',
-'blocklistline'            => '$1, $2 zascëgôł $3 ($4)',
 'blocklink'                => 'blokùjë',
 'unblocklink'              => 'òdblokùjë',
 'change-blocklink'         => 'zmieni blokòwanié',
@@ -1123,8 +1095,6 @@ W taczich przëtrôfkach zamkłosc diskùsëji mòże przeniesc blós rãczno.',
 'talkexists'              => "'''Starna zamkłoscë òsta ùdało przeniosłô, równak starna diskùsëji ni, ga starna diskùsëji na nowim pacu ju je. Sparłãczë ne dwa tekstë rãczno'''",
 'movedto'                 => 'przeniesłô do',
 'movetalk'                => 'Przeniesë téż starnã <i>Diskùsëje</i>, jeżle je to mòżlëwé.',
-'1movedto2'               => '[[$1]] przeniesłé do [[$2]]',
-'1movedto2_redir'         => '[[$1]] przeniesłé do [[$2]] nad przeczérowanim',
 'movelogpage'             => 'Przeniosłé',
 'movereason'              => 'Przëczëna:',
 'revertmove'              => 'copnij',
@@ -1140,7 +1110,7 @@ W taczich przëtrôfkach zamkłosc diskùsëji mòże przeniesc blós rãczno.',
 'allmessagesdefault'        => 'Domëslny tekst',
 'allmessagescurrent'        => 'Aktualny tekst',
 'allmessagestext'           => 'To je zestôwk systemòwëch ògłosów przistãpnëch w rumie mionów MediaWiki.
-Proszã zazdrzë na [http://www.mediawiki.org/wiki/Localisation Lokalizacëjô MediaWiki] ë [http://translatewiki.net translatewiki.net] jeżlë chcesz dolmaczëc softwôrã MediaWiki.',
+Proszã zazdrzë na [//www.mediawiki.org/wiki/Localisation Lokalizacëjô MediaWiki] ë [//translatewiki.net translatewiki.net] jeżlë chcesz dolmaczëc softwôrã MediaWiki.',
 'allmessagesnotsupportedDB' => "'''{{ns:special}}:Allmessages''' nie mòże bëc brëkòwónô, temù że '''\$wgUseDatabaseMessages''' je wëłączony.",
 
 # Thumbnails
@@ -1220,29 +1190,17 @@ Zezwôlô na dodanié przëczënë zjinaczi w òpisënkù.',
 # Spam protection
 'spamprotectiontitle' => 'Anti-spamòwi filter',
 
-# Math options
-'mw_math_png'    => 'Wiedno wëskrzëniwôj jakno PNG',
-'mw_math_simple' => 'Jeżlë prosti wëskrzëniwôj jakno HTML, w jinëm przëtrôfkù jakno PNG',
-'mw_math_html'   => 'HTML czej mòżlewé a w jinëm przëtrôfkù PNG',
-'mw_math_source' => 'Òstawi jakno TeX (dlô tekstowich przezérników)',
-'mw_math_modern' => 'Zalécóné dlô nowoczasnëch przezérników',
-'mw_math_mathml' => 'Wëskrzëniwôj jakno MathML jeżlë mòżlëwé (eksperimentalné)',
-
-# Math errors
-'math_failure' => 'Parser nie rozmiôł rozpòznac',
-
 # Browsing diffs
 'previousdiff' => '← Pòprzédnô edicëjô',
 'nextdiff'     => 'Nôslédnô edicëjô →',
 
 # Media information
-'imagemaxsize'         => 'Ògrańczë na starnie òpisënkù òbrôzków jich miarã do:',
-'thumbsize'            => 'Miara miniaturków:',
-'file-info-size'       => '$1 × $2 pikslów, miara lopka: $3, ôrt MIME: $4',
-'file-nohires'         => '<small>Felëje wikszô miara.</small>',
-'svg-long-desc'        => 'Lopk SVG, nominalno $1 × $2 pikslów, miara lopka: $3',
-'show-big-image'       => 'Fùl miara',
-'show-big-image-thumb' => '<small>Miara pòdzérkù: $1 × $2 pikslów</small>',
+'imagemaxsize'   => 'Ògrańczë na starnie òpisënkù òbrôzków jich miarã do:',
+'thumbsize'      => 'Miara miniaturków:',
+'file-info-size' => '$1 × $2 pikslów, miara lopka: $3, ôrt MIME: $4',
+'file-nohires'   => 'Felëje wikszô miara.',
+'svg-long-desc'  => 'Lopk SVG, nominalno $1 × $2 pikslów, miara lopka: $3',
+'show-big-image' => 'Fùl miara',
 
 # Special:NewFiles
 'newimages' => 'Galerëjô nowich lopków',
@@ -1270,19 +1228,29 @@ Jinszé pòla bãdą domëslno zataconé.
 * exposuretime
 * fnumber
 * isospeedratings
-* focallength',
+* focallength
+* artist
+* copyright
+* imagedescription
+* gpslatitude
+* gpslongitude
+* gpsaltitude',
+
+# EXIF tags
+'exif-source'       => 'Zdrój',
+'exif-languagecode' => 'Jãzëk',
+
+'exif-iimcategory-spo' => 'Szpòrt',
 
 # External editor support
 'edit-externally'      => 'Editëjë nen lopk brëkùjąc bùtnowi aplikacëji',
-'edit-externally-help' => '(Zdrzë na [http://www.mediawiki.org/wiki/Manual:External_editors setup instructions] dlô dobëcô wicy wëdowiédzë).',
+'edit-externally-help' => '(Zdrzë na [//www.mediawiki.org/wiki/Manual:External_editors setup instructions] dlô dobëcô wicy wëdowiédzë).',
 
 # 'all' in various places, this might be different for inflected languages
-'recentchangesall' => 'wszëtczé',
-'imagelistall'     => 'wszëtczé',
-'watchlistall2'    => 'wszëtczé',
-'namespacesall'    => 'wszëtczé',
-'monthsall'        => 'wszëtczé',
-'limitall'         => 'wszëtczé',
+'watchlistall2' => 'wszëtczé',
+'namespacesall' => 'wszëtczé',
+'monthsall'     => 'wszëtczé',
+'limitall'      => 'wszëtczé',
 
 # E-mail address confirmation
 'confirmemail_loggedin' => 'Twòjô adresa e-mail òsta pòcwierdzona.',
@@ -1306,5 +1274,9 @@ Jinszé pòla bãdą domëslno zataconé.
 
 # Special:SpecialPages
 'specialpages' => 'Specjalné starnë',
+
+# New logging system
+'revdelete-restricted'   => 'nastôwi ògrańczenia dlô sprôwników',
+'revdelete-unrestricted' => 'rëmôj ògrańczenia dlô sprôwników',
 
 );

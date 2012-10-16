@@ -60,9 +60,10 @@ class StubObject {
 
 	/**
 	 * Create a new object to replace this stub object.
+	 * @return object
 	 */
 	function _newObject() {
-		return wfCreateObject( $this->mClass, $this->mParams );
+		return MWFunction::newObj( $this->mClass, $this->mParams );
 	}
 
 	/**
@@ -89,9 +90,10 @@ class StubObject {
 	function _unstub( $name = '_unstub', $level = 2 ) {
 		static $recursionLevel = 0;
 
-		if ( !($GLOBALS[$this->mGlobal] instanceof StubObject) )
+		if ( !($GLOBALS[$this->mGlobal] instanceof StubObject) ) {
 			return $GLOBALS[$this->mGlobal]; // already unstubbed.
-		
+		}
+
 		if ( get_class( $GLOBALS[$this->mGlobal] ) != $this->mClass ) {
 			$fname = __METHOD__.'-'.$this->mGlobal;
 			wfProfileIn( $fname );
@@ -110,10 +112,13 @@ class StubObject {
 /**
  * Stub object for the content language of this wiki. This object have to be in
  * $wgContLang global.
+ *
+ * @deprecated since 1.18
  */
 class StubContLang extends StubObject {
 
 	function __construct() {
+		wfDeprecated( __CLASS__, '1.18' );
 		parent::__construct( 'wgContLang' );
 	}
 
@@ -121,6 +126,9 @@ class StubContLang extends StubObject {
 		return $this->_call( $name, $args );
 	}
 
+	/**
+	 * @return Language
+	 */
 	function _newObject() {
 		global $wgLanguageCode;
 		$obj = Language::factory( $wgLanguageCode );
@@ -145,23 +153,10 @@ class StubUserLang extends StubObject {
 		return $this->_call( $name, $args );
 	}
 
+	/**
+	 * @return Language
+	 */
 	function _newObject() {
-		global $wgLanguageCode, $wgRequest, $wgUser, $wgContLang;
-		$code = $wgRequest->getVal( 'uselang', $wgUser->getOption( 'language' ) );
-		// BCP 47 - letter case MUST NOT carry meaning
-		$code = strtolower( $code );
-
-		# Validate $code
-		if( empty( $code ) || !Language::isValidCode( $code ) || ( $code === 'qqq' ) ) {
-			wfDebug( "Invalid user language code\n" );
-			$code = $wgLanguageCode;
-		}
-
-		if( $code === $wgLanguageCode ) {
-			return $wgContLang;
-		} else {
-			$obj = Language::factory( $code );
-			return $obj;
-		}
+		return RequestContext::getMain()->getLanguage();
 	}
 }

@@ -1,4 +1,26 @@
 <?php
+/**
+ * Moves blobs indexed by trackBlobs.php to a specified list of destination
+ * clusters, and recompresses them in the process.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ * http://www.gnu.org/copyleft/gpl.html
+ *
+ * @file
+ * @ingroup Maintenance ExternalStorage
+ */
 
 $optionsWithArgs = RecompressTracked::getOptionsWithArgs();
 require( dirname( __FILE__ ) . '/../commandLine.inc' );
@@ -147,6 +169,7 @@ class RecompressTracked {
 
 	/**
 	 * Make sure the tracking table exists and isn't empty
+	 * @return bool
 	 */
 	function checkTrackingTable() {
 		$dbr = wfGetDB( DB_SLAVE );
@@ -566,6 +589,7 @@ class RecompressTracked {
 
 	/**
 	 * Returns the name of the next target cluster
+	 * @return string
 	 */
 	function getTargetCluster() {
 		$cluster = next( $this->destClusters );
@@ -577,6 +601,8 @@ class RecompressTracked {
 
 	/**
 	 * Gets a DB master connection for the given external cluster name
+	 * @param $cluster string
+	 * @return DatabaseBase
 	 */
 	function getExtDB( $cluster ) {
 		$lb = wfGetLBFactory()->getExternalLB( $cluster );
@@ -662,6 +688,9 @@ class CgzCopyTransaction {
 	/**
 	 * Add text.
 	 * Returns false if it's ready to commit.
+	 * @param $text string
+	 * @param $textId
+	 * @return bool
 	 */
 	function addItem( $text, $textId ) {
 		if ( !$this->cgz ) {

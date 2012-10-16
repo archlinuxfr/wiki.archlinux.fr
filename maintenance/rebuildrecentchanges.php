@@ -119,11 +119,11 @@ class RebuildRecentchanges extends Maintenance {
 				if ( $row ) {
 					$lastOldId = intval( $row->rev_id );
 					# Grab the last text size if available
-					$lastSize = !is_null( $row->rev_len ) ? intval( $row->rev_len ) : 'NULL';
+					$lastSize = !is_null( $row->rev_len ) ? intval( $row->rev_len ) : null;
 				} else {
 					# No previous edit
 					$lastOldId = 0;
-					$lastSize = 'NULL';
+					$lastSize = null;
 					$new = 1; // probably true
 				}
 			}
@@ -132,7 +132,6 @@ class RebuildRecentchanges extends Maintenance {
 			} else {
 				# Grab the entry's text size
 				$size = $dbw->selectField( 'revision', 'rev_len', array( 'rev_id' => $obj->rc_this_oldid ) );
-				$size = !is_null( $size ) ? intval( $size ) : 'NULL';
 
 				$dbw->update( 'recentchanges',
 					array(

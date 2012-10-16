@@ -29,44 +29,35 @@
  */
 class ShortPagesPage extends QueryPage {
 
-	function getName() {
-		return 'Shortpages';
-	}
-
-	/**
-	 * This query is indexed as of 1.5
-	 */
-	function isExpensive() {
-		return true;
+	function __construct( $name = 'Shortpages' ) {
+		parent::__construct( $name );
 	}
 
 	function isSyndicated() {
 		return false;
 	}
 
-	function getSQL() {
-		global $wgContentNamespaces;
-
-		$dbr = wfGetDB( DB_SLAVE );
-		$page = $dbr->tableName( 'page' );
-		$name = $dbr->addQuotes( $this->getName() );
-
-		$forceindex = $dbr->useIndexClause("page_len");
-
-		if ($wgContentNamespaces)
-			$nsclause = "page_namespace IN (" . $dbr->makeList($wgContentNamespaces) . ")";
-		else
-			$nsclause = "page_namespace = " . NS_MAIN;
-
-		return
-			"SELECT $name as type,
-				page_namespace as namespace,
-			        page_title as title,
-			        page_len AS value
-			FROM $page $forceindex
-			WHERE $nsclause AND page_is_redirect=0";
+	function getQueryInfo() {
+		return array (
+			'tables' => array ( 'page' ),
+			'fields' => array ( 'page_namespace AS namespace',
+					'page_title AS title',
+					'page_len AS value' ),
+			'conds' => array ( 'page_namespace' => NS_MAIN,
+					'page_is_redirect' => 0 ),
+			'options' => array ( 'USE INDEX' => 'page_redirect_namespace_len' )
+		);
 	}
 
+	function getOrderFields() {
+		return array( 'page_len' );
+	}
+
+	/**
+	 * @param $db DatabaseBase
+	 * @param $res
+	 * @return void
+	 */
 	function preprocessResults( $db, $res ) {
 		# There's no point doing a batch check if we aren't caching results;
 		# the page must exist for it to have been pulled out of the table
@@ -87,37 +78,25 @@ class ShortPagesPage extends QueryPage {
 	}
 
 	function formatResult( $skin, $result ) {
-		global $wgLang, $wgContLang;
-		$dm = $wgContLang->getDirMark();
+		$dm = $this->getLanguage()->getDirMark();
 
-		$title = Title::makeTitleSafe( $result->namespace, $result->title );
+		$title = Title::makeTitle( $result->namespace, $result->title );
 		if ( !$title ) {
 			return '<!-- Invalid title ' .  htmlspecialchars( "{$result->namespace}:{$result->title}" ). '-->';
 		}
-		$hlink = $skin->linkKnown(
+		$hlink = Linker::linkKnown(
 			$title,
 			wfMsgHtml( 'hist' ),
 			array(),
 			array( 'action' => 'history' )
 		);
 		$plink = $this->isCached()
-					? $skin->link( $title )
-					: $skin->linkKnown( $title );
-		$size = wfMessage( 'nbytes', $wgLang->formatNum( $result->value ) )->escaped();
+					? Linker::link( $title )
+					: Linker::linkKnown( $title );
+		$size = $this->msg( 'nbytes' )->numParams( $result->value )->escaped();
 
 		return $title->exists()
 				? "({$hlink}) {$dm}{$plink} {$dm}[{$size}]"
 				: "<del>({$hlink}) {$dm}{$plink} {$dm}[{$size}]</del>";
 	}
-}
-
-/**
- * constructor
- */
-function wfSpecialShortpages() {
-	list( $limit, $offset ) = wfCheckLimits();
-
-	$spp = new ShortPagesPage();
-
-	return $spp->doQuery( $offset, $limit );
 }

@@ -5,8 +5,15 @@
  * @ingroup Language
  */
 class LanguageUk extends Language {
-	# Convert from the nominative form of a noun to some other case
-	# Invoked with {{grammar:case|word}}
+
+	/**
+	 * Convert from the nominative form of a noun to some other case
+	 * Invoked with {{grammar:case|word}}
+	 *
+	 * @param $word string
+	 * @param $case string
+	 * @return string
+	 */
 	function convertGrammar( $word, $case ) {
 		global $wgGrammarForms;
 		if ( isset( $wgGrammarForms['uk'][$case][$word] ) ) {
@@ -56,13 +63,21 @@ class LanguageUk extends Language {
 		return $word;
 	}
 
+	/**
+	 * @param $count int
+	 * @param $forms array
+	 * @return string
+	 */
 	function convertPlural( $count, $forms ) {
 		if ( !count( $forms ) ) { return ''; }
 
-		// if no number with word, then use $form[0] for singular and $form[1] for plural or zero
+		// If the actual number is not mentioned in the expression, then just two forms are enough:
+		// singular for $count == 1
+		// plural   for $count != 1
+		// For example, "This user belongs to {{PLURAL:$1|one group|several groups}}."
 		if ( count( $forms ) === 2 ) return $count == 1 ? $forms[0] : $forms[1];
 
-		// FIXME: CLDR defines 4 plural forms. Form for decimals is missing/
+		// @todo FIXME: CLDR defines 4 plural forms. Form for decimals is missing/
 		// See http://unicode.org/repos/cldr-tmp/trunk/diff/supplemental/language_plural_rules.html#uk
 		$forms = $this->preConvertPlural( $forms, 3 );
 
@@ -79,8 +94,12 @@ class LanguageUk extends Language {
 		}
 	}
 
-	/*
+	/**
 	 * Ukrainian numeric format is "12 345,67" but "1234,56"
+	 *
+	 * @param $_ string
+	 *
+	 * @return string
 	 */
 	function commafy( $_ ) {
 		if ( !preg_match( '/^\-?\d{1,4}(\.\d+)?$/', $_ ) ) {

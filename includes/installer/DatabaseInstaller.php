@@ -55,6 +55,15 @@ abstract class DatabaseInstaller {
 	public abstract function isCompiled();
 
 	/**
+	 * Checks for installation prerequisites other than those checked by isCompiled()
+	 * @since 1.19
+	 * @return Status
+	 */
+	public function checkPrerequisites() {
+		return Status::newGood();
+	}
+
+	/**
 	 * Get HTML for a web form that configures this database. Configuration
 	 * at this time should be the minimum needed to connect and test
 	 * whether install or upgrade is required.
@@ -148,7 +157,7 @@ abstract class DatabaseInstaller {
 		}
 		$this->db->selectDB( $this->getVar( 'wgDBname' ) );
 
-		if( $this->db->tableExists( 'user' ) ) {
+		if( $this->db->tableExists( 'archive', __METHOD__ ) ) {
 			$status->warning( 'config-install-tables-exist' );
 			$this->enableLB();
 			return $status;
@@ -157,7 +166,7 @@ abstract class DatabaseInstaller {
 		$this->db->setFlag( DBO_DDLMODE ); // For Oracle's handling of schema files
 		$this->db->begin( __METHOD__ );
 
-		$error = $this->db->sourceFile( $this->db->getSchema() );
+		$error = $this->db->sourceFile( $this->db->getSchemaPath() );
 		if( $error !== true ) {
 			$this->db->reportQueryError( $error, 0, '', __METHOD__ );
 			$this->db->rollback( __METHOD__ );
@@ -181,26 +190,9 @@ abstract class DatabaseInstaller {
 		if ( !$status->isOK() ) {
 			return $status;
 		}
-		$updater = DatabaseUpdater::newForDB( $this->db );
-		$extensionUpdates = $updater->getNewExtensions();
-
-		$ourExtensions = array_map( 'strtolower', $this->getVar( '_Extensions' ) );
-
-		foreach( $ourExtensions as $ext ) {
-			if( isset( $extensionUpdates[$ext] ) ) {
-				$this->db->begin( __METHOD__ );
-				$error = $this->db->sourceFile( $extensionUpdates[$ext] );
-				if( $error !== true ) {
-					$this->db->rollback( __METHOD__ );
-					$status->warning( 'config-install-tables-failed', $error );
-				} else {
-					$this->db->commit( __METHOD__ );
-				}
-			}
-		}
 
 		// Now run updates to create tables for old extensions
-		$updater->doUpdates( array( 'extensions' ) );
+		DatabaseUpdater::newForDB( $this->db )->doUpdates( array( 'extensions' ) );
 
 		return $status;
 	}
@@ -298,6 +290,7 @@ abstract class DatabaseInstaller {
 	/**
 	 * Construct and initialise parent.
 	 * This is typically only called from Installer::getDBInstaller()
+	 * @param $parent
 	 */
 	public function __construct( $parent ) {
 		$this->parent = $parent;
@@ -308,6 +301,8 @@ abstract class DatabaseInstaller {
 	 * Check if a named extension is present.
 	 *
 	 * @see wfDl
+	 * @param $name
+	 * @return bool
 	 */
 	protected static function checkExtension( $name ) {
 		wfSuppressWarnings();
@@ -340,6 +335,9 @@ abstract class DatabaseInstaller {
 
 	/**
 	 * Get a variable, taking local defaults into account.
+	 * @param $var string
+	 * @param $default null
+	 * @return mixed
 	 */
 	public function getVar( $var, $default = null ) {
 		$defaults = $this->getGlobalDefaults();
@@ -354,6 +352,8 @@ abstract class DatabaseInstaller {
 
 	/**
 	 * Convenience alias for $this->parent->setVar()
+	 * @param $name string
+	 * @param $value mixed
 	 */
 	public function setVar( $name, $value ) {
 		$this->parent->setVar( $name, $value );
@@ -361,6 +361,12 @@ abstract class DatabaseInstaller {
 
 	/**
 	 * Get a labelled text box to configure a local variable.
+	 *
+	 * @param $var string
+	 * @param $label string
+	 * @param $attribs array
+	 * @param $helpData string
+	 * @return string
 	 */
 	public function getTextBox( $var, $label, $attribs = array(), $helpData = "" ) {
 		$name = $this->getName() . '_' . $var;
@@ -381,6 +387,12 @@ abstract class DatabaseInstaller {
 	/**
 	 * Get a labelled password box to configure a local variable.
 	 * Implements password hiding.
+	 *
+	 * @param $var string
+	 * @param $label string
+	 * @param $attribs array
+	 * @param $helpData string
+	 * @return string
 	 */
 	public function getPasswordBox( $var, $label, $attribs = array(), $helpData = "" ) {
 		$name = $this->getName() . '_' . $var;
@@ -400,6 +412,8 @@ abstract class DatabaseInstaller {
 
 	/**
 	 * Get a labelled checkbox to configure a local boolean variable.
+	 *
+	 * @return string
 	 */
 	public function getCheckBox( $var, $label, $attribs = array(), $helpData = "" ) {
 		$name = $this->getName() . '_' . $var;
@@ -461,7 +475,7 @@ abstract class DatabaseInstaller {
 		if ( !$this->db->selectDB( $this->getVar( 'wgDBname' ) ) ) {
 			return false;
 		}
-		return $this->db->tableExists( 'cur' ) || $this->db->tableExists( 'revision' );
+		return $this->db->tableExists( 'cur', __METHOD__ ) || $this->db->tableExists( 'revision', __METHOD__ );
 	}
 
 	/**
@@ -473,8 +487,8 @@ abstract class DatabaseInstaller {
 		return
 			Html::openElement( 'fieldset' ) .
 			Html::element( 'legend', array(), wfMsg( 'config-db-install-account' ) ) .
-			$this->getTextBox( '_InstallUser', 'config-db-username', array(), $this->parent->getHelpBox( 'config-db-install-username' ) ) .
-			$this->getPasswordBox( '_InstallPassword', 'config-db-password', array(), $this->parent->getHelpBox( 'config-db-install-password' ) ) .
+			$this->getTextBox( '_InstallUser', 'config-db-username', array( 'dir' => 'ltr' ), $this->parent->getHelpBox( 'config-db-install-username' ) ) .
+			$this->getPasswordBox( '_InstallPassword', 'config-db-password', array( 'dir' => 'ltr' ), $this->parent->getHelpBox( 'config-db-install-password' ) ) .
 			Html::closeElement( 'fieldset' );
 	}
 

@@ -13,6 +13,12 @@
  * @since 1.17
  */
 class SqliteInstaller extends DatabaseInstaller {
+	const MINIMUM_VERSION = '3.3.7';
+
+	/**
+	 * @var DatabaseSqlite
+	 */
+	public $db;
 
 	protected $globalNames = array(
 		'wgDBname',
@@ -25,6 +31,24 @@ class SqliteInstaller extends DatabaseInstaller {
 
 	public function isCompiled() {
 		return self::checkExtension( 'pdo_sqlite' );
+	}
+
+	/**
+	 *
+	 * @return Status:
+	 */
+	public function checkPrerequisites() {
+		$result = Status::newGood();
+		// Bail out if SQLite is too old
+		$db = new DatabaseSqliteStandalone( ':memory:' );
+		if ( version_compare( $db->getServerVersion(), self::MINIMUM_VERSION, '<' ) ) {
+			$result->fatal( 'config-outdated-sqlite', $db->getServerVersion(), self::MINIMUM_VERSION );
+		}
+		// Check for FTS3 full-text search module
+		if( DatabaseSqlite::getFulltextSearchModule() != 'FTS3' ) {
+			$result->warning( 'config-no-fts3' );
+		}
+		return $result;
 	}
 
 	public function getGlobalDefaults() {
@@ -45,8 +69,12 @@ class SqliteInstaller extends DatabaseInstaller {
 			$this->getTextBox( 'wgDBname', 'config-db-name', array(), $this->parent->getHelpBox( 'config-sqlite-name-help' ) );
 	}
 
-	/*
+	/**
 	 * Safe wrapper for PHP's realpath() that fails gracefully if it's unable to canonicalize the path.
+	 *
+	 * @param $path string
+	 *
+	 * @return string
 	 */
 	private static function realpath( $path ) {
 		$result = realpath( $path );
@@ -56,14 +84,16 @@ class SqliteInstaller extends DatabaseInstaller {
 		return $result;
 	}
 
+	/**
+	 * @return Status
+	 */
 	public function submitConnectForm() {
 		$this->setVarsFromRequest( array( 'wgSQLiteDataDir', 'wgDBname' ) );
 
 		# Try realpath() if the directory already exists
 		$dir = self::realpath( $this->getVar( 'wgSQLiteDataDir' ) );
 		$result = self::dataDirOKmaybeCreate( $dir, true /* create? */ );
-		if ( $result->isOK() )
-		{
+		if ( $result->isOK() ) {
 			# Try expanding again in case we've just created it
 			$dir = self::realpath( $dir );
 			$this->setVar( 'wgSQLiteDataDir', $dir );
@@ -71,6 +101,11 @@ class SqliteInstaller extends DatabaseInstaller {
 		return $result;
 	}
 
+	/**
+	 * @param $dir
+	 * @param $create bool
+	 * @return Status
+	 */
 	private static function dataDirOKmaybeCreate( $dir, $create = false ) {
 		if ( !is_dir( $dir ) ) {
 			if ( !is_writable( dirname( $dir ) ) ) {
@@ -86,7 +121,7 @@ class SqliteInstaller extends DatabaseInstaller {
 			# if it's still writable
 			if ( $create ) {
 				wfSuppressWarnings();
-				$ok = wfMkdirParents( $dir, 0700 );
+				$ok = wfMkdirParents( $dir, 0700, __METHOD__ );
 				wfRestoreWarnings();
 				if ( !$ok ) {
 					return Status::newFatal( 'config-sqlite-mkdir-error', $dir );
@@ -103,6 +138,9 @@ class SqliteInstaller extends DatabaseInstaller {
 		return Status::newGood();
 	}
 
+	/**
+	 * @return Status
+	 */
 	public function openConnection() {
 		global $wgSQLiteDataDir;
 
@@ -110,7 +148,7 @@ class SqliteInstaller extends DatabaseInstaller {
 		$dir = $this->getVar( 'wgSQLiteDataDir' );
 		$dbName = $this->getVar( 'wgDBname' );
 		try {
-			# FIXME: need more sensible constructor parameters, e.g. single associative array
+			# @todo FIXME: Need more sensible constructor parameters, e.g. single associative array
 			# Setting globals kind of sucks
 			$wgSQLiteDataDir = $dir;
 			$db = new DatabaseSqlite( false, false, false, $dbName );
@@ -121,6 +159,9 @@ class SqliteInstaller extends DatabaseInstaller {
 		return $status;
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function needsUpgrade() {
 		$dir = $this->getVar( 'wgSQLiteDataDir' );
 		$dbName = $this->getVar( 'wgDBname' );
@@ -133,6 +174,9 @@ class SqliteInstaller extends DatabaseInstaller {
 		return parent::needsUpgrade();
 	}
 
+	/**
+	 * @return Status
+	 */
 	public function setupDatabase() {
 		$dir = $this->getVar( 'wgSQLiteDataDir' );
 
@@ -162,11 +206,18 @@ class SqliteInstaller extends DatabaseInstaller {
 		return $this->getConnection();
 	}
 
+	/**
+	 * @return Staus
+	 */
 	public function createTables() {
 		$status = parent::createTables();
 		return $this->setupSearchIndex( $status );
 	}
 
+	/**
+	 * @param $status Status
+	 * @return Status
+	 */
 	public function setupSearchIndex( &$status ) {
 		global $IP;
 
@@ -181,6 +232,9 @@ class SqliteInstaller extends DatabaseInstaller {
 		return $status;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getLocalSettings() {
 		$dir = LocalSettingsGenerator::escapePhpString( $this->getVar( 'wgSQLiteDataDir' ) );
 		return

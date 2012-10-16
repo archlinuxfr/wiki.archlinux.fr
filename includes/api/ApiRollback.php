@@ -1,10 +1,10 @@
 <?php
 /**
- * API for MediaWiki 1.8+
+ *
  *
  * Created on Jun 20, 2007
  *
- * Copyright © 2007 Roan Kattouw <Firstname>.<Lastname>@home.nl
+ * Copyright © 2007 Roan Kattouw <Firstname>.<Lastname>@gmail.com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,11 +24,6 @@
  * @file
  */
 
-if ( !defined( 'MEDIAWIKI' ) ) {
-	// Eclipse helper - will be ignored in production
-	require_once( "ApiBase.php" );
-}
-
 /**
  * @ingroup API
  */
@@ -38,17 +33,25 @@ class ApiRollback extends ApiBase {
 		parent::__construct( $main, $action );
 	}
 
-	private $mTitleObj = null, $mUser = null;
+	/**
+	 * @var Title
+	 */
+	private $mTitleObj = null;
+
+	/**
+	 * @var User
+	 */
+	private $mUser = null;
 
 	public function execute() {
 		$params = $this->extractRequestParams();
 
 		// User and title already validated in call to getTokenSalt from Main
-		$titleObj = $this->getTitle();
-		$articleObj = new Article( $titleObj );
+		$titleObj = $this->getRbTitle();
+		$pageObj = WikiPage::factory( $titleObj );
 		$summary = ( isset( $params['summary'] ) ? $params['summary'] : '' );
-		$details = null;
-		$retval = $articleObj->doRollback( $this->getUser(), $summary, $params['token'], $params['markbot'], $details );
+		$details = array();
+		$retval = $pageObj->doRollback( $this->getRbUser(), $summary, $params['token'], $params['markbot'], $details, $this->getUser() );
 
 		if ( $retval ) {
 			// We don't care about multiple errors, just report one of them
@@ -133,10 +136,10 @@ class ApiRollback extends ApiBase {
 	}
 
 	public function getTokenSalt() {
-		return array( $this->getTitle()->getPrefixedText(), $this->getUser() );
+		return array( $this->getRbTitle()->getPrefixedText(), $this->getRbUser() );
 	}
 
-	private function getUser() {
+	private function getRbUser() {
 		if ( $this->mUser !== null ) {
 			return $this->mUser;
 		}
@@ -157,7 +160,7 @@ class ApiRollback extends ApiBase {
 	/**
 	 * @return Title
 	 */
-	private function getTitle() {
+	private function getRbTitle() {
 		if ( $this->mTitleObj !== null ) {
 			return $this->mTitleObj;
 		}
@@ -170,20 +173,24 @@ class ApiRollback extends ApiBase {
 			$this->dieUsageMsg( array( 'invalidtitle', $params['title'] ) );
 		}
 		if ( !$this->mTitleObj->exists() ) {
-			$this->dieUsageMsg( array( 'notanarticle' ) );
+			$this->dieUsageMsg( 'notanarticle' );
 		}
 
 		return $this->mTitleObj;
 	}
 
-	protected function getExamples() {
+	public function getExamples() {
 		return array(
 			'api.php?action=rollback&title=Main%20Page&user=Catrope&token=123ABC',
 			'api.php?action=rollback&title=Main%20Page&user=217.121.114.116&token=123ABC&summary=Reverting%20vandalism&markbot=1'
 		);
 	}
 
+	public function getHelpUrls() {
+		return 'https://www.mediawiki.org/wiki/API:Rollback';
+	}
+
 	public function getVersion() {
-		return __CLASS__ . ': $Id: ApiRollback.php 75602 2010-10-28 00:04:48Z reedy $';
+		return __CLASS__ . ': $Id$';
 	}
 }

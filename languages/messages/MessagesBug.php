@@ -9,6 +9,7 @@
  *
  * @author Ezagren
  * @author Kurniasan
+ * @author Zaidpjd (on bug.wikipedia.org)
  */
 
 $fallback = "id";
@@ -95,7 +96,6 @@ $messages = array(
 'searcharticle'    => 'Lao',
 'history'          => 'Versi riolo leppaë',
 'history_short'    => 'versi riolo',
-'info_short'       => 'Informasi',
 'permalink'        => 'Pranala permanen',
 'edit'             => 'Padécéŋ',
 'create'           => 'Ebbu',
@@ -172,7 +172,6 @@ $messages = array(
 'internalerror_info'  => 'Éro internal: $1',
 'badtitle'            => 'Judul dek essa',
 'viewsource'          => 'Ita sumber',
-'viewsourcefor'       => 'polé $1',
 
 # Virus scanner
 'virus-unknownscanner' => "Antivirus dé' riisseŋ:",
@@ -194,7 +193,7 @@ $messages = array(
 'loginerror'              => 'Éro log attama',
 'mailmypassword'          => 'E-mail adacili baru',
 
-# Password reset dialog
+# Change password dialog
 'oldpassword' => 'Pasewodo matoa:',
 
 # Edit page toolbar
@@ -238,9 +237,6 @@ $messages = array(
 'revdelete-hide-comment' => 'Tapo komentar mapadecéŋ',
 'revdelete-hide-user'    => 'Tapo aseŋ papakéna/IPna papadéceŋë',
 'revdelete-log'          => 'Saba:',
-'revdelete-content'      => 'lise',
-'revdelete-uname'        => 'aseŋ papaké',
-'revdelete-hid'          => 'tapo $1',
 
 # Diffs
 'editundo' => 'undo',
@@ -273,7 +269,7 @@ $messages = array(
 'group-sysop' => 'Puŋgawa',
 'group-all'   => '(sininna)',
 
-'group-user-member'  => 'Pappaké',
+'group-user-member'  => '{{GENDER:$1|Pappaké}}',
 'group-sysop-member' => 'Puŋgawa',
 
 'grouppage-user'  => '{{ns:project}}:Pappaké',
@@ -312,12 +308,8 @@ $messages = array(
 'filehist-dimensions' => 'Dimensi',
 'imagelinks'          => 'Liŋke',
 
-# File reversion
-'filerevert-backlink' => '← $1',
-
 # File deletion
 'filedelete'             => 'Mapeddé $1',
-'filedelete-backlink'    => '← $1',
 'filedelete-legend'      => 'Mapeddé berkas',
 'filedelete-intro'       => "Iko purani mapeddé '''[[Media:$1|$1]]'''.",
 'filedelete-submit'      => 'Peddé',
@@ -364,7 +356,6 @@ $messages = array(
 'categories' => 'Maneŋ kategori',
 
 # Watchlist
-'addedwatch'     => 'Tamba ri jagaan',
 'addedwatchtext' => "Halamang \"[[:\$1]]\" ni ritamba ri ida [[Special:Watchlist|watchlist]].
 Halamang bicara éréngé gabungan halamang bicara pada wettu depan didaftarkan koe,
 éréngé halamang akan wessi '''umpek''' ri [[Special:RecentChanges|daftar pinra tanappa]] barak lebih lemmak ita.
@@ -386,10 +377,9 @@ Apak ida ronnak mappedde halamang édé ri daftar jagaan, klik \"Mangedda jaga\"
 'sp-contributions-talk' => 'Bicara',
 
 # What links here
-'whatlinkshere'          => 'Pranala ri leppa iyéwé',
-'whatlinkshere-page'     => 'Leppa:',
-'whatlinkshere-backlink' => '← $1',
-'whatlinkshere-links'    => '← liŋke',
+'whatlinkshere'       => 'Pranala ri leppa iyéwé',
+'whatlinkshere-page'  => 'Leppa:',
+'whatlinkshere-links' => '← liŋke',
 
 # Block/unblock
 'ipblocklist-submit' => 'Sappa',
@@ -399,8 +389,6 @@ Apak ida ronnak mappedde halamang édé ri daftar jagaan, klik \"Mangedda jaga\"
 # Move page
 'articleexists'             => 'Leppa béla ida pile ni ujuk, a dek essa.
 Silakan pile aseng laing.',
-'1movedto2'                 => '[[$1]] léccé lao [[$2]]',
-'1movedto2_redir'           => '[[$1]] rileccé lao ri[[$2]] paké redirect',
 'movelogpage'               => 'Log leccé',
 'movereason'                => 'Saba:',
 'delete_and_move'           => 'Peddé nappa paleccé',
@@ -440,7 +428,6 @@ Eloko peddéï supaya weddiŋi mapalecé?',
 'ilsubmit' => 'Sappa',
 
 # 'all' in various places, this might be different for inflected languages
-'imagelistall'  => 'maneng',
 'watchlistall2' => 'maneŋ',
 'namespacesall' => 'maneŋ',
 'monthsall'     => 'maneŋ',

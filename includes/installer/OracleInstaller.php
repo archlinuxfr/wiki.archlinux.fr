@@ -27,7 +27,7 @@ class OracleInstaller extends DatabaseInstaller {
 		'_OracleTempTS' => 'TEMP',
 		'_InstallUser' => 'SYSDBA',
 	);
-	
+
 	public $minimumVersion = '9.0.1'; // 9iR1
 
 	protected $connError = null;
@@ -92,7 +92,7 @@ class OracleInstaller extends DatabaseInstaller {
 		// Scenario 1: Install with a manually created account
 		$status = $this->getConnection();
 		if ( !$status->isOK() ) {
-			if ( $this->connError == 28009 ) { 
+			if ( $this->connError == 28009 ) {
 				// _InstallUser seems to be a SYSDBA
 				// Scenario 2: Create user with SYSDBA and install with new user
 				$status = $this->submitWebUserBox();
@@ -117,6 +117,10 @@ class OracleInstaller extends DatabaseInstaller {
 				return $statusIS3;
 			}
 		}
+
+		/**
+		 * @var $conn DatabaseBase
+		 */
 		$conn = $status->value;
 
 		// Check version
@@ -199,7 +203,7 @@ class OracleInstaller extends DatabaseInstaller {
 		// normaly only SYSDBA users can create accounts
 		$status = $this->openSYSDBAConnection();
 		if ( !$status->isOK() ) {
-			if ( $this->connError == 1031 ) { 
+			if ( $this->connError == 1031 ) {
 				// insufficient  privileges (looks like a normal user)
 				$status = $this->openConnection();
 				if ( !$status->isOK() ) {
@@ -226,6 +230,8 @@ class OracleInstaller extends DatabaseInstaller {
 			// user created or already existing, switching back to a normal connection
 			// as the new user has all needed privileges to setup the rest of the schema
 			// i will be using that user as _InstallUser from this point on
+			$this->db->close();
+			$this->db = false;
 			$this->parent->setVar( '_InstallUser', $this->getVar( 'wgDBuser' ) );
 			$this->parent->setVar( '_InstallPassword', $this->getVar( 'wgDBpassword' ) );
 			$this->parent->setVar( '_InstallDBname', $this->getVar( 'wgDBuser' ) );
@@ -240,8 +246,8 @@ class OracleInstaller extends DatabaseInstaller {
 	 */
 	public function createTables() {
 		$this->setupSchemaVars();
-		$this->db->selectDB( $this->getVar( 'wgDBuser' ) );
 		$this->db->setFlag( DBO_DDLMODE );
+		$this->parent->setVar( 'wgDBname', $this->getVar( 'wgDBuser' ) );
 		$status = parent::createTables();
 		$this->db->clearFlag( DBO_DDLMODE );
 

@@ -1,5 +1,5 @@
 <?php
-/** Megleno-Romanian (Cyrillic) (Vlăheşte (Cyrillic))
+/** Megleno-Romanian (Cyrillic script) (Влахесте)
  *
  * See MessagesQqq.php for message documentation incl. usage of parameters
  * To improve a translation please visit http://translatewiki.net
@@ -134,8 +134,7 @@ $messages = array(
 'nstab-category' => 'категориа',
 
 # General errors
-'viewsource'    => 'баганаере',
-'viewsourcefor' => 'пентру $1',
+'viewsource' => 'баганаере',
 
 # Login and logout pages
 'yourname'                => 'Ном дутилизатору:',
@@ -155,8 +154,6 @@ $messages = array(
 'extlink_tip'     => 'Легајтул ќстернул (вец префикс http://)',
 'headline_sample' => 'Ескрире с-титлус',
 'headline_tip'    => 'Титлу де нивел 2',
-'math_sample'     => 'Интродуца формула иси',
-'math_tip'        => 'Формула с-математикс (LaTeX)',
 'nowiki_sample'   => 'Интродуца но-Вики иси',
 'nowiki_tip'      => 'Но-Бики клашу',
 'image_tip'       => 'Сантигул инсерат',
@@ -264,9 +261,6 @@ $3',
 'watching'   => 'О клајаере...',
 'unwatching' => 'О деклајаере...',
 
-# Delete
-'deletedarticle' => 'делајрај "[[$1]]"',
-
 # Rollback
 'rollbacklink' => 'ревенире',
 
@@ -335,7 +329,7 @@ $3',
 'tooltip-diff'              => 'Ратај це модификајри аи фајцут текстулуи.',
 
 # Media information
-'file-nohires'   => '<small>Це-н-ест нресолуцион маи мари.</small>',
+'file-nohires'   => 'Це-н-ест нресолуцион маи мари.',
 'show-big-image' => 'Мареште ресолуцион',
 
 # Bad image list

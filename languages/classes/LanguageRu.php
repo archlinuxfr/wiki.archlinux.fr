@@ -7,8 +7,15 @@
   * @ingroup Language
   */
 class LanguageRu extends Language {
-	# Convert from the nominative form of a noun to some other case
-	# Invoked with {{grammar:case|word}}
+
+	/**
+	 * Convert from the nominative form of a noun to some other case
+	 * Invoked with {{grammar:case|word}}
+	 *
+	 * @param $word string
+	 * @param $case string
+	 * @return string
+	 */
 	function convertGrammar( $word, $case ) {
 		global $wgGrammarForms;
 		if ( isset( $wgGrammarForms['ru'][$case][$word] ) ) {
@@ -65,18 +72,25 @@ class LanguageRu extends Language {
 	 * Examples:
 	 *   message with number
 	 *     "Сделано $1 {{PLURAL:$1|изменение|изменения|изменений}}"
+	 *     ("$1 change[s] were made)
 	 *   message without number
 	 *     "Действие не может быть выполнено по {{PLURAL:$1|следующей причине|следующим причинам}}:"
+	 *     ("The action cannot be performed for the following reason[s]")
+	 * @param $count int
+	 * @param $forms array
 	 *
+	 * @return string
 	 */
-
 	function convertPlural( $count, $forms ) {
 		if ( !count( $forms ) ) { return ''; }
 
-		// if no number with word, then use $form[0] for singular and $form[1] for plural or zero
+		// If the actual number is not mentioned in the expression, then just two forms are enough:
+		// singular for $count == 1
+		// plural   for $count != 1
+		// For example, "This user belongs to {{PLURAL:$1|one group|several groups}}."
 		if ( count( $forms ) === 2 ) return $count == 1 ? $forms[0] : $forms[1];
 
-		// FIXME: CLDR defines 4 plural forms. Form with decimals missing.
+		// @todo FIXME: CLDR defines 4 plural forms. Form with decimals missing.
 		// See http://unicode.org/repos/cldr-tmp/trunk/diff/supplemental/language_plural_rules.html#ru
 		$forms = $this->preConvertPlural( $forms, 3 );
 
@@ -93,10 +107,14 @@ class LanguageRu extends Language {
 		}
 	}
 
-	/*
+	/**
 	 * Four-digit number should be without group commas (spaces)
 	 * See manual of style at http://ru.wikipedia.org/wiki/Википедия:Оформление_статей
 	 * So "1 234 567", "12 345" but "1234"
+	 *
+	 * @param $_ string
+	 *
+	 * @return string
 	 */
 	function commafy( $_ ) {
 		if ( preg_match( '/^-?\d{1,4}(\.\d*)?$/', $_ ) ) {

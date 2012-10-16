@@ -1,10 +1,10 @@
 <?php
 /**
- * API for MediaWiki 1.8+
+ *
  *
  * Created on Sep 27, 2008
  *
- * Copyright © 2008 Roan Kattow <Firstname>,<Lastname>@home.nl
+ * Copyright © 2008 Roan Kattouw <Firstname>.<Lastname>@gmail.com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,11 +23,6 @@
  *
  * @file
  */
-
-if ( !defined( 'MEDIAWIKI' ) ) {
-	// Eclipse helper - will be ignored in production
-	require_once( "ApiQueryBase.php" );
-}
 
 /**
  * A query module to list duplicates of the given file(s)
@@ -52,6 +47,10 @@ class ApiQueryDuplicateFiles extends ApiQueryGeneratorBase {
 		$this->run( $resultPageSet );
 	}
 
+	/**
+	 * @param $resultPageSet ApiPageSet
+	 * @return
+	 */
 	private function run( $resultPageSet = null ) {
 		$params = $this->extractRequestParams();
 		$namespaces = $this->getPageSet()->getAllTitlesByNamespace();
@@ -90,7 +89,8 @@ class ApiQueryDuplicateFiles extends ApiQueryGeneratorBase {
 			);
 		}
 
-		$this->addOption( 'ORDER BY', 'i1.img_name' );
+		$dir = ( $params['dir'] == 'descending' ? ' DESC' : '' );
+		$this->addOption( 'ORDER BY', 'i1.img_name' . $dir );
 		$this->addOption( 'LIMIT', $params['limit'] + 1 );
 
 		$res = $this->select( __METHOD__ );
@@ -137,6 +137,13 @@ class ApiQueryDuplicateFiles extends ApiQueryGeneratorBase {
 				ApiBase::PARAM_MAX2 => ApiBase::LIMIT_BIG2
 			),
 			'continue' => null,
+			'dir' => array(
+				ApiBase::PARAM_DFLT => 'ascending',
+				ApiBase::PARAM_TYPE => array(
+					'ascending',
+					'descending'
+				)
+			),
 		);
 	}
 
@@ -144,6 +151,7 @@ class ApiQueryDuplicateFiles extends ApiQueryGeneratorBase {
 		return array(
 			'limit' => 'How many files to return',
 			'continue' => 'When more results are available, use this to continue',
+			'dir' => 'The direction in which to list',
 		);
 	}
 
@@ -157,14 +165,18 @@ class ApiQueryDuplicateFiles extends ApiQueryGeneratorBase {
 		) );
 	}
 
-	protected function getExamples() {
+	public function getExamples() {
 		return array(
 			'api.php?action=query&titles=File:Albert_Einstein_Head.jpg&prop=duplicatefiles',
 			'api.php?action=query&generator=allimages&prop=duplicatefiles',
 		);
 	}
 
+	public function getHelpUrls() {
+		return 'https://www.mediawiki.org/wiki/API:Properties#duplicatefiles_.2F_df';
+	}
+
 	public function getVersion() {
-		return __CLASS__ . ': $Id: ApiQueryDuplicateFiles.php 70647 2010-08-07 19:59:42Z ialex $';
+		return __CLASS__ . ': $Id$';
 	}
 }

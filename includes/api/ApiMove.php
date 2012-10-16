@@ -1,10 +1,10 @@
 <?php
 /**
- * API for MediaWiki 1.8+
+ *
  *
  * Created on Oct 31, 2007
  *
- * Copyright © 2007 Roan Kattouw <Firstname>.<Lastname>@home.nl
+ * Copyright © 2007 Roan Kattouw <Firstname>.<Lastname>@gmail.com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,11 +24,6 @@
  * @file
  */
 
-if ( !defined( 'MEDIAWIKI' ) ) {
-	// Eclipse helper - will be ignored in production
-	require_once( "ApiBase.php" );
-}
-
 /**
  * API Module to move pages
  * @ingroup API
@@ -40,7 +35,7 @@ class ApiMove extends ApiBase {
 	}
 
 	public function execute() {
-		global $wgUser;
+		$user = $this->getUser();
 		$params = $this->extractRequestParams();
 		if ( is_null( $params['reason'] ) ) {
 			$params['reason'] = '';
@@ -61,7 +56,7 @@ class ApiMove extends ApiBase {
 		}
 
 		if ( !$fromTitle->exists() ) {
-			$this->dieUsageMsg( array( 'notanarticle' ) );
+			$this->dieUsageMsg( 'notanarticle' );
 		}
 		$fromTalk = $fromTitle->getTalkPage();
 
@@ -75,10 +70,10 @@ class ApiMove extends ApiBase {
 			&& !RepoGroup::singleton()->getLocalRepo()->findFile( $toTitle )
 			&& wfFindFile( $toTitle ) )
 		{
-			if ( !$params['ignorewarnings'] && $wgUser->isAllowed( 'reupload-shared' ) ) {
-				$this->dieUsageMsg( array( 'sharedfile-exists' ) );
-			} elseif ( !$wgUser->isAllowed( 'reupload-shared' ) ) {
-				$this->dieUsageMsg( array( 'cantoverwrite-sharedfile' ) );
+			if ( !$params['ignorewarnings'] && $user->isAllowed( 'reupload-shared' ) ) {
+				$this->dieUsageMsg( 'sharedfile-exists' );
+			} elseif ( !$user->isAllowed( 'reupload-shared' ) ) {
+				$this->dieUsageMsg( 'cantoverwrite-sharedfile' );
 			}
 		}
 
@@ -89,7 +84,7 @@ class ApiMove extends ApiBase {
 		}
 
 		$r = array( 'from' => $fromTitle->getPrefixedText(), 'to' => $toTitle->getPrefixedText(), 'reason' => $params['reason'] );
-		if ( !$params['noredirect'] || !$wgUser->isAllowed( 'suppressredirect' ) ) {
+		if ( !$params['noredirect'] || !$user->isAllowed( 'suppressredirect' ) ) {
 			$r['redirectcreated'] = '';
 		}
 
@@ -107,15 +102,18 @@ class ApiMove extends ApiBase {
 			}
 		}
 
+		$result = $this->getResult();
+
 		// Move subpages
 		if ( $params['movesubpages'] ) {
 			$r['subpages'] = $this->moveSubpages( $fromTitle, $toTitle,
 					$params['reason'], $params['noredirect'] );
-			$this->getResult()->setIndexedTagName( $r['subpages'], 'subpage' );
+			$result->setIndexedTagName( $r['subpages'], 'subpage' );
+
 			if ( $params['movetalk'] ) {
 				$r['subpages-talk'] = $this->moveSubpages( $fromTalk, $toTalk,
 					$params['reason'], $params['noredirect'] );
-				$this->getResult()->setIndexedTagName( $r['subpages-talk'], 'subpage' );
+				$result->setIndexedTagName( $r['subpages-talk'], 'subpage' );
 			}
 		}
 
@@ -132,9 +130,16 @@ class ApiMove extends ApiBase {
 		$this->setWatch( $watch, $fromTitle, 'watchmoves' );
 		$this->setWatch( $watch, $toTitle, 'watchmoves' );
 
-		$this->getResult()->addValue( null, $this->getModuleName(), $r );
+		$result->addValue( null, $this->getModuleName(), $r );
 	}
 
+	/**
+	 * @param Title $fromTitle
+	 * @param Title $toTitle
+	 * @param  $reason
+	 * @param  $noredirect
+	 * @return array
+	 */
 	public function moveSubpages( $fromTitle, $toTitle, $reason, $noredirect ) {
 		$retval = array();
 		$success = $fromTitle->moveSubpages( $toTitle, true, $reason, !$noredirect );
@@ -224,13 +229,16 @@ class ApiMove extends ApiBase {
 	}
 
 	public function getPossibleErrors() {
-		return array_merge( parent::getPossibleErrors(), array(
-			array( 'invalidtitle', 'from' ),
-			array( 'nosuchpageid', 'fromid' ),
-			array( 'notanarticle' ),
-			array( 'invalidtitle', 'to' ),
-			array( 'sharedfile-exists' ),
-		) );
+		return array_merge( parent::getPossibleErrors(),
+			$this->getRequireOnlyOneParameterErrorMessages( array( 'from', 'fromid' ) ),
+			array(
+				array( 'invalidtitle', 'from' ),
+				array( 'nosuchpageid', 'fromid' ),
+				array( 'notanarticle' ),
+				array( 'invalidtitle', 'to' ),
+				array( 'sharedfile-exists' ),
+			)
+		);
 	}
 
 	public function needsToken() {
@@ -241,13 +249,17 @@ class ApiMove extends ApiBase {
 		return '';
 	}
 
-	protected function getExamples() {
+	public function getExamples() {
 		return array(
 			'api.php?action=move&from=Exampel&to=Example&token=123ABC&reason=Misspelled%20title&movetalk=&noredirect='
 		);
 	}
 
+	public function getHelpUrls() {
+		return 'https://www.mediawiki.org/wiki/API:Move';
+	}
+
 	public function getVersion() {
-		return __CLASS__ . ': $Id: ApiMove.php 77192 2010-11-23 22:05:27Z btongminh $';
+		return __CLASS__ . ': $Id$';
 	}
 }

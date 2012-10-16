@@ -1,6 +1,6 @@
 <?php
 /**
- * API for MediaWiki 1.8+
+ *
  *
  * Created on Sep 25, 2006
  *
@@ -24,11 +24,6 @@
  * @file
  */
 
-if ( !defined( 'MEDIAWIKI' ) ) {
-	// Eclipse helper - will be ignored in production
-	require_once( 'ApiQueryBase.php' );
-}
-
 /**
  * A query module to show basic page information.
  *
@@ -41,12 +36,23 @@ class ApiQueryInfo extends ApiQueryBase {
 		$fld_readable = false, $fld_watched = false,
 		$fld_preload = false, $fld_displaytitle = false;
 
+	private $params, $titles, $missing, $everything, $pageCounter;
+
+	private $pageRestrictions, $pageIsRedir, $pageIsNew, $pageTouched,
+		$pageLatest, $pageLength;
+
+	private $protections, $watched, $talkids, $subjectids, $displaytitles;
+
 	private $tokenFunctions;
 
 	public function __construct( $query, $moduleName ) {
 		parent::__construct( $query, $moduleName, 'in' );
 	}
 
+	/**
+	 * @param $pageSet ApiPageSet
+	 * @return void
+	 */
 	public function requestExtraData( $pageSet ) {
 		global $wgDisableCounters;
 
@@ -65,7 +71,7 @@ class ApiQueryInfo extends ApiQueryBase {
 	 * Get an array mapping token names to their handler functions.
 	 * The prototype for a token function is func($pageid, $title)
 	 * it should return a token or false (permission denied)
-	 * @return array(tokenname => function)
+	 * @return array array(tokenname => function)
 	 */
 	protected function getTokenFunctions() {
 		// Don't call the hooks twice
@@ -87,6 +93,7 @@ class ApiQueryInfo extends ApiQueryBase {
 			'unblock' => array( 'ApiQueryInfo', 'getUnblockToken' ),
 			'email' => array( 'ApiQueryInfo', 'getEmailToken' ),
 			'import' => array( 'ApiQueryInfo', 'getImportToken' ),
+			'watch' => array( 'ApiQueryInfo', 'getWatchToken'),
 		);
 		wfRunHooks( 'APIQueryInfoTokens', array( &$this->tokenFunctions ) );
 		return $this->tokenFunctions;
@@ -107,7 +114,7 @@ class ApiQueryInfo extends ApiQueryBase {
 			return $cachedEditToken;
 		}
 
-		$cachedEditToken = $wgUser->editToken();
+		$cachedEditToken = $wgUser->getEditToken();
 		return $cachedEditToken;
 	}
 
@@ -122,7 +129,7 @@ class ApiQueryInfo extends ApiQueryBase {
 			return $cachedDeleteToken;
 		}
 
-		$cachedDeleteToken = $wgUser->editToken();
+		$cachedDeleteToken = $wgUser->getEditToken();
 		return $cachedDeleteToken;
 	}
 
@@ -137,7 +144,7 @@ class ApiQueryInfo extends ApiQueryBase {
 			return $cachedProtectToken;
 		}
 
-		$cachedProtectToken = $wgUser->editToken();
+		$cachedProtectToken = $wgUser->getEditToken();
 		return $cachedProtectToken;
 	}
 
@@ -152,7 +159,7 @@ class ApiQueryInfo extends ApiQueryBase {
 			return $cachedMoveToken;
 		}
 
-		$cachedMoveToken = $wgUser->editToken();
+		$cachedMoveToken = $wgUser->getEditToken();
 		return $cachedMoveToken;
 	}
 
@@ -167,7 +174,7 @@ class ApiQueryInfo extends ApiQueryBase {
 			return $cachedBlockToken;
 		}
 
-		$cachedBlockToken = $wgUser->editToken();
+		$cachedBlockToken = $wgUser->getEditToken();
 		return $cachedBlockToken;
 	}
 
@@ -187,13 +194,13 @@ class ApiQueryInfo extends ApiQueryBase {
 			return $cachedEmailToken;
 		}
 
-		$cachedEmailToken = $wgUser->editToken();
+		$cachedEmailToken = $wgUser->getEditToken();
 		return $cachedEmailToken;
 	}
 
 	public static function getImportToken( $pageid, $title ) {
 		global $wgUser;
-		if ( !$wgUser->isAllowed( 'import' ) ) {
+		if ( !$wgUser->isAllowedAny( 'import', 'importupload' ) ) {
 			return false;
 		}
 
@@ -202,8 +209,23 @@ class ApiQueryInfo extends ApiQueryBase {
 			return $cachedImportToken;
 		}
 
-		$cachedImportToken = $wgUser->editToken();
+		$cachedImportToken = $wgUser->getEditToken();
 		return $cachedImportToken;
+	}
+
+	public static function getWatchToken( $pageid, $title ) {
+		global $wgUser;
+		if ( !$wgUser->isLoggedIn() ) {
+			return false;
+		}
+
+		static $cachedWatchToken = null;
+		if ( !is_null( $cachedWatchToken ) ) {
+			return $cachedWatchToken;
+		}
+
+		$cachedWatchToken = $wgUser->getEditToken( 'watch' );
+		return $cachedWatchToken;
 	}
 
 	public function execute() {
@@ -353,10 +375,10 @@ class ApiQueryInfo extends ApiQueryBase {
 		}
 
 		if ( $this->fld_url ) {
-			$pageInfo['fullurl'] = $title->getFullURL();
-			$pageInfo['editurl'] = $title->getFullURL( 'action=edit' );
+			$pageInfo['fullurl'] = wfExpandUrl( $title->getFullURL(), PROTO_CURRENT );
+			$pageInfo['editurl'] = wfExpandUrl( $title->getFullURL( 'action=edit' ), PROTO_CURRENT );
 		}
-		if ( $this->fld_readable && $title->userCanRead() ) {
+		if ( $this->fld_readable && $title->userCan( 'read' ) ) {
 			$pageInfo['readable'] = '';
 		}
 
@@ -386,6 +408,7 @@ class ApiQueryInfo extends ApiQueryBase {
 	 * Get information about protections and put it in $protections
 	 */
 	private function getProtectionInfo() {
+		global $wgContLang;
 		$this->protections = array();
 		$db = $this->getDB();
 
@@ -404,7 +427,7 @@ class ApiQueryInfo extends ApiQueryBase {
 				$a = array(
 					'type' => $row->pr_type,
 					'level' => $row->pr_level,
-					'expiry' => Block::decodeExpiry( $row->pr_expiry, TS_ISO_8601 )
+					'expiry' => $wgContLang->formatExpiry( $row->pr_expiry, TS_ISO_8601 )
 				);
 				if ( $row->pr_cascade ) {
 					$a['cascade'] = '';
@@ -461,7 +484,7 @@ class ApiQueryInfo extends ApiQueryBase {
 				$this->protections[$row->pt_namespace][$row->pt_title][] = array(
 					'type' => 'create',
 					'level' => $row->pt_create_perm,
-					'expiry' => Block::decodeExpiry( $row->pt_expiry, TS_ISO_8601 )
+					'expiry' => $wgContLang->formatExpiry( $row->pt_expiry, TS_ISO_8601 )
 				);
 			}
 		}
@@ -495,7 +518,7 @@ class ApiQueryInfo extends ApiQueryBase {
 				$this->protections[$row->tl_namespace][$row->tl_title][] = array(
 					'type' => $row->pr_type,
 					'level' => $row->pr_level,
-					'expiry' => Block::decodeExpiry( $row->pr_expiry, TS_ISO_8601 ),
+					'expiry' => $wgContLang->formatExpiry( $row->pr_expiry, TS_ISO_8601 ),
 					'source' => $source->getPrefixedText()
 				);
 			}
@@ -518,7 +541,7 @@ class ApiQueryInfo extends ApiQueryBase {
 				$this->protections[NS_FILE][$row->il_to][] = array(
 					'type' => $row->pr_type,
 					'level' => $row->pr_level,
-					'expiry' => Block::decodeExpiry( $row->pr_expiry, TS_ISO_8601 ),
+					'expiry' => $wgContLang->formatExpiry( $row->pr_expiry, TS_ISO_8601 ),
 					'source' => $source->getPrefixedText()
 				);
 			}
@@ -591,9 +614,9 @@ class ApiQueryInfo extends ApiQueryBase {
 	 * Get information about watched status and put it in $this->watched
 	 */
 	private function getWatchedInfo() {
-		global $wgUser;
+		$user = $this->getUser();
 
-		if ( $wgUser->isAnon() || count( $this->everything ) == 0 ) {
+		if ( $user->isAnon() || count( $this->everything ) == 0 ) {
 			return;
 		}
 
@@ -607,7 +630,7 @@ class ApiQueryInfo extends ApiQueryBase {
 		$this->addFields( array( 'wl_title', 'wl_namespace' ) );
 		$this->addWhere( array(
 			$lb->constructSet( 'wl', $db ),
-			'wl_user' => $wgUser->getID()
+			'wl_user' => $user->getID()
 		) );
 
 		$res = $this->select( __METHOD__ );
@@ -693,14 +716,18 @@ class ApiQueryInfo extends ApiQueryBase {
 		) );
 	}
 
-	protected function getExamples() {
+	public function getExamples() {
 		return array(
 			'api.php?action=query&prop=info&titles=Main%20Page',
 			'api.php?action=query&prop=info&inprop=protection&titles=Main%20Page'
 		);
 	}
 
+	public function getHelpUrls() {
+		return 'https://www.mediawiki.org/wiki/API:Properties#info_.2F_in';
+	}
+
 	public function getVersion() {
-		return __CLASS__ . ': $Id: ApiQueryInfo.php 78439 2010-12-15 14:23:46Z catrope $';
+		return __CLASS__ . ': $Id$';
 	}
 }

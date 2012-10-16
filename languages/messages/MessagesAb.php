@@ -1,5 +1,5 @@
 <?php
-/** Abkhazian (Аҧсуа)
+/** Abkhazian (Аҧсшәа)
  *
  * See MessagesQqq.php for message documentation incl. usage of parameters
  * To improve a translation please visit http://translatewiki.net
@@ -56,24 +56,27 @@ $namespaceAliases = array(
 	'Обсуждение_категории' => NS_CATEGORY_TALK
 );
 
+// Remove Russian aliases
+$namespaceGenderAliases = array();
+
 $specialPageAliases = array(
-	'Recentchanges'             => array( 'АрҽеираҾыцқәа' ),
-	'Upload'                    => array( 'Аҭагалара' ),
-	'Newimages'                 => array( 'АфаилқәаҾыц' ),
-	'Randompage'                => array( 'Машәырлатәи' ),
-	'Newpages'                  => array( 'АдаҟьақәаҾыц' ),
-	'Specialpages'              => array( 'ЦастәиАдаҟьақәа' ),
 	'Categories'                => array( 'Акатегориақәа' ),
+	'Mycontributions'           => array( 'Архиарақәа' ),
 	'Mypage'                    => array( 'Садаҟьа' ),
 	'Mytalk'                    => array( 'Сахцәажәара' ),
-	'Mycontributions'           => array( 'Архиарақәа' ),
+	'Newimages'                 => array( 'АфаилқәаҾыц' ),
+	'Newpages'                  => array( 'АдаҟьақәаҾыц' ),
+	'Randompage'                => array( 'Машәырлатәи' ),
+	'Recentchanges'             => array( 'АрҽеираҾыцқәа' ),
 	'Search'                    => array( 'Аҧшаара' ),
+	'Specialpages'              => array( 'ЦастәиАдаҟьақәа' ),
+	'Upload'                    => array( 'Аҭагалара' ),
 );
 
 $magicWords = array(
-	'language'              => array( '0', '#АБЫЗШӘА:', '#ЯЗЫК:', '#LANGUAGE:' ),
-	'special'               => array( '0', 'цастәи', 'служебная', 'special' ),
-	'index'                 => array( '1', '__АИНДЕКС__', '__ИНДЕКС__', '__INDEX__' ),
+	'language'                => array( '0', '#АБЫЗШӘА:', '#ЯЗЫК:', '#LANGUAGE:' ),
+	'special'                 => array( '0', 'цастәи', 'служебная', 'special' ),
+	'index'                   => array( '1', '__АИНДЕКС__', '__ИНДЕКС__', '__INDEX__' ),
 );
 
 $messages = array(
@@ -218,7 +221,7 @@ $messages = array(
 # Groups
 'group-user' => 'Алахәылацәа',
 
-'group-user-member' => 'алахәыла',
+'group-user-member' => '{{GENDER:$1|алахәыла}}',
 
 'grouppage-sysop' => '{{ns:project}}:Администраторцәа',
 

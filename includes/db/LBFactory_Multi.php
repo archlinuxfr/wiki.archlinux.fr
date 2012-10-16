@@ -53,13 +53,16 @@ class LBFactory_Multi extends LBFactory {
 	var $conf, $mainLBs = array(), $extLBs = array();
 	var $lastWiki, $lastSection;
 
+	/**
+	 * @param $conf array
+	 */
 	function __construct( $conf ) {
 		$this->chronProt = new ChronologyProtector;
 		$this->conf = $conf;
 		$required = array( 'sectionsByDB', 'sectionLoads', 'serverTemplate' );
 		$optional = array( 'groupLoadsBySection', 'groupLoadsByDB', 'hostsByName',
 			'externalLoads', 'externalTemplateOverrides', 'templateOverridesByServer',
-			'templateOverridesByCluster', 'masterTemplateOverrides', 
+			'templateOverridesByCluster', 'masterTemplateOverrides',
 			'readOnlyBySection' );
 
 		foreach ( $required as $key ) {
@@ -83,6 +86,10 @@ class LBFactory_Multi extends LBFactory {
 		}
 	}
 
+	/**
+	 * @param $wiki bool|string
+	 * @return string
+	 */
 	function getSectionForWiki( $wiki = false ) {
 		if ( $this->lastWiki === $wiki ) {
 			return $this->lastSection;
@@ -98,6 +105,10 @@ class LBFactory_Multi extends LBFactory {
 		return $section;
 	}
 
+	/**
+	 * @param $wiki bool|string
+	 * @return LoadBalancer
+	 */
 	function newMainLB( $wiki = false ) {
 		list( $dbName, ) = $this->getDBNameAndPrefix( $wiki );
 		$section = $this->getSectionForWiki( $wiki );
@@ -111,6 +122,10 @@ class LBFactory_Multi extends LBFactory {
 		return $this->newLoadBalancer( $this->serverTemplate, $this->sectionLoads[$section], $groupLoads );
 	}
 
+	/**
+	 * @param $wiki bool|string
+	 * @return LoadBalancer
+	 */
 	function getMainLB( $wiki = false ) {
 		$section = $this->getSectionForWiki( $wiki );
 		if ( !isset( $this->mainLBs[$section] ) ) {
@@ -122,6 +137,11 @@ class LBFactory_Multi extends LBFactory {
 		return $this->mainLBs[$section];
 	}
 
+	/**
+	 * @param $cluster
+	 * @param $wiki
+	 * @return LoadBalancer
+	 */
 	function newExternalLB( $cluster, $wiki = false ) {
 		if ( !isset( $this->externalLoads[$cluster] ) ) {
 			throw new MWException( __METHOD__.": Unknown cluster \"$cluster\"" );
@@ -136,6 +156,11 @@ class LBFactory_Multi extends LBFactory {
 		return $this->newLoadBalancer( $template, $this->externalLoads[$cluster], array() );
 	}
 
+	/**
+	 * @param $cluster
+	 * @param $wiki
+	 * @return LoadBalancer
+	 */
 	function &getExternalLB( $cluster, $wiki = false ) {
 		if ( !isset( $this->extLBs[$cluster] ) ) {
 			$this->extLBs[$cluster] = $this->newExternalLB( $cluster, $wiki );
@@ -146,19 +171,29 @@ class LBFactory_Multi extends LBFactory {
 
 	/**
 	 * Make a new load balancer object based on template and load array
+	 *
+	 * @param $template
+	 * @param $loads array
+	 * @param $groupLoads
+	 * @return LoadBalancer
 	 */
 	function newLoadBalancer( $template, $loads, $groupLoads ) {
 		global $wgMasterWaitTimeout;
 		$servers = $this->makeServerArray( $template, $loads, $groupLoads );
 		$lb = new LoadBalancer( array(
 			'servers' => $servers,
-			'masterWaitTimeout' => $wgMasterWaitTimeout 
+			'masterWaitTimeout' => $wgMasterWaitTimeout
 		));
 		return $lb;
 	}
 
 	/**
 	 * Make a server array as expected by LoadBalancer::__construct, using a template and load array
+	 *
+	 * @param $template
+	 * @param $loads array
+	 * @param $groupLoads
+	 * @return array
 	 */
 	function makeServerArray( $template, $loads, $groupLoads ) {
 		$servers = array();
@@ -198,6 +233,8 @@ class LBFactory_Multi extends LBFactory {
 
 	/**
 	 * Take a group load array indexed by group then server, and reindex it by server then group
+	 * @param $groupLoads
+	 * @return array
 	 */
 	function reindexGroupLoads( $groupLoads ) {
 		$reindexed = array();
@@ -211,6 +248,8 @@ class LBFactory_Multi extends LBFactory {
 
 	/**
 	 * Get the database name and prefix based on the wiki ID
+	 * @param $wiki bool
+	 * @return array
 	 */
 	function getDBNameAndPrefix( $wiki = false ) {
 		if ( $wiki === false ) {
@@ -225,6 +264,8 @@ class LBFactory_Multi extends LBFactory {
 	 * Execute a function for each tracked load balancer
 	 * The callback is called with the load balancer as the first parameter,
 	 * and $params passed as the subsequent parameters.
+	 * @param $callback
+	 * @param $params array
 	 */
 	function forEachLB( $callback, $params = array() ) {
 		foreach ( $this->mainLBs as $lb ) {

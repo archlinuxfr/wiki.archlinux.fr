@@ -67,6 +67,9 @@ class MoveBatch extends Maintenance {
 			$this->error( "Unable to read file, exiting", true );
 		}
 		$wgUser = User::newFromName( $user );
+		if ( !$wgUser ) {
+			$this->error( "Invalid username", true );
+		}
 
 		# Setup complete, now start
 		$dbw = wfGetDB( DB_MASTER );
@@ -101,7 +104,7 @@ class MoveBatch extends Maintenance {
 			if ( $interval ) {
 				sleep( $interval );
 			}
-			wfWaitForSlaves( 5 );
+			wfWaitForSlaves();
 		}
 	}
 }

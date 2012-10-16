@@ -1,6 +1,6 @@
 <?php
 /**
- * API for MediaWiki 1.8+
+ *
  *
  * Created on Oct 19, 2006
  *
@@ -24,18 +24,13 @@
  * @file
  */
 
-if ( !defined( 'MEDIAWIKI' ) ) {
-	// Eclipse helper - will be ignored in production
-	require_once( 'ApiQueryBase.php' );
-}
-
 /**
  * A query action to enumerate the recent changes that were done to the wiki.
  * Various filters are supported.
  *
  * @ingroup API
  */
-class ApiQueryRecentChanges extends ApiQueryBase {
+class ApiQueryRecentChanges extends ApiQueryGeneratorBase {
 
 	public function __construct( $query, $moduleName ) {
 		parent::__construct( $query, $moduleName, 'rc' );
@@ -43,7 +38,8 @@ class ApiQueryRecentChanges extends ApiQueryBase {
 
 	private $fld_comment = false, $fld_parsedcomment = false, $fld_user = false, $fld_userid = false,
 			$fld_flags = false, $fld_timestamp = false, $fld_title = false, $fld_ids = false,
-			$fld_sizes = false, $fld_redirect = false, $fld_patrolled = false, $fld_loginfo = false, $fld_tags = false;
+			$fld_sizes = false, $fld_redirect = false, $fld_patrolled = false, $fld_loginfo = false,
+			$fld_tags = false, $token = array();
 
 	private $tokenFunctions;
 
@@ -51,7 +47,7 @@ class ApiQueryRecentChanges extends ApiQueryBase {
 	 * Get an array mapping token names to their handler functions.
 	 * The prototype for a token function is func($pageid, $title, $rc)
 	 * it should return a token or false (permission denied)
-	 * @return array(tokenname => function)
+	 * @return array array(tokenname => function)
 	 */
 	protected function getTokenFunctions() {
 		// Don't call the hooks twice
@@ -71,6 +67,12 @@ class ApiQueryRecentChanges extends ApiQueryBase {
 		return $this->tokenFunctions;
 	}
 
+	/**
+	 * @param  $pageid
+	 * @param  $title
+	 * @param $rc RecentChange
+	 * @return bool|String
+	 */
 	public static function getPatrolToken( $pageid, $title, $rc ) {
 		global $wgUser;
 		if ( !$wgUser->useRCPatrol() && ( !$wgUser->useNPPatrol() ||
@@ -82,9 +84,9 @@ class ApiQueryRecentChanges extends ApiQueryBase {
 		// The patrol token is always the same, let's exploit that
 		static $cachedPatrolToken = null;
 		if ( is_null( $cachedPatrolToken ) ) {
-			$cachedPatrolToken = $wgUser->editToken( 'patrol' );
+			$cachedPatrolToken = $wgUser->getEditToken( 'patrol' );
 		}
-		
+
 		return $cachedPatrolToken;
 	}
 
@@ -108,11 +110,21 @@ class ApiQueryRecentChanges extends ApiQueryBase {
 		$this->fld_tags = isset( $prop['tags'] );
 	}
 
+	public function execute() {
+		$this->run();
+	}
+
+	public function executeGenerator( $resultPageSet ) {
+		$this->run( $resultPageSet );
+	}
+
 	/**
 	 * Generates and outputs the result of this query based upon the provided parameters.
+	 *
+	 * @param $resultPageSet ApiPageSet
 	 */
-	public function execute() {
-		global $wgUser;
+	public function run( $resultPageSet = null ) {
+		$user = $this->getUser();
 		/* Get the parameters of the request. */
 		$params = $this->extractRequestParams();
 
@@ -123,7 +135,7 @@ class ApiQueryRecentChanges extends ApiQueryBase {
 		 */
 		$this->addTables( 'recentchanges' );
 		$index = array( 'recentchanges' => 'rc_timestamp' ); // May change
-		$this->addWhereRange( 'rc_timestamp', $params['dir'], $params['start'], $params['end'] );
+		$this->addTimestampWhereRange( 'rc_timestamp', $params['dir'], $params['start'], $params['end'] );
 		$this->addWhereFld( 'rc_namespace', $params['namespace'] );
 		$this->addWhereFld( 'rc_deleted', 0 );
 
@@ -140,14 +152,13 @@ class ApiQueryRecentChanges extends ApiQueryBase {
 					|| ( isset( $show['anon'] ) && isset( $show['!anon'] ) )
 					|| ( isset( $show['redirect'] ) && isset( $show['!redirect'] ) )
 					|| ( isset( $show['patrolled'] ) && isset( $show['!patrolled'] ) )
-			)
-			{
-				$this->dieUsageMsg( array( 'show' ) );
+			) {
+				$this->dieUsageMsg( 'show' );
 			}
 
 			// Check permissions
 			if ( isset( $show['patrolled'] ) || isset( $show['!patrolled'] ) ) {
-				if ( !$wgUser->useRCPatrol() && !$wgUser->useNPPatrol() ) {
+				if ( !$user->useRCPatrol() && !$user->useNPPatrol() ) {
 					$this->dieUsage( 'You need the patrol right to request the patrolled flag', 'permissiondenied' );
 				}
 			}
@@ -195,6 +206,7 @@ class ApiQueryRecentChanges extends ApiQueryBase {
 			'rc_deleted'
 		) );
 
+		$showRedirects = false;
 		/* Determine what properties we need to display. */
 		if ( !is_null( $params['prop'] ) ) {
 			$prop = array_flip( $params['prop'] );
@@ -202,38 +214,36 @@ class ApiQueryRecentChanges extends ApiQueryBase {
 			/* Set up internal members based upon params. */
 			$this->initProperties( $prop );
 
-			if ( $this->fld_patrolled && !$wgUser->useRCPatrol() && !$wgUser->useNPPatrol() ) {
+			if ( $this->fld_patrolled && !$user->useRCPatrol() && !$user->useNPPatrol() ) {
 				$this->dieUsage( 'You need the patrol right to request the patrolled flag', 'permissiondenied' );
 			}
 
 			/* Add fields to our query if they are specified as a needed parameter. */
-			$this->addFieldsIf( 'rc_id', $this->fld_ids );
-			$this->addFieldsIf( 'rc_this_oldid', $this->fld_ids );
-			$this->addFieldsIf( 'rc_last_oldid', $this->fld_ids );
+			$this->addFieldsIf( array( 'rc_id', 'rc_this_oldid', 'rc_last_oldid' ), $this->fld_ids );
 			$this->addFieldsIf( 'rc_comment', $this->fld_comment || $this->fld_parsedcomment );
 			$this->addFieldsIf( 'rc_user', $this->fld_user );
 			$this->addFieldsIf( 'rc_user_text', $this->fld_user || $this->fld_userid );
-			$this->addFieldsIf( 'rc_minor', $this->fld_flags );
-			$this->addFieldsIf( 'rc_bot', $this->fld_flags );
-			$this->addFieldsIf( 'rc_new', $this->fld_flags );
-			$this->addFieldsIf( 'rc_old_len', $this->fld_sizes );
-			$this->addFieldsIf( 'rc_new_len', $this->fld_sizes );
+			$this->addFieldsIf( array( 'rc_minor', 'rc_new', 'rc_bot' ) , $this->fld_flags );
+			$this->addFieldsIf( array( 'rc_old_len', 'rc_new_len' ), $this->fld_sizes );
 			$this->addFieldsIf( 'rc_patrolled', $this->fld_patrolled );
-			$this->addFieldsIf( 'rc_logid', $this->fld_loginfo );
-			$this->addFieldsIf( 'rc_log_type', $this->fld_loginfo );
-			$this->addFieldsIf( 'rc_log_action', $this->fld_loginfo );
-			$this->addFieldsIf( 'rc_params', $this->fld_loginfo );
-			if ( $this->fld_redirect || isset( $show['redirect'] ) || isset( $show['!redirect'] ) ) {
-				$this->addTables( 'page' );
-				$this->addJoinConds( array( 'page' => array( 'LEFT JOIN', array( 'rc_namespace=page_namespace', 'rc_title=page_title' ) ) ) );
-				$this->addFields( 'page_is_redirect' );
-			}
+			$this->addFieldsIf( array( 'rc_logid', 'rc_log_type', 'rc_log_action', 'rc_params' ), $this->fld_loginfo );
+			$showRedirects = $this->fld_redirect || isset( $show['redirect'] ) || isset( $show['!redirect'] );
 		}
 
 		if ( $this->fld_tags ) {
 			$this->addTables( 'tag_summary' );
 			$this->addJoinConds( array( 'tag_summary' => array( 'LEFT JOIN', array( 'rc_id=ts_rc_id' ) ) ) );
 			$this->addFields( 'ts_tags' );
+		}
+
+		if ( $params['toponly'] || $showRedirects ) {
+			$this->addTables( 'page' );
+			$this->addJoinConds( array( 'page' => array( 'LEFT JOIN', array( 'rc_namespace=page_namespace', 'rc_title=page_title' ) ) ) );
+			$this->addFields( 'page_is_redirect' );
+
+			if ( $params['toponly'] ) {
+				$this->addWhere( 'rc_this_oldid = page_latest' );
+			}
 		}
 
 		if ( !is_null( $params['tag'] ) ) {
@@ -252,6 +262,10 @@ class ApiQueryRecentChanges extends ApiQueryBase {
 		/* Perform the actual query. */
 		$res = $this->select( __METHOD__ );
 
+		$titles = array();
+
+		$result = $this->getResult();
+
 		/* Iterate through the rows, adding data extracted from them to our query result. */
 		foreach ( $res as $row ) {
 			if ( ++ $count > $params['limit'] ) {
@@ -260,22 +274,30 @@ class ApiQueryRecentChanges extends ApiQueryBase {
 				break;
 			}
 
-			/* Extract the data from a single row. */
-			$vals = $this->extractRowInfo( $row );
+			if ( is_null( $resultPageSet ) ) {
+				/* Extract the data from a single row. */
+				$vals = $this->extractRowInfo( $row );
 
-			/* Add that row's data to our final output. */
-			if ( !$vals ) {
-				continue;
-			}
-			$fit = $this->getResult()->addValue( array( 'query', $this->getModuleName() ), null, $vals );
-			if ( !$fit ) {
-				$this->setContinueEnumParameter( 'start', wfTimestamp( TS_ISO_8601, $row->rc_timestamp ) );
-				break;
+				/* Add that row's data to our final output. */
+				if ( !$vals ) {
+					continue;
+				}
+				$fit = $result->addValue( array( 'query', $this->getModuleName() ), null, $vals );
+				if ( !$fit ) {
+					$this->setContinueEnumParameter( 'start', wfTimestamp( TS_ISO_8601, $row->rc_timestamp ) );
+					break;
+				}
+			} else {
+				$titles[] = Title::makeTitle( $row->rc_namespace, $row->rc_title );
 			}
 		}
 
-		/* Format the result */
-		$this->getResult()->setIndexedTagName_internal( array( 'query', $this->getModuleName() ), 'rc' );
+		if ( is_null( $resultPageSet ) ) {
+			/* Format the result */
+			$result->setIndexedTagName_internal( array( 'query', $this->getModuleName() ), 'rc' );
+		} else {
+			$resultPageSet->populateFromTitles( $titles );
+		}
 	}
 
 	/**
@@ -288,8 +310,7 @@ class ApiQueryRecentChanges extends ApiQueryBase {
 	public function extractRowInfo( $row ) {
 		/* If page was moved somewhere, get the title of the move target. */
 		$movedToTitle = false;
-		if ( isset( $row->rc_moved_to_title ) && $row->rc_moved_to_title !== '' )
-		{
+		if ( isset( $row->rc_moved_to_title ) && $row->rc_moved_to_title !== '' ) {
 			$movedToTitle = Title::makeTitle( $row->rc_moved_to_ns, $row->rc_moved_to_title );
 		}
 
@@ -384,8 +405,7 @@ class ApiQueryRecentChanges extends ApiQueryBase {
 		}
 
 		if ( $this->fld_parsedcomment && isset( $row->rc_comment ) ) {
-			global $wgUser;
-			$vals['parsedcomment'] = $wgUser->getSkin()->formatComment( $row->rc_comment, $title );
+			$vals['parsedcomment'] = Linker::formatComment( $row->rc_comment, $title );
 		}
 
 		if ( $this->fld_redirect ) {
@@ -405,8 +425,11 @@ class ApiQueryRecentChanges extends ApiQueryBase {
 			$vals['logaction'] = $row->rc_log_action;
 			ApiQueryLogEvents::addLogParams(
 				$this->getResult(),
-				$vals, $row->rc_params,
-				$row->rc_log_type, $row->rc_timestamp
+				$vals,
+				$row->rc_params,
+				$row->rc_log_action,
+				$row->rc_log_type,
+				$row->rc_timestamp
 			);
 		}
 
@@ -550,15 +573,17 @@ class ApiQueryRecentChanges extends ApiQueryBase {
 					'new',
 					'log'
 				)
-			)
+			),
+			'toponly' => false,
 		);
 	}
 
 	public function getParamDescription() {
+		$p = $this->getModulePrefix();
 		return array(
 			'start' => 'The timestamp to start enumerating from',
 			'end' => 'The timestamp to end enumerating',
-			'dir' => 'In which direction to enumerate',
+			'dir' => $this->getDirectionDescription( $p ),
 			'namespace' => 'Filter log entries to only this namespace(s)',
 			'user' => 'Only list changes by this user',
 			'excludeuser' => 'Don\'t list changes by this user',
@@ -571,21 +596,22 @@ class ApiQueryRecentChanges extends ApiQueryBase {
 				' flags          - Adds flags for the edit',
 				' timestamp      - Adds timestamp of the edit',
 				' title          - Adds the page title of the edit',
-				' ids            - Adds the page id, recent changes id and the new and old revision id',
+				' ids            - Adds the page ID, recent changes ID and the new and old revision ID',
 				' sizes          - Adds the new and old page length in bytes',
 				' redirect       - Tags edit if page is a redirect',
-				' patrolled      - Tags edits have have been patrolled',
+				' patrolled      - Tags edits that have been patrolled',
 				' loginfo        - Adds log information (logid, logtype, etc) to log entries',
 				' tags           - Lists tags for the entry',
 			),
 			'token' => 'Which tokens to obtain for each change',
 			'show' => array(
 				'Show only items that meet this criteria.',
-				"For example, to see only minor edits done by logged-in users, set {$this->getModulePrefix()}show=minor|!anon"
+				"For example, to see only minor edits done by logged-in users, set {$p}show=minor|!anon"
 			),
 			'type' => 'Which types of changes to show',
 			'limit' => 'How many total changes to return',
 			'tag' => 'Only list changes tagged with this tag',
+			'toponly' => 'Only list changes which are the latest revision',
 		);
 	}
 
@@ -601,13 +627,17 @@ class ApiQueryRecentChanges extends ApiQueryBase {
 		) );
 	}
 
-	protected function getExamples() {
+	public function getExamples() {
 		return array(
 			'api.php?action=query&list=recentchanges'
 		);
 	}
 
+	public function getHelpUrls() {
+		return 'https://www.mediawiki.org/wiki/API:Recentchanges';
+	}
+
 	public function getVersion() {
-		return __CLASS__ . ': $Id: ApiQueryRecentChanges.php 78437 2010-12-15 14:14:16Z catrope $';
+		return __CLASS__ . ': $Id$';
 	}
 }
