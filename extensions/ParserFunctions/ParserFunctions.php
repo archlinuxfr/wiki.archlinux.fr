@@ -29,28 +29,11 @@ $wgPFStringLengthLimit = 1000;
  */
 $wgPFEnableStringFunctions = false;
 
-/**
- * Enable Convert parser for converting between units of measurement
- */
-$wgPFEnableConvert = false;
-
-/**
- * The language for 'en' is actually 'en-us', which insists on using non-canonical translations
- * of the SI base units ("meter" rather than "metre" and "liter" rather than "litre").  We
- * can avoid contaminatng dialects by internally mapping languages by default; this is
- * configurable so you can remove it if you like, or add other maps if that's useful.
- * Essentially, if your wiki's $wgContLang appears as a key in this array, the value is
- * what is used as the default language for {{#convert}} output.
- */
-$wgPFUnitLanguageVariants = array(
-   'en' => 'en-gb'
-);
-
 /** REGISTRATION */
 $wgExtensionCredits['parserhook'][] = array(
 	'path' => __FILE__,
 	'name' => 'ParserFunctions',
-	'version' => '1.4.1',
+	'version' => '1.5.1',
 	'url' => 'https://www.mediawiki.org/wiki/Extension:ParserFunctions',
 	'author' => array( 'Tim Starling', 'Robert Rohde', 'Ross McClure', 'Juraj Simlovic' ),
 	'descriptionmsg' => 'pfunc_desc',
@@ -58,14 +41,13 @@ $wgExtensionCredits['parserhook'][] = array(
 
 $wgAutoloadClasses['ExtParserFunctions'] = dirname( __FILE__ ) . '/ParserFunctions_body.php';
 $wgAutoloadClasses['ExprParser'] = dirname( __FILE__ ) . '/Expr.php';
-$wgAutoloadClasses['ConvertParser'] = dirname( __FILE__ ) . '/Convert.php';
+$wgAutoloadClasses['ExprError'] = dirname( __FILE__ ) . '/Expr.php';
 
 $wgExtensionMessagesFiles['ParserFunctions'] = dirname( __FILE__ ) . '/ParserFunctions.i18n.php';
 $wgExtensionMessagesFiles['ParserFunctionsMagic'] = dirname( __FILE__ ) . '/ParserFunctions.i18n.magic.php';
 
 $wgParserTestFiles[] = dirname( __FILE__ ) . "/funcsParserTests.txt";
 $wgParserTestFiles[] = dirname( __FILE__ ) . "/stringFunctionTests.txt";
-$wgParserTestFiles[] = dirname( __FILE__ ) . "/convertTests.txt";
 
 $wgHooks['ParserFirstCallInit'][] = 'wfRegisterParserFunctions';
 
@@ -74,7 +56,7 @@ $wgHooks['ParserFirstCallInit'][] = 'wfRegisterParserFunctions';
  * @return bool
  */
 function wfRegisterParserFunctions( $parser ) {
-	global $wgPFEnableStringFunctions, $wgPFEnableConvert;
+	global $wgPFEnableStringFunctions;
 
 	// These functions accept DOM-style arguments
 	$parser->setFunctionHook( 'if', 'ExtParserFunctions::ifObj', SFH_OBJECT_ARGS );
@@ -102,9 +84,16 @@ function wfRegisterParserFunctions( $parser ) {
 		$parser->setFunctionHook( 'urldecode', 'ExtParserFunctions::runUrlDecode' );
 	}
 
-	if( $wgPFEnableConvert ) {
-		$parser->setFunctionHook( 'convert', 'ExtParserFunctions::convert' );
-	}
+	return true;
+}
 
+$wgHooks['UnitTestsList'][] = 'wfParserFunctionsTests';
+
+/**
+ * @param $files array
+ * @return bool
+ */
+function wfParserFunctionsTests( &$files ) {
+	$files[] = dirname( __FILE__ ) . '/tests/ExpressionTest.php';
 	return true;
 }
