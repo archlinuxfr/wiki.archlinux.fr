@@ -10,7 +10,7 @@
 #archnavbar { height: 40px !important; padding: 10px 15px !important; background: #333 !important; border-bottom: 5px #08c solid !important; }
 
 /* logo trickery -- GIF for IE6 and PNG for the rest */
-#archnavbarlogo { float: left !important; margin: 0 !important; padding: 0 !important; height: 40px !important; width: 190px !important; }
+#archnavbarlogo { float: left !important; margin: 0 !important; padding: 0 !important; height: 50px !important; width: 200px !important; }
 /* IE6 doesn't support alpha PNGs so we serve it a GIF */
 #archnavbarlogo { background: url('archlogo.gif') no-repeat !important; }
 /* and use a proper PNG for all other modern browsers */
