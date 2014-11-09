@@ -45,14 +45,20 @@ class PhpBBAuthPlugin extends AuthPlugin {
 	}
 
 	private function checkHash ($password, $hash) {
-		// We need to use PasswordHash function to resolv phpbb3 hashed passwords, see function phpbb_hash in phpbb3/includes/functions.php
-		$t_hasher = new PasswordHash(8, TRUE);
-		if (strlen($hash) == 34)
-		{
-			return ($t_hasher->crypt_private($password, $hash) === $hash) ? true : false;
-		}
-		return (md5($password) === $hash) ? true : false;
-	}
+        if (strlen($hash) == 34)
+        {
+            // We need to use PasswordHash function to resolv phpbb3.0 hashed passwords, see function phpbb_hash in phpbb3/includes/functions.php
+            $t_hasher = new PasswordHash(8, TRUE);
+            return ($t_hasher->crypt_private($password, $hash) === $hash) ? true : false;
+        }
+        else if (strlen($hash) == 60)
+        {
+            // We need to resolv phpbb3.1 hashed passwords with bcrypt_2y (see function phpbb/passwords/driver/bcrypt.php)
+            $salt = substr($hash, 0, 29);
+            return $hash === crypt($password, $salt);
+        }
+        return (md5($password) === $hash) ? true : false;
+    }
 
 
 	public function authenticate( $username, $password ) {
