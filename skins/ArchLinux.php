@@ -78,10 +78,7 @@ class ArchLinuxTemplate extends BaseTemplate {
 		<p><a id="logo" href="<?php if (isset($wgArchHome)) { echo $wgArchHome; } ?>"></a></p>
 	</div>
 	<div id="archnavbarmenu">
-		<input type="radio" id="archnavbarbutshowr" name="archnavbarbutradio">
-		<input type="radio" id="archnavbarbuthider" name="archnavbarbutradio" checked="checked">
-		<label for="archnavbarbutshowr" id="archnavbarbutshowl"> </label>
-		<label for="archnavbarbuthider" id="archnavbarbuthidel"> </label>
+		<i id="archnavbaropenmenu"></i>
 		<ul id="archnavbarlist">
 			<?php
 			if (isset($wgArchNavBar)) {
