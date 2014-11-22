@@ -61,9 +61,6 @@ div#footer { color: #888; background-color: transparent; border-top: none; borde
 /* and now for the other browsers that work properly */
 html > body #footer ul { margin-left: 170px; }
 
-/* highlight current website in the navbar */
-#archnavbar ul li.anb-selected a { color: white !important; }
-
 /* don't highlight https links */
 #bodyContent a.external[href ^="https://"], .link-https { background: none; padding: 0; }
 
