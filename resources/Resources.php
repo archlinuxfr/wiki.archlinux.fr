@@ -92,7 +92,6 @@ return array(
 			'common/commonContent.css' => array( 'media' => 'screen' ),
 			'common/commonInterface.css' => array( 'media' => 'screen' ),
 			'archlinux/main.css' => array( 'media' => 'screen' ),
-			'archlinux/archnavbar.css' => array( 'media' => 'screen' ),
 			'archlinux/arch.css' => array( 'media' => 'screen' ),
 			'archlinux/print.css' => array( 'media' => 'print' ),
 		),

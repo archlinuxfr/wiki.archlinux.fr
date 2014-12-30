@@ -43,6 +43,8 @@ class SkinArchLinux extends SkinTemplate {
 		parent::setupSkinUserCss( $out );
 
 		$out->addModuleStyles( 'skins.archlinux' );
+		$out->addStyle( '//archlinux.fr/commun/archnavbar.css', 'screen' );
+		$out->addStyle( '//archlinux.fr/commun/archfr.css', 'screen' );
 
 		// TODO: Migrate all of these
 		$out->addStyle( 'archlinux/IE60Fixes.css', 'screen', 'IE 6' );
@@ -78,6 +80,7 @@ class ArchLinuxTemplate extends BaseTemplate {
 		<p><a id="logo" href="<?php if (isset($wgArchHome)) { echo $wgArchHome; } ?>"></a></p>
 	</div>
 	<div id="archnavbarmenu">
+		<i id="archnavbaropenmenu"></i>
 		<ul id="archnavbarlist">
 			<?php
 			if (isset($wgArchNavBar)) {
