@@ -28,9 +28,9 @@
  * @ingroup API
  */
 class ApiProtect extends ApiBase {
-
 	public function execute() {
-		global $wgRestrictionLevels;
+		global $wgContLang;
+
 		$params = $this->extractRequestParams();
 
 		$pageObj = $this->getTitleOrPageId( $params, 'fromdbmaster' );
@@ -47,7 +47,11 @@ class ApiProtect extends ApiBase {
 			if ( count( $expiry ) == 1 ) {
 				$expiry = array_fill( 0, count( $params['protections'] ), $expiry[0] );
 			} else {
-				$this->dieUsageMsg( array( 'toofewexpiries', count( $expiry ), count( $params['protections'] ) ) );
+				$this->dieUsageMsg( array(
+					'toofewexpiries',
+					count( $expiry ),
+					count( $params['protections'] )
+				) );
 			}
 		}
 
@@ -71,12 +75,12 @@ class ApiProtect extends ApiBase {
 			if ( !in_array( $p[0], $restrictionTypes ) && $p[0] != 'create' ) {
 				$this->dieUsageMsg( array( 'protect-invalidaction', $p[0] ) );
 			}
-			if ( !in_array( $p[1], $wgRestrictionLevels ) && $p[1] != 'all' ) {
+			if ( !in_array( $p[1], $this->getConfig()->get( 'RestrictionLevels' ) ) && $p[1] != 'all' ) {
 				$this->dieUsageMsg( array( 'protect-invalidlevel', $p[1] ) );
 			}
 
-			if ( in_array( $expiry[$i], array( 'infinite', 'indefinite', 'never' ) ) ) {
-				$expiryarray[$p[0]] = $db->getInfinity();
+			if ( wfIsInfinity( $expiry[$i] ) ) {
+				$expiryarray[$p[0]] = 'infinity';
 			} else {
 				$exp = strtotime( $expiry[$i] );
 				if ( $exp < 0 || !$exp ) {
@@ -89,18 +93,27 @@ class ApiProtect extends ApiBase {
 				}
 				$expiryarray[$p[0]] = $exp;
 			}
-			$resultProtections[] = array( $p[0] => $protections[$p[0]],
-					'expiry' => ( $expiryarray[$p[0]] == $db->getInfinity() ?
-								'infinite' :
-								wfTimestamp( TS_ISO_8601, $expiryarray[$p[0]] ) ) );
+			$resultProtections[] = array(
+				$p[0] => $protections[$p[0]],
+				'expiry' => $wgContLang->formatExpiry( $expiryarray[$p[0]], TS_ISO_8601, 'infinite' ),
+			);
 		}
 
 		$cascade = $params['cascade'];
 
+		if ( $params['watch'] ) {
+			$this->logFeatureUsage( 'action=protect&watch' );
+		}
 		$watch = $params['watch'] ? 'watch' : $params['watchlist'];
-		$this->setWatch( $watch, $titleObj );
+		$this->setWatch( $watch, $titleObj, 'watchdefault' );
 
-		$status = $pageObj->doUpdateRestrictions( $protections, $expiryarray, $cascade, $params['reason'], $this->getUser() );
+		$status = $pageObj->doUpdateRestrictions(
+			$protections,
+			$expiryarray,
+			$cascade,
+			$params['reason'],
+			$this->getUser()
+		);
 
 		if ( !$status->isOK() ) {
 			$this->dieStatus( $status );
@@ -110,11 +123,11 @@ class ApiProtect extends ApiBase {
 			'reason' => $params['reason']
 		);
 		if ( $cascade ) {
-			$res['cascade'] = '';
+			$res['cascade'] = true;
 		}
 		$res['protections'] = $resultProtections;
 		$result = $this->getResult();
-		$result->setIndexedTagName( $res['protections'], 'protection' );
+		ApiResult::setIndexedTagName( $res['protections'], 'protection' );
 		$result->addValue( null, $this->getModuleName(), $res );
 	}
 
@@ -133,10 +146,6 @@ class ApiProtect extends ApiBase {
 			),
 			'pageid' => array(
 				ApiBase::PARAM_TYPE => 'integer',
-			),
-			'token' => array(
-				ApiBase::PARAM_TYPE => 'string',
-				ApiBase::PARAM_REQUIRED => true
 			),
 			'protections' => array(
 				ApiBase::PARAM_ISMULTI => true,
@@ -165,64 +174,21 @@ class ApiProtect extends ApiBase {
 		);
 	}
 
-	public function getParamDescription() {
-		$p = $this->getModulePrefix();
-		return array(
-			'title' => "Title of the page you want to (un)protect. Cannot be used together with {$p}pageid",
-			'pageid' => "ID of the page you want to (un)protect. Cannot be used together with {$p}title",
-			'token' => 'A protect token previously retrieved through prop=info',
-			'protections' => 'List of protection levels, formatted action=group (e.g. edit=sysop)',
-			'expiry' => array( 'Expiry timestamps. If only one timestamp is set, it\'ll be used for all protections.',
-					'Use \'infinite\', \'indefinite\' or \'never\', for a never-expiring protection.' ),
-			'reason' => 'Reason for (un)protecting',
-			'cascade' => array( 'Enable cascading protection (i.e. protect pages included in this page)',
-					'Ignored if not all protection levels are \'sysop\' or \'protect\'' ),
-			'watch' => 'If set, add the page being (un)protected to your watchlist',
-			'watchlist' => 'Unconditionally add or remove the page from your watchlist, use preferences or do not change watch',
-		);
-	}
-
-	public function getResultProperties() {
-		return array(
-			'' => array(
-				'title' => 'string',
-				'reason' => 'string',
-				'cascade' => 'boolean'
-			)
-		);
-	}
-
-	public function getDescription() {
-		return 'Change the protection level of a page';
-	}
-
-	public function getPossibleErrors() {
-		return array_merge( parent::getPossibleErrors(),
-			$this->getTitleOrPageIdErrorMessage(),
-			array(
-				array( 'toofewexpiries', 'noofexpiries', 'noofprotections' ),
-				array( 'create-titleexists' ),
-				array( 'missingtitle-createonly' ),
-				array( 'protect-invalidaction', 'action' ),
-				array( 'protect-invalidlevel', 'level' ),
-				array( 'invalidexpiry', 'expiry' ),
-				array( 'pastexpiry', 'expiry' ),
-			)
-		);
-	}
-
 	public function needsToken() {
-		return true;
+		return 'csrf';
 	}
 
-	public function getTokenSalt() {
-		return '';
-	}
-
-	public function getExamples() {
+	protected function getExamplesMessages() {
 		return array(
-			'api.php?action=protect&title=Main%20Page&token=123ABC&protections=edit=sysop|move=sysop&cascade=&expiry=20070901163000|never',
-			'api.php?action=protect&title=Main%20Page&token=123ABC&protections=edit=all|move=all&reason=Lifting%20restrictions'
+			'action=protect&title=Main%20Page&token=123ABC&' .
+				'protections=edit=sysop|move=sysop&cascade=&expiry=20070901163000|never'
+				=> 'apihelp-protect-example-protect',
+			'action=protect&title=Main%20Page&token=123ABC&' .
+				'protections=edit=all|move=all&reason=Lifting%20restrictions'
+				=> 'apihelp-protect-example-unprotect',
+			'action=protect&title=Main%20Page&token=123ABC&' .
+				'protections=&reason=Lifting%20restrictions'
+				=> 'apihelp-protect-example-unprotect2',
 		);
 	}
 

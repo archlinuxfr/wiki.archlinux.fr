@@ -33,9 +33,9 @@ class ForeignAPIFile extends File {
 	protected $repoClass = 'ForeignApiRepo';
 
 	/**
-	 * @param $title
-	 * @param $repo ForeignApiRepo
-	 * @param $info
+	 * @param Title|string|bool $title
+	 * @param ForeignApiRepo $repo
+	 * @param array $info
 	 * @param bool $exists
 	 */
 	function __construct( $title, $repo, $info, $exists = false ) {
@@ -48,8 +48,8 @@ class ForeignAPIFile extends File {
 	}
 
 	/**
-	 * @param $title Title
-	 * @param $repo ForeignApiRepo
+	 * @param Title $title
+	 * @param ForeignApiRepo $repo
 	 * @return ForeignAPIFile|null
 	 */
 	static function newFromTitle( Title $title, $repo ) {
@@ -57,7 +57,10 @@ class ForeignAPIFile extends File {
 			'titles' => 'File:' . $title->getDBkey(),
 			'iiprop' => self::getProps(),
 			'prop' => 'imageinfo',
-			'iimetadataversion' => MediaHandler::getMetadataVersion()
+			'iimetadataversion' => MediaHandler::getMetadataVersion(),
+			// extmetadata is language-dependant, accessing the current language here
+			// would be problematic, so we just get them all
+			'iiextmetadatamultilang' => 1,
 		) );
 
 		$info = $repo->getImageInfo( $data );
@@ -75,6 +78,7 @@ class ForeignAPIFile extends File {
 			} else {
 				$img = new self( $title, $repo, $info, true );
 			}
+
 			return $img;
 		} else {
 			return null;
@@ -86,7 +90,7 @@ class ForeignAPIFile extends File {
 	 * @return string
 	 */
 	static function getProps() {
-		return 'timestamp|user|comment|url|size|sha1|metadata|mime|mediatype';
+		return 'timestamp|user|comment|url|size|sha1|metadata|mime|mediatype|extmetadata';
 	}
 
 	// Dummy functions...
@@ -130,6 +134,7 @@ class ForeignAPIFile extends File {
 		);
 		if ( $thumbUrl === false ) {
 			global $wgLang;
+
 			return $this->repo->getThumbError(
 				$this->getName(),
 				$width,
@@ -138,13 +143,14 @@ class ForeignAPIFile extends File {
 				$wgLang->getCode()
 			);
 		}
+
 		return $this->handler->getTransform( $this, 'bogus', $thumbUrl, $params );
 	}
 
 	// Info we can get from API...
 
 	/**
-	 * @param $page int
+	 * @param int $page
 	 * @return int|number
 	 */
 	public function getWidth( $page = 1 ) {
@@ -152,7 +158,7 @@ class ForeignAPIFile extends File {
 	}
 
 	/**
-	 * @param $page int
+	 * @param int $page
 	 * @return int
 	 */
 	public function getHeight( $page = 1 ) {
@@ -166,11 +172,24 @@ class ForeignAPIFile extends File {
 		if ( isset( $this->mInfo['metadata'] ) ) {
 			return serialize( self::parseMetadata( $this->mInfo['metadata'] ) );
 		}
+
 		return null;
 	}
 
 	/**
-	 * @param $metadata array
+	 * @return array|null Extended metadata (see imageinfo API for format) or
+	 *   null on error
+	 */
+	public function getExtendedMetadata() {
+		if ( isset( $this->mInfo['extmetadata'] ) ) {
+			return $this->mInfo['extmetadata'];
+		}
+
+		return null;
+	}
+
+	/**
+	 * @param array $metadata
 	 * @return array
 	 */
 	public static function parseMetadata( $metadata ) {
@@ -181,6 +200,7 @@ class ForeignAPIFile extends File {
 		foreach ( $metadata as $meta ) {
 			$ret[$meta['name']] = self::parseMetadata( $meta['value'] );
 		}
+
 		return $ret;
 	}
 
@@ -199,14 +219,20 @@ class ForeignAPIFile extends File {
 	}
 
 	/**
-	 * @param string $method
+	 * @param string $type
 	 * @return int|null|string
 	 */
-	public function getUser( $method = 'text' ) {
-		return isset( $this->mInfo['user'] ) ? strval( $this->mInfo['user'] ) : null;
+	public function getUser( $type = 'text' ) {
+		if ( $type == 'text' ) {
+			return isset( $this->mInfo['user'] ) ? strval( $this->mInfo['user'] ) : null;
+		} elseif ( $type == 'id' ) {
+			return 0; // What makes sense here, for a remote user?
+		}
 	}
 
 	/**
+	 * @param int $audience
+	 * @param User $user
 	 * @return null|string
 	 */
 	public function getDescription( $audience = self::FOR_PUBLIC, User $user = null ) {
@@ -214,7 +240,7 @@ class ForeignAPIFile extends File {
 	}
 
 	/**
-	 * @return null|String
+	 * @return null|string
 	 */
 	function getSha1() {
 		return isset( $this->mInfo['sha1'] )
@@ -223,7 +249,7 @@ class ForeignAPIFile extends File {
 	}
 
 	/**
-	 * @return bool|Mixed|string
+	 * @return bool|string
 	 */
 	function getTimestamp() {
 		return wfTimestamp( TS_MW,
@@ -241,6 +267,7 @@ class ForeignAPIFile extends File {
 			$magic = MimeMagic::singleton();
 			$this->mInfo['mime'] = $magic->guessTypesForExtension( $this->getExtension() );
 		}
+
 		return $this->mInfo['mime'];
 	}
 
@@ -252,6 +279,7 @@ class ForeignAPIFile extends File {
 			return $this->mInfo['mediatype'];
 		}
 		$magic = MimeMagic::singleton();
+
 		return $magic->getMediaType( null, $this->getMimeType() );
 	}
 
@@ -266,7 +294,7 @@ class ForeignAPIFile extends File {
 
 	/**
 	 * Only useful if we're locally caching thumbs anyway...
-	 * @param $suffix string
+	 * @param string $suffix
 	 * @return null|string
 	 */
 	function getThumbPath( $suffix = '' ) {
@@ -275,6 +303,7 @@ class ForeignAPIFile extends File {
 			if ( $suffix ) {
 				$path = $path . $suffix . '/';
 			}
+
 			return $path;
 		} else {
 			return null;
@@ -314,7 +343,7 @@ class ForeignAPIFile extends File {
 	}
 
 	/**
-	 * @param $options array
+	 * @param array $options
 	 */
 	function purgeThumbnails( $options = array() ) {
 		global $wgMemc;
@@ -339,5 +368,14 @@ class ForeignAPIFile extends File {
 		$this->repo->quickPurgeBatch( $purgeList );
 		# Clear out the thumbnail directory if empty
 		$this->repo->quickCleanDir( $dir );
+	}
+
+	/**
+	 * The thumbnail is created on the foreign server and fetched over internet
+	 * @since 1.25
+	 * @return bool
+	 */
+	public function isTransformedLocally() {
+		return false;
 	}
 }

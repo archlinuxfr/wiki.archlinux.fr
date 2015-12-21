@@ -31,6 +31,7 @@
 class SVGMetadataExtractor {
 	static function getMetadata( $filename ) {
 		$svg = new SVGReader( $filename );
+
 		return $svg->getMetadata();
 	}
 }
@@ -42,10 +43,19 @@ class SVGReader {
 	const DEFAULT_WIDTH = 512;
 	const DEFAULT_HEIGHT = 512;
 	const NS_SVG = 'http://www.w3.org/2000/svg';
+	const LANG_PREFIX_MATCH = 1;
+	const LANG_FULL_MATCH = 2;
 
+	/** @var null|XMLReader */
 	private $reader = null;
+
+	/** @var bool */
 	private $mDebug = false;
-	private $metadata = Array();
+
+	/** @var array */
+	private $metadata = array();
+	private $languages = array();
+	private $languagePrefixes = array();
 
 	/**
 	 * Constructor
@@ -98,22 +108,22 @@ class SVGReader {
 		// Because we cut off the end of the svg making an invalid one. Complicated
 		// try catch thing to make sure warnings get restored. Seems like there should
 		// be a better way.
-		wfSuppressWarnings();
+		MediaWiki\suppressWarnings();
 		try {
 			$this->read();
 		} catch ( Exception $e ) {
 			// Note, if this happens, the width/height will be taken to be 0x0.
 			// Should we consider it the default 512x512 instead?
-			wfRestoreWarnings();
+			MediaWiki\restoreWarnings();
 			libxml_disable_entity_loader( $oldDisable );
 			throw $e;
 		}
-		wfRestoreWarnings();
+		MediaWiki\restoreWarnings();
 		libxml_disable_entity_loader( $oldDisable );
 	}
 
 	/**
-	 * @return Array with the known metadata
+	 * @return array Array with the known metadata
 	 */
 	public function getMetadata() {
 		return $this->metadata;
@@ -128,7 +138,7 @@ class SVGReader {
 		$keepReading = $this->reader->read();
 
 		/* Skip until first element */
-		while ( $keepReading && $this->reader->nodeType != XmlReader::ELEMENT ) {
+		while ( $keepReading && $this->reader->nodeType != XMLReader::ELEMENT ) {
 			$keepReading = $this->reader->read();
 		}
 
@@ -148,13 +158,15 @@ class SVGReader {
 
 			$this->debug( "$tag" );
 
-			if ( $isSVG && $tag == 'svg' && $type == XmlReader::END_ELEMENT && $this->reader->depth <= $exitDepth ) {
+			if ( $isSVG && $tag == 'svg' && $type == XMLReader::END_ELEMENT
+				&& $this->reader->depth <= $exitDepth
+			) {
 				break;
 			} elseif ( $isSVG && $tag == 'title' ) {
 				$this->readField( $tag, 'title' );
 			} elseif ( $isSVG && $tag == 'desc' ) {
 				$this->readField( $tag, 'description' );
-			} elseif ( $isSVG && $tag == 'metadata' && $type == XmlReader::ELEMENT ) {
+			} elseif ( $isSVG && $tag == 'metadata' && $type == XMLReader::ELEMENT ) {
 				$this->readXml( $tag, 'metadata' );
 			} elseif ( $isSVG && $tag == 'script' ) {
 				// We normally do not allow scripted svgs.
@@ -164,10 +176,8 @@ class SVGReader {
 			} elseif ( $tag !== '#text' ) {
 				$this->debug( "Unhandled top-level XML tag $tag" );
 
-				if ( !isset( $this->metadata['animated'] ) ) {
-					// Recurse into children of current tag, looking for animation.
-					$this->animateFilter( $tag );
-				}
+				// Recurse into children of current tag, looking for animation and languages.
+				$this->animateFilterAndLang( $tag );
 			}
 
 			// Goto next element, which is sibling of current (Skip children).
@@ -176,25 +186,30 @@ class SVGReader {
 
 		$this->reader->close();
 
+		$this->metadata['translations'] = $this->languages + $this->languagePrefixes;
+
 		return true;
 	}
 
 	/**
 	 * Read a textelement from an element
 	 *
-	 * @param string $name of the element that we are reading from
-	 * @param string $metafield that we will fill with the result
+	 * @param string $name Name of the element that we are reading from
+	 * @param string $metafield Field that we will fill with the result
 	 */
 	private function readField( $name, $metafield = null ) {
 		$this->debug( "Read field $metafield" );
-		if ( !$metafield || $this->reader->nodeType != XmlReader::ELEMENT ) {
+		if ( !$metafield || $this->reader->nodeType != XMLReader::ELEMENT ) {
 			return;
 		}
 		$keepReading = $this->reader->read();
 		while ( $keepReading ) {
-			if ( $this->reader->localName == $name && $this->reader->namespaceURI == self::NS_SVG && $this->reader->nodeType == XmlReader::END_ELEMENT ) {
+			if ( $this->reader->localName == $name
+				&& $this->reader->namespaceURI == self::NS_SVG
+				&& $this->reader->nodeType == XMLReader::END_ELEMENT
+			) {
 				break;
-			} elseif ( $this->reader->nodeType == XmlReader::TEXT ) {
+			} elseif ( $this->reader->nodeType == XMLReader::TEXT ) {
 				$this->metadata[$metafield] = trim( $this->reader->value );
 			}
 			$keepReading = $this->reader->read();
@@ -204,31 +219,34 @@ class SVGReader {
 	/**
 	 * Read an XML snippet from an element
 	 *
-	 * @param string $metafield that we will fill with the result
+	 * @param string $metafield Field that we will fill with the result
 	 * @throws MWException
 	 */
 	private function readXml( $metafield = null ) {
 		$this->debug( "Read top level metadata" );
-		if ( !$metafield || $this->reader->nodeType != XmlReader::ELEMENT ) {
+		if ( !$metafield || $this->reader->nodeType != XMLReader::ELEMENT ) {
 			return;
 		}
-		// TODO: find and store type of xml snippet. metadata['metadataType'] = "rdf"
+		// @todo Find and store type of xml snippet. metadata['metadataType'] = "rdf"
 		if ( method_exists( $this->reader, 'readInnerXML' ) ) {
 			$this->metadata[$metafield] = trim( $this->reader->readInnerXML() );
 		} else {
-			throw new MWException( "The PHP XMLReader extension does not come with readInnerXML() method. Your libxml is probably out of date (need 2.6.20 or later)." );
+			throw new MWException( "The PHP XMLReader extension does not come " .
+				"with readInnerXML() method. Your libxml is probably out of " .
+				"date (need 2.6.20 or later)." );
 		}
 		$this->reader->next();
 	}
 
 	/**
-	 * Filter all children, looking for animate elements
+	 * Filter all children, looking for animated elements.
+	 * Also get a list of languages that can be targeted.
 	 *
-	 * @param string $name of the element that we are reading from
+	 * @param string $name Name of the element that we are reading from
 	 */
-	private function animateFilter( $name ) {
+	private function animateFilterAndLang( $name ) {
 		$this->debug( "animate filter for tag $name" );
-		if ( $this->reader->nodeType != XmlReader::ELEMENT ) {
+		if ( $this->reader->nodeType != XMLReader::ELEMENT ) {
 			return;
 		}
 		if ( $this->reader->isEmptyElement ) {
@@ -238,9 +256,37 @@ class SVGReader {
 		$keepReading = $this->reader->read();
 		while ( $keepReading ) {
 			if ( $this->reader->localName == $name && $this->reader->depth <= $exitDepth
-				&& $this->reader->nodeType == XmlReader::END_ELEMENT ) {
+				&& $this->reader->nodeType == XMLReader::END_ELEMENT
+			) {
 				break;
-			} elseif ( $this->reader->namespaceURI == self::NS_SVG && $this->reader->nodeType == XmlReader::ELEMENT ) {
+			} elseif ( $this->reader->namespaceURI == self::NS_SVG
+				&& $this->reader->nodeType == XMLReader::ELEMENT
+			) {
+				$sysLang = $this->reader->getAttribute( 'systemLanguage' );
+				if ( !is_null( $sysLang ) && $sysLang !== '' ) {
+					// See http://www.w3.org/TR/SVG/struct.html#SystemLanguageAttribute
+					$langList = explode( ',', $sysLang );
+					foreach ( $langList as $langItem ) {
+						$langItem = trim( $langItem );
+						if ( Language::isWellFormedLanguageTag( $langItem ) ) {
+							$this->languages[$langItem] = self::LANG_FULL_MATCH;
+						}
+						// Note, the standard says that any prefix should work,
+						// here we do only the initial prefix, since that will catch
+						// 99% of cases, and we are going to compare against fallbacks.
+						// This differs mildly from how the spec says languages should be
+						// handled, however it matches better how the MediaWiki language
+						// preference is generally handled.
+						$dash = strpos( $langItem, '-' );
+						// Intentionally checking both !false and > 0 at the same time.
+						if ( $dash ) {
+							$itemPrefix = substr( $langItem, 0, $dash );
+							if ( Language::isWellFormedLanguageTag( $itemPrefix ) ) {
+								$this->languagePrefixes[$itemPrefix] = self::LANG_PREFIX_MATCH;
+							}
+						}
+					}
+				}
 				switch ( $this->reader->localName ) {
 					case 'script':
 						// Normally we disallow files with
@@ -261,6 +307,7 @@ class SVGReader {
 		}
 	}
 
+	// @todo FIXME: Unused, remove?
 	private function throwXmlError( $err ) {
 		$this->debug( "FAILURE: $err" );
 		wfDebug( "SVGReader XML error: $err\n" );
@@ -270,14 +317,6 @@ class SVGReader {
 		if ( $this->mDebug ) {
 			wfDebug( "SVGReader: $data\n" );
 		}
-	}
-
-	private function warn( $data ) {
-		wfDebug( "SVGReader: $data\n" );
-	}
-
-	private function notice( $data ) {
-		wfDebug( "SVGReader WARN: $data\n" );
 	}
 
 	/**
@@ -333,8 +372,8 @@ class SVGReader {
 	 * http://www.w3.org/TR/SVG11/coords.html#UnitIdentifiers
 	 *
 	 * @param string $length CSS/SVG length.
-	 * @param $viewportSize: Float optional scale for percentage units...
-	 * @return float: length in pixels
+	 * @param float|int $viewportSize Optional scale for percentage units...
+	 * @return float Length in pixels
 	 */
 	static function scaleSVGUnit( $length, $viewportSize = 512 ) {
 		static $unitLength = array(
@@ -347,7 +386,7 @@ class SVGReader {
 			'em' => 16.0, // fake it?
 			'ex' => 12.0, // fake it?
 			'' => 1.0, // "User units" pixels by default
-			);
+		);
 		$matches = array();
 		if ( preg_match( '/^\s*(\d+(?:\.\d+)?)(em|ex|px|pt|pc|cm|mm|in|%|)\s*$/', $length, $matches ) ) {
 			$length = floatval( $matches[1] );

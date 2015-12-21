@@ -1,9 +1,9 @@
+#!/usr/bin/env php
 <?php
 /**
  * Run all updaters.
  *
  * This is used when the database schema is modified and we need to apply patches.
- * It is kept compatible with php 4 parsing so that it can give out a meaningful error.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,11 +25,6 @@
  * @ingroup Maintenance
  */
 
-if ( !function_exists( 'version_compare' ) || ( version_compare( phpversion(), '5.3.2' ) < 0 ) ) {
-	require dirname( __FILE__ ) . '/../includes/PHPVersionError.php';
-	wfPHPVersionError( 'cli' );
-}
-
 $wgUseMasterForMaintenance = true;
 require_once __DIR__ . '/Maintenance.php';
 
@@ -47,18 +42,26 @@ class UpdateMediaWiki extends Maintenance {
 		$this->addOption( 'doshared', 'Also update shared tables' );
 		$this->addOption( 'nopurge', 'Do not purge the objectcache table after updates' );
 		$this->addOption( 'noschema', 'Only do the updates that are not done during schema updates' );
-		$this->addOption( 'schema', 'Output SQL to do the schema updates instead of doing them.  Works even when $wgAllowSchemaUpdates is false', false, true );
+		$this->addOption(
+			'schema',
+			'Output SQL to do the schema updates instead of doing them. Works '
+				. 'even when $wgAllowSchemaUpdates is false',
+			false,
+			true
+		);
 		$this->addOption( 'force', 'Override when $wgAllowSchemaUpdates disables this script' );
+		$this->addOption(
+			'skip-external-dependencies',
+			'Skips checking whether external dependencies are up to date, mostly for developers'
+		);
 	}
 
 	function getDbType() {
-		/* If we used the class constant PHP4 would give a parser error here */
-		return 2 /* Maintenance::DB_ADMIN */;
+		return Maintenance::DB_ADMIN;
 	}
 
 	function compatChecks() {
-		// Avoid syntax error in PHP4
-		$minimumPcreVersion = constant( 'Installer::MINIMUM_PCRE_VERSION' );
+		$minimumPcreVersion = Installer::MINIMUM_PCRE_VERSION;
 
 		list( $pcreVersion ) = explode( ' ', PCRE_VERSION, 2 );
 		if ( version_compare( $pcreVersion, $minimumPcreVersion, '<' ) ) {
@@ -74,30 +77,22 @@ class UpdateMediaWiki extends Maintenance {
 		$test = new PhpXmlBugTester();
 		if ( !$test->ok ) {
 			$this->error(
-				"Your system has a combination of PHP and libxml2 versions which is buggy\n" .
+				"Your system has a combination of PHP and libxml2 versions that is buggy\n" .
 				"and can cause hidden data corruption in MediaWiki and other web apps.\n" .
-				"Upgrade to PHP 5.2.9 or later and libxml2 2.7.3 or later!\n" .
-				"ABORTING (see http://bugs.php.net/bug.php?id=45996).\n",
-				true );
-		}
-
-		$test = new PhpRefCallBugTester;
-		$test->execute();
-		if ( !$test->ok ) {
-			$ver = phpversion();
-			$this->error(
-				"PHP $ver is not compatible with MediaWiki due to a bug involving\n" .
-				"reference parameters to __call. Upgrade to PHP 5.3.2 or higher, or \n" .
-				"downgrade to PHP 5.3.0 to fix this.\n" .
-				"ABORTING (see http://bugs.php.net/bug.php?id=50394 for details)\n",
+				"Upgrade to libxml2 2.7.3 or later.\n" .
+				"ABORTING (see https://bugs.php.net/bug.php?id=45996).\n",
 				true );
 		}
 	}
 
 	function execute() {
-		global $wgVersion, $wgTitle, $wgLang, $wgAllowSchemaUpdates;
+		global $wgVersion, $wgLang, $wgAllowSchemaUpdates;
 
-		if ( !$wgAllowSchemaUpdates && !( $this->hasOption( 'force' ) || $this->hasOption( 'schema' ) || $this->hasOption( 'noschema' ) ) ) {
+		if ( !$wgAllowSchemaUpdates
+			&& !( $this->hasOption( 'force' )
+				|| $this->hasOption( 'schema' )
+				|| $this->hasOption( 'noschema' ) )
+		) {
 			$this->error( "Do not run update.php on this wiki. If you're seeing this you should\n"
 				. "probably ask for some help in performing your schema updates or use\n"
 				. "the --noschema and --schema options to get an SQL file for someone\n"
@@ -118,11 +113,12 @@ class UpdateMediaWiki extends Maintenance {
 		}
 
 		$wgLang = Language::factory( 'en' );
-		$wgTitle = Title::newFromText( "MediaWiki database updater" );
+
+		define( 'MW_UPDATER', true );
 
 		$this->output( "MediaWiki {$wgVersion} Updater\n\n" );
 
-		wfWaitForSlaves( 5 ); // let's not kill databases, shall we? ;) --tor
+		wfWaitForSlaves();
 
 		if ( !$this->hasOption( 'skip-compat-checks' ) ) {
 			$this->compatChecks();
@@ -131,20 +127,33 @@ class UpdateMediaWiki extends Maintenance {
 			wfCountdown( 5 );
 		}
 
+		// Check external dependencies are up to date
+		if ( !$this->hasOption( 'skip-external-dependencies' ) ) {
+			$composerLockUpToDate = $this->runChild( 'CheckComposerLockUpToDate' );
+			$composerLockUpToDate->execute();
+		} else {
+			$this->output(
+				"Skipping checking whether external dependencies are up to date, proceed at your own risk\n"
+			);
+		}
+
 		# Attempt to connect to the database as a privileged user
 		# This will vomit up an error if there are permissions problems
 		$db = wfGetDB( DB_MASTER );
 
 		$this->output( "Going to run database updates for " . wfWikiID() . "\n" );
 		if ( $db->getType() === 'sqlite' ) {
-			$this->output( "Using SQLite file: '{$db->mDatabaseFile}'\n" );
+			$this->output( "Using SQLite file: '{$db->getDbFilePath()}'\n" );
 		}
 		$this->output( "Depending on the size of your database this may take a while!\n" );
 
 		if ( !$this->hasOption( 'quick' ) ) {
-			$this->output( "Abort with control-c in the next five seconds (skip this countdown with --quick) ... " );
+			$this->output( "Abort with control-c in the next five seconds "
+				. "(skip this countdown with --quick) ... " );
 			wfCountDown( 5 );
 		}
+
+		$time1 = microtime( true );
 
 		$shared = $this->hasOption( 'doshared' );
 
@@ -163,7 +172,7 @@ class UpdateMediaWiki extends Maintenance {
 			$child = $this->runChild( $maint );
 
 			// LoggedUpdateMaintenance is checking the updatelog itself
-			$isLoggedUpdate = is_a( $child, 'LoggedUpdateMaintenance' );
+			$isLoggedUpdate = $child instanceof LoggedUpdateMaintenance;
 
 			if ( !$isLoggedUpdate && $updater->updateRowExists( $maint ) ) {
 				continue;
@@ -175,11 +184,15 @@ class UpdateMediaWiki extends Maintenance {
 			}
 		}
 
+		$updater->setFileAccess();
 		if ( !$this->hasOption( 'nopurge' ) ) {
 			$updater->purgeCache();
 		}
 
-		$this->output( "\nDone.\n" );
+		$time2 = microtime( true );
+
+		$timeDiff = $wgLang->formatTimePeriod( $time2 - $time1 );
+		$this->output( "\nDone in $timeDiff.\n" );
 	}
 
 	function afterFinalSetup() {
@@ -190,7 +203,7 @@ class UpdateMediaWiki extends Maintenance {
 		# cache from $wgExtensionFunctions (bug 20471)
 		$wgLocalisationCacheConf = array(
 			'class' => 'LocalisationCache',
-			'storeClass' => 'LCStore_Null',
+			'storeClass' => 'LCStoreNull',
 			'storeDirectory' => false,
 			'manualRecache' => false,
 		);

@@ -1,7 +1,5 @@
 <?php
 /**
- * Request-dependant objects containers.
- *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -17,8 +15,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  * http://www.gnu.org/copyleft/gpl.html
  *
- * @since 1.18
- *
  * @author Happy-melon
  * @file
  */
@@ -26,6 +22,8 @@
 /**
  * The simplest way of implementing IContextSource is to hold a RequestContext as a
  * member variable and provide accessors to it.
+ *
+ * @since 1.18
  */
 abstract class ContextSource implements IContextSource {
 	/**
@@ -34,16 +32,18 @@ abstract class ContextSource implements IContextSource {
 	private $context;
 
 	/**
-	 * Get the RequestContext object
+	 * Get the base IContextSource object
 	 * @since 1.18
-	 * @return RequestContext
+	 * @return IContextSource
 	 */
 	public function getContext() {
 		if ( $this->context === null ) {
 			$class = get_class( $this );
-			wfDebug( __METHOD__ . " ($class): called and \$context is null. Using RequestContext::getMain() for sanity\n" );
+			wfDebug( __METHOD__ . " ($class): called and \$context is null. " .
+				"Using RequestContext::getMain() for sanity\n" );
 			$this->context = RequestContext::getMain();
 		}
+
 		return $this->context;
 	}
 
@@ -55,6 +55,16 @@ abstract class ContextSource implements IContextSource {
 	 */
 	public function setContext( IContextSource $context ) {
 		$this->context = $context;
+	}
+
+	/**
+	 * Get the Config object
+	 *
+	 * @since 1.23
+	 * @return Config
+	 */
+	public function getConfig() {
+		return $this->getContext()->getConfig();
 	}
 
 	/**
@@ -71,7 +81,7 @@ abstract class ContextSource implements IContextSource {
 	 * Get the Title object
 	 *
 	 * @since 1.18
-	 * @return Title
+	 * @return Title|null
 	 */
 	public function getTitle() {
 		return $this->getContext()->getTitle();
@@ -125,17 +135,6 @@ abstract class ContextSource implements IContextSource {
 	/**
 	 * Get the Language object
 	 *
-	 * @deprecated since 1.19 Use getLanguage instead
-	 * @return Language
-	 */
-	public function getLang() {
-		wfDeprecated( __METHOD__, '1.19' );
-		return $this->getLanguage();
-	}
-
-	/**
-	 * Get the Language object
-	 *
 	 * @since 1.19
 	 * @return Language
 	 */
@@ -154,14 +153,27 @@ abstract class ContextSource implements IContextSource {
 	}
 
 	/**
+	 * Get the Stats object
+	 *
+	 * @since 1.25
+	 * @return BufferingStatsdDataFactory
+	 */
+	public function getStats() {
+		return $this->getContext()->getStats();
+	}
+
+
+	/**
 	 * Get a Message object with context set
 	 * Parameters are the same as wfMessage()
 	 *
 	 * @since 1.18
+	 * @param mixed ...
 	 * @return Message
 	 */
 	public function msg( /* $args */ ) {
 		$args = func_get_args();
+
 		return call_user_func_array( array( $this->getContext(), 'msg' ), $args );
 	}
 
@@ -169,7 +181,7 @@ abstract class ContextSource implements IContextSource {
 	 * Export the resolved user IP, HTTP headers, user ID, and session ID.
 	 * The result will be reasonably sized to allow for serialization.
 	 *
-	 * @return Array
+	 * @return array
 	 * @since 1.21
 	 */
 	public function exportSession() {

@@ -27,6 +27,24 @@
  * @ingroup Watchlist
  */
 class WatchedItem {
+	/** @var Title */
+	public $mTitle;
+
+	/** @var User */
+	public $mUser;
+
+	/** @var int */
+	public $mCheckRights;
+
+	/** @var bool */
+	private $loaded = false;
+
+	/** @var bool */
+	private $watched;
+
+	/** @var string */
+	private $timestamp;
+
 	/**
 	 * Constant to specify that user rights 'editmywatchlist' and
 	 * 'viewmywatchlist' should not be checked.
@@ -41,19 +59,29 @@ class WatchedItem {
 	 */
 	const CHECK_USER_RIGHTS = 1;
 
-	var $mTitle, $mUser, $mCheckRights;
-	private $loaded = false, $watched, $timestamp;
+	/**
+	 * Do DB master updates right now
+	 * @since 1.26
+	 */
+	const IMMEDIATE = 0;
+	/**
+	 * Do DB master updates via the job queue
+	 * @since 1.26
+	 */
+	const DEFERRED = 1;
 
 	/**
 	 * Create a WatchedItem object with the given user and title
 	 * @since 1.22 $checkRights parameter added
-	 * @param $user User: the user to use for (un)watching
-	 * @param $title Title: the title we're going to (un)watch
-	 * @param $checkRights int: Whether to check the 'viewmywatchlist' and 'editmywatchlist' rights.
+	 * @param User $user The user to use for (un)watching
+	 * @param Title $title The title we're going to (un)watch
+	 * @param int $checkRights Whether to check the 'viewmywatchlist' and 'editmywatchlist' rights.
 	 *     Pass either WatchedItem::IGNORE_USER_RIGHTS or WatchedItem::CHECK_USER_RIGHTS.
-	 * @return WatchedItem object
+	 * @return WatchedItem
 	 */
-	public static function fromUserTitle( $user, $title, $checkRights = WatchedItem::CHECK_USER_RIGHTS ) {
+	public static function fromUserTitle( $user, $title,
+		$checkRights = WatchedItem::CHECK_USER_RIGHTS
+	) {
 		$wl = new WatchedItem;
 		$wl->mUser = $user;
 		$wl->mTitle = $title;
@@ -70,16 +98,26 @@ class WatchedItem {
 		return $this->mTitle;
 	}
 
-	/** Helper to retrieve the title namespace */
+	/**
+	 * Helper to retrieve the title namespace
+	 * @return int
+	 */
 	protected function getTitleNs() {
 		return $this->getTitle()->getNamespace();
 	}
 
-	/** Helper to retrieve the title DBkey */
+	/**
+	 * Helper to retrieve the title DBkey
+	 * @return string
+	 */
 	protected function getTitleDBkey() {
 		return $this->getTitle()->getDBkey();
 	}
-	/** Helper to retrieve the user id */
+
+	/**
+	 * Helper to retrieve the user id
+	 * @return int
+	 */
 	protected function getUserId() {
 		return $this->mUser->getId();
 	}
@@ -113,6 +151,12 @@ class WatchedItem {
 			return;
 		}
 
+		// some pages cannot be watched
+		if ( !$this->getTitle()->isWatchable() ) {
+			$this->watched = false;
+			return;
+		}
+
 		# Pages and their talk pages are considered equivalent for watching;
 		# remember that talk namespaces are numbered as page namespace+1.
 
@@ -130,7 +174,8 @@ class WatchedItem {
 
 	/**
 	 * Check permissions
-	 * @param $what string: 'viewmywatchlist' or 'editmywatchlist'
+	 * @param string $what 'viewmywatchlist' or 'editmywatchlist'
+	 * @return bool
 	 */
 	private function isAllowed( $what ) {
 		return !$this->mCheckRights || $this->mUser->isAllowed( $what );
@@ -152,8 +197,8 @@ class WatchedItem {
 	/**
 	 * Get the notification timestamp of this entry.
 	 *
-	 * @return false|null|string: false if the page is not watched, the value of
-	 *         the wl_notificationtimestamp field otherwise
+	 * @return bool|null|string False if the page is not watched, the value of
+	 *   the wl_notificationtimestamp field otherwise
 	 */
 	public function getNotificationTimestamp() {
 		if ( !$this->isAllowed( 'viewmywatchlist' ) ) {
@@ -171,10 +216,14 @@ class WatchedItem {
 	/**
 	 * Reset the notification timestamp of this entry
 	 *
-	 * @param $force Whether to force the write query to be executed even if the
-	 *        page is not watched or the notification timestamp is already NULL.
+	 * @param bool $force Whether to force the write query to be executed even if the
+	 *    page is not watched or the notification timestamp is already NULL.
+	 * @param int $oldid The revision id being viewed. If not given or 0, latest revision is assumed.
+	 * @mode int $mode WatchedItem::DEFERRED/IMMEDIATE
 	 */
-	public function resetNotificationTimestamp( $force = '' ) {
+	public function resetNotificationTimestamp(
+		$force = '', $oldid = 0, $mode = self::IMMEDIATE
+	) {
 		// Only loggedin user can have a watchlist
 		if ( wfReadOnly() || $this->mUser->isAnon() || !$this->isAllowed( 'editmywatchlist' ) ) {
 			return;
@@ -187,53 +236,122 @@ class WatchedItem {
 			}
 		}
 
-		// If the page is watched by the user (or may be watched), update the timestamp on any
-		// any matching rows
-		$dbw = wfGetDB( DB_MASTER );
-		$dbw->update( 'watchlist', array( 'wl_notificationtimestamp' => null ),
-			$this->dbCond(), __METHOD__ );
+		$title = $this->getTitle();
+		if ( !$oldid ) {
+			// No oldid given, assuming latest revision; clear the timestamp.
+			$notificationTimestamp = null;
+		} elseif ( !$title->getNextRevisionID( $oldid ) ) {
+			// Oldid given and is the latest revision for this title; clear the timestamp.
+			$notificationTimestamp = null;
+		} else {
+			// See if the version marked as read is more recent than the one we're viewing.
+			// Call load() if it wasn't called before due to $force.
+			$this->load();
+
+			if ( $this->timestamp === null ) {
+				// This can only happen if $force is enabled.
+				$notificationTimestamp = null;
+			} else {
+				// Oldid given and isn't the latest; update the timestamp.
+				// This will result in no further notification emails being sent!
+				$notificationTimestamp = Revision::getTimestampFromId( $title, $oldid );
+				// We need to go one second to the future because of various strict comparisons
+				// throughout the codebase
+				$ts = new MWTimestamp( $notificationTimestamp );
+				$ts->timestamp->add( new DateInterval( 'PT1S' ) );
+				$notificationTimestamp = $ts->getTimestamp( TS_MW );
+
+				if ( $notificationTimestamp < $this->timestamp ) {
+					if ( $force != 'force' ) {
+						return;
+					} else {
+						// This is a little silly…
+						$notificationTimestamp = $this->timestamp;
+					}
+				}
+			}
+		}
+
+		// If the page is watched by the user (or may be watched), update the timestamp
+		if ( $mode === self::DEFERRED ) {
+			$job = new ActivityUpdateJob(
+				$title,
+				array(
+					'type'      => 'updateWatchlistNotification',
+					'userid'    => $this->getUserId(),
+					'notifTime' => $notificationTimestamp,
+					'curTime'   => time()
+				)
+			);
+			// Try to run this post-send
+			DeferredUpdates::addCallableUpdate( function() use ( $job ) {
+				$job->run();
+			} );
+		} else {
+			$dbw = wfGetDB( DB_MASTER );
+			$dbw->update( 'watchlist',
+				array( 'wl_notificationtimestamp' => $notificationTimestamp ),
+				$this->dbCond(),
+				__METHOD__
+			);
+		}
+
 		$this->timestamp = null;
 	}
 
 	/**
-	 * Given a title and user (assumes the object is setup), add the watch to the
-	 * database.
+	 * @param WatchedItem[] $items
 	 * @return bool
 	 */
-	public function addWatch() {
-		wfProfileIn( __METHOD__ );
+	public static function batchAddWatch( array $items ) {
 
-		// Only loggedin user can have a watchlist
-		if ( wfReadOnly() || $this->mUser->isAnon() || !$this->isAllowed( 'editmywatchlist' ) ) {
-			wfProfileOut( __METHOD__ );
+		if ( wfReadOnly() ) {
 			return false;
 		}
 
-		// Use INSERT IGNORE to avoid overwriting the notification timestamp
-		// if there's already an entry for this page
+		$rows = array();
+		foreach ( $items as $item ) {
+			// Only loggedin user can have a watchlist
+			if ( $item->mUser->isAnon() || !$item->isAllowed( 'editmywatchlist' ) ) {
+				continue;
+			}
+			$rows[] = array(
+				'wl_user' => $item->getUserId(),
+				'wl_namespace' => MWNamespace::getSubject( $item->getTitleNs() ),
+				'wl_title' => $item->getTitleDBkey(),
+				'wl_notificationtimestamp' => null,
+			);
+			// Every single watched page needs now to be listed in watchlist;
+			// namespace:page and namespace_talk:page need separate entries:
+			$rows[] = array(
+				'wl_user' => $item->getUserId(),
+				'wl_namespace' => MWNamespace::getTalk( $item->getTitleNs() ),
+				'wl_title' => $item->getTitleDBkey(),
+				'wl_notificationtimestamp' => null
+			);
+			$item->watched = true;
+		}
+
+		if ( !$rows ) {
+			return false;
+		}
+
 		$dbw = wfGetDB( DB_MASTER );
-		$dbw->insert( 'watchlist',
-			array(
-				'wl_user' => $this->getUserId(),
-				'wl_namespace' => MWNamespace::getSubject( $this->getTitleNs() ),
-				'wl_title' => $this->getTitleDBkey(),
-				'wl_notificationtimestamp' => null
-			), __METHOD__, 'IGNORE' );
+		foreach ( array_chunk( $rows, 100 ) as $toInsert ) {
+			// Use INSERT IGNORE to avoid overwriting the notification timestamp
+			// if there's already an entry for this page
+			$dbw->insert( 'watchlist', $toInsert, __METHOD__, 'IGNORE' );
+		}
 
-		// Every single watched page needs now to be listed in watchlist;
-		// namespace:page and namespace_talk:page need separate entries:
-		$dbw->insert( 'watchlist',
-			array(
-				'wl_user' => $this->getUserId(),
-				'wl_namespace' => MWNamespace::getTalk( $this->getTitleNs() ),
-				'wl_title' => $this->getTitleDBkey(),
-				'wl_notificationtimestamp' => null
-			), __METHOD__, 'IGNORE' );
-
-		$this->watched = true;
-
-		wfProfileOut( __METHOD__ );
 		return true;
+	}
+
+	/**
+	 * Given a title and user (assumes the object is setup), add the watch to the database.
+	 * @return bool
+	 */
+	public function addWatch() {
+		return self::batchAddWatch( array( $this ) );
 	}
 
 	/**
@@ -241,11 +359,9 @@ class WatchedItem {
 	 * @return bool
 	 */
 	public function removeWatch() {
-		wfProfileIn( __METHOD__ );
 
 		// Only loggedin user can have a watchlist
 		if ( wfReadOnly() || $this->mUser->isAnon() || !$this->isAllowed( 'editmywatchlist' ) ) {
-			wfProfileOut( __METHOD__ );
 			return false;
 		}
 
@@ -280,7 +396,6 @@ class WatchedItem {
 
 		$this->watched = false;
 
-		wfProfileOut( __METHOD__ );
 		return $success;
 	}
 
@@ -288,8 +403,8 @@ class WatchedItem {
 	 * Check if the given title already is watched by the user, and if so
 	 * add watches on a new title. To be used for page renames and such.
 	 *
-	 * @param $ot Title: page title to duplicate entries from, if present
-	 * @param $nt Title: page title to add watches on
+	 * @param Title $ot Page title to duplicate entries from, if present
+	 * @param Title $nt Page title to add watches on
 	 */
 	public static function duplicateEntries( $ot, $nt ) {
 		WatchedItem::doDuplicateEntries( $ot->getSubjectPage(), $nt->getSubjectPage() );
@@ -299,8 +414,8 @@ class WatchedItem {
 	/**
 	 * Handle duplicate entries. Backend for duplicateEntries().
 	 *
-	 * @param $ot Title
-	 * @param $nt Title
+	 * @param Title $ot
+	 * @param Title $nt
 	 *
 	 * @return bool
 	 */
@@ -311,7 +426,8 @@ class WatchedItem {
 		$newtitle = $nt->getDBkey();
 
 		$dbw = wfGetDB( DB_MASTER );
-		$res = $dbw->select( 'watchlist', 'wl_user',
+		$res = $dbw->select( 'watchlist',
+			array( 'wl_user', 'wl_notificationtimestamp' ),
 			array( 'wl_namespace' => $oldnamespace, 'wl_title' => $oldtitle ),
 			__METHOD__, 'FOR UPDATE'
 		);
@@ -321,7 +437,8 @@ class WatchedItem {
 			$values[] = array(
 				'wl_user' => $s->wl_user,
 				'wl_namespace' => $newnamespace,
-				'wl_title' => $newtitle
+				'wl_title' => $newtitle,
+				'wl_notificationtimestamp' => $s->wl_notificationtimestamp,
 			);
 		}
 
@@ -333,7 +450,13 @@ class WatchedItem {
 		# Perform replace
 		# Note that multi-row replace is very efficient for MySQL but may be inefficient for
 		# some other DBMSes, mostly due to poor simulation by us
-		$dbw->replace( 'watchlist', array( array( 'wl_user', 'wl_namespace', 'wl_title' ) ), $values, __METHOD__ );
+		$dbw->replace(
+			'watchlist',
+			array( array( 'wl_user', 'wl_namespace', 'wl_title' ) ),
+			$values,
+			__METHOD__
+		);
+
 		return true;
 	}
 }

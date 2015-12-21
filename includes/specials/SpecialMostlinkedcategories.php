@@ -38,12 +38,13 @@ class MostlinkedCategoriesPage extends QueryPage {
 		return false;
 	}
 
-	function getQueryInfo() {
+	public function getQueryInfo() {
 		return array(
 			'tables' => array( 'category' ),
 			'fields' => array( 'title' => 'cat_title',
 				'namespace' => NS_CATEGORY,
 				'value' => 'cat_pages' ),
+			'conds' => array( 'cat_pages > 0' ),
 		);
 	}
 
@@ -54,7 +55,7 @@ class MostlinkedCategoriesPage extends QueryPage {
 	/**
 	 * Fetch user page links and cache their existence
 	 *
-	 * @param DatabaseBase $db
+	 * @param IDatabase $db
 	 * @param ResultWrapper $res
 	 */
 	function preprocessResults( $db, $res ) {

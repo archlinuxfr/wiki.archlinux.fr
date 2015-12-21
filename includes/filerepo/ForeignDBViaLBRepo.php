@@ -27,12 +27,23 @@
  * @ingroup FileRepo
  */
 class ForeignDBViaLBRepo extends LocalRepo {
-	var $wiki, $dbName, $tablePrefix;
-	var $fileFactory = array( 'ForeignDBFile', 'newFromTitle' );
-	var $fileFromRowFactory = array( 'ForeignDBFile', 'newFromRow' );
+	/** @var string */
+	protected $wiki;
+
+	/** @var string */
+	protected $dbName;
+
+	/** @var string */
+	protected $tablePrefix;
+
+	/** @var array */
+	protected $fileFactory = array( 'ForeignDBFile', 'newFromTitle' );
+
+	/** @var array */
+	protected $fileFromRowFactory = array( 'ForeignDBFile', 'newFromRow' );
 
 	/**
-	 * @param $info array|null
+	 * @param array|null $info
 	 */
 	function __construct( $info ) {
 		parent::__construct( $info );
@@ -55,6 +66,16 @@ class ForeignDBViaLBRepo extends LocalRepo {
 		return wfGetDB( DB_SLAVE, array(), $this->wiki );
 	}
 
+	/**
+	 * @return Closure
+	 */
+	protected function getDBFactory() {
+		$wiki = $this->wiki;
+		return function( $index ) use ( $wiki ) {
+			return wfGetDB( $index, array(), $wiki );
+		};
+	}
+
 	function hasSharedCache() {
 		return $this->hasSharedCache;
 	}
@@ -69,6 +90,7 @@ class ForeignDBViaLBRepo extends LocalRepo {
 		if ( $this->hasSharedCache() ) {
 			$args = func_get_args();
 			array_unshift( $args, $this->wiki );
+
 			return implode( ':', $args );
 		} else {
 			return false;
@@ -77,5 +99,9 @@ class ForeignDBViaLBRepo extends LocalRepo {
 
 	protected function assertWritableRepo() {
 		throw new MWException( get_class( $this ) . ': write operations are not supported.' );
+	}
+
+	public function getInfo() {
+		return FileRepo::getInfo();
 	}
 }

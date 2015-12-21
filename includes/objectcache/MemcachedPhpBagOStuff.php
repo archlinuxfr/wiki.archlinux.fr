@@ -39,9 +39,10 @@ class MemcachedPhpBagOStuff extends MemcachedBagOStuff {
 	 *   - timeout:             The read timeout in microseconds
 	 *   - connect_timeout:     The connect timeout in seconds
 	 *
-	 * @param $params array
+	 * @param array $params
 	 */
 	function __construct( $params ) {
+		parent::__construct( $params );
 		$params = $this->applyDefaultParams( $params );
 
 		$this->client = new MemCachedClientforWiki( $params );
@@ -50,51 +51,36 @@ class MemcachedPhpBagOStuff extends MemcachedBagOStuff {
 	}
 
 	/**
-	 * @param $debug bool
+	 * @param bool $debug
 	 */
 	public function setDebug( $debug ) {
 		$this->client->set_debug( $debug );
 	}
 
-	/**
-	 * @param $keys Array
-	 * @return Array
-	 */
-	public function getMulti( array $keys ) {
+	public function getMulti( array $keys, $flags = 0 ) {
 		$callback = array( $this, 'encodeKey' );
-		return $this->client->get_multi( array_map( $callback, $keys ) );
+		$encodedResult = $this->client->get_multi( array_map( $callback, $keys ) );
+		$result = array();
+		foreach ( $encodedResult as $key => $value ) {
+			$key = $this->decodeKey( $key );
+			$result[$key] = $value;
+		}
+		return $result;
 	}
 
 	/**
-	 * @param $key
-	 * @param $timeout int
-	 * @return bool
-	 */
-	public function lock( $key, $timeout = 0 ) {
-		return $this->client->lock( $this->encodeKey( $key ), $timeout );
-	}
-
-	/**
-	 * @param $key string
-	 * @return Mixed
-	 */
-	public function unlock( $key ) {
-		return $this->client->unlock( $this->encodeKey( $key ) );
-	}
-
-	/**
-	 * @param $key string
-	 * @param $value int
-	 * @return Mixed
+	 * @param string $key
+	 * @param int $value
+	 * @return mixed
 	 */
 	public function incr( $key, $value = 1 ) {
 		return $this->client->incr( $this->encodeKey( $key ), $value );
 	}
 
 	/**
-	 * @param $key string
-	 * @param $value int
-	 * @return Mixed
+	 * @param string $key
+	 * @param int $value
+	 * @return mixed
 	 */
 	public function decr( $key, $value = 1 ) {
 		return $this->client->decr( $this->encodeKey( $key ), $value );

@@ -27,7 +27,6 @@
  * @ingroup SpecialPage
  */
 class SpecialUserlogout extends UnlistedSpecialPage {
-
 	function __construct() {
 		parent::__construct( 'Userlogout' );
 	}
@@ -57,7 +56,7 @@ class SpecialUserlogout extends UnlistedSpecialPage {
 
 		// Hook.
 		$injected_html = '';
-		wfRunHooks( 'UserLogoutComplete', array( &$user, &$injected_html, $oldName ) );
+		Hooks::run( 'UserLogoutComplete', array( &$user, &$injected_html, $oldName ) );
 		$out->addHTML( $injected_html );
 
 		$out->returnToMain();

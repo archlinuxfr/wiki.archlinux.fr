@@ -9,9 +9,11 @@ Simple <ref>, no <references/>
 !! input
 Wikipedia rocks!<ref>Proceeds of Rockology, vol. XXI</ref>
 !! result
-<p>Wikipedia rocks!<sup id="cite_ref-1" class="reference"><a href="#cite_note-1">[1]</a></sup>
-<br /><strong class="error mw-ext-cite-error">Cite error: <code>&lt;ref&gt;</code> tags exist, but no <code>&lt;references/&gt;</code> tag was found</strong>
-</p>
+Wikipedia rocks!<sup id="cite_ref-1" class="reference"><a href="#cite_note-1">[1]</a></sup><ol class="references">
+<li id="cite_note-1"><span class="mw-cite-backlink"><a href="#cite_ref-1">↑</a></span> <span class="reference-text">Proceeds of Rockology, vol. XXI</span>
+</li>
+</ol>
+
 !! end
 
 !! test
@@ -124,7 +126,7 @@ Templating<ref>Text<!--comment--></ref>
 </p>
 <ul class="gallery mw-gallery-traditional">
 		<li class="gallerybox" style="width: 155px"><div style="width: 155px">
-			<div class="thumb" style="width: 150px;"><div style="margin:68px auto;"><a href="/wiki/File:Foobar.jpg" class="image"><img alt="Foobar.jpg" src="http://example.com/images/thumb/3/3a/Foobar.jpg/120px-Foobar.jpg" width="120" height="14" /></a></div></div>
+			<div class="thumb" style="width: 150px;"><div style="margin:68px auto;"><a href="/wiki/File:Foobar.jpg" class="image"><img alt="Foobar.jpg" src="http://example.com/images/thumb/3/3a/Foobar.jpg/120px-Foobar.jpg" width="120" height="14" srcset="http://example.com/images/thumb/3/3a/Foobar.jpg/180px-Foobar.jpg 1.5x, http://example.com/images/thumb/3/3a/Foobar.jpg/240px-Foobar.jpg 2x" /></a></div></div>
 			<div class="gallerytext">
 			</div>
 		</div></li>
@@ -141,9 +143,11 @@ Templating<ref>Text<!--comment--></ref>
 !! input
 {{REVISIONID}}<ref>elite</ref>
 !! result
-<p>1337<sup id="cite_ref-1" class="reference"><a href="#cite_note-1">[1]</a></sup>
-<br /><strong class="error mw-ext-cite-error">Cite error: <code>&lt;ref&gt;</code> tags exist, but no <code>&lt;references/&gt;</code> tag was found</strong>
-</p>
+1337<sup id="cite_ref-1" class="reference"><a href="#cite_note-1">[1]</a></sup><ol class="references">
+<li id="cite_note-1"><span class="mw-cite-backlink"><a href="#cite_ref-1">↑</a></span> <span class="reference-text">elite</span>
+</li>
+</ol>
+
 !! end
 
 !! test
@@ -300,7 +304,7 @@ Wikipedia rocks!<sup id="cite_ref-2" class="reference"><a href="#cite_note-2">[n
 !! end
 
 !! test
-Simple <ref>, with <references/> in group, with groupname in chinese 
+Simple <ref>, with <references/> in group, with groupname in Chinese
 !! input
 AAA<ref group="参">ref a</ref>BBB<ref group="注">note b</ref>CCC<ref group="参">ref c</ref>
 
@@ -311,16 +315,14 @@ AAA<ref group="参">ref a</ref>BBB<ref group="注">note b</ref>CCC<ref group="�
 !! result
 <p>AAA<sup id="cite_ref-1" class="reference"><a href="#cite_note-1">[参 1]</a></sup>BBB<sup id="cite_ref-2" class="reference"><a href="#cite_note-2">[注 1]</a></sup>CCC<sup id="cite_ref-3" class="reference"><a href="#cite_note-3">[参 2]</a></sup>
 </p>
-<dl><dt>refs
-</dt></dl>
+<dl><dt>refs</dt></dl>
 <ol class="references">
 <li id="cite_note-1"><span class="mw-cite-backlink"><a href="#cite_ref-1">↑</a></span> <span class="reference-text">ref a</span>
 </li>
 <li id="cite_note-3"><span class="mw-cite-backlink"><a href="#cite_ref-3">↑</a></span> <span class="reference-text">ref c</span>
 </li>
 </ol>
-<dl><dt>notes
-</dt></dl>
+<dl><dt>notes</dt></dl>
 <ol class="references">
 <li id="cite_note-2"><span class="mw-cite-backlink"><a href="#cite_ref-2">↑</a></span> <span class="reference-text">note b</span>
 </li>
@@ -395,7 +397,7 @@ wa' cha' wej loS vagh jav Soch chorgh Hut wa'maH
 !! endarticle
 
 !! test
-<ref> with custom group link
+<ref> with custom group link with number names in Klingon
 !! input
 Wikipedia rocks!<ref group="klingon">Proceeds of Rockology, vol. XXI</ref>
 
@@ -445,5 +447,37 @@ foo
 foo</span>
 </li>
 </ol></div>
+
+!! end
+
+!! test
+<ref> with no name and no content.
+!! input
+Bla.<ref></ref>
+!! result
+<p>Bla.<strong class="error mw-ext-cite-error">Cite error: Invalid <code>&lt;ref&gt;</code> tag;
+refs with no name must have content</strong>
+</p>
+!! end
+
+!! test
+<ref> with an empty-string name parameter and no content.
+!! input
+Bla.<ref name=""></ref>
+!! result
+<p>Bla.<strong class="error mw-ext-cite-error">Cite error: Invalid <code>&lt;ref&gt;</code> tag;
+refs with no name must have content</strong>
+</p>
+!! end
+
+!! test
+<ref> with a non-empty name parameter and no content.
+!! input
+Bla.<ref name="void"></ref>
+!! result
+Bla.<sup id="cite_ref-void_1-0" class="reference"><a href="#cite_note-void-1">[1]</a></sup><ol class="references">
+<li id="cite_note-void"><span class="mw-cite-backlink"><a href="#cite_ref-void_0">↑</a></span> <strong class="error mw-ext-cite-error">Cite error: Invalid <code>&lt;ref&gt;</code> tag;
+no text was provided for refs named <code>void</code></strong></li>
+</ol>
 
 !! end

@@ -27,7 +27,8 @@
 /**
  * @since 1.18
  */
-class MWHookException extends MWException {}
+class MWHookException extends MWException {
+}
 
 /**
  * Hooks class.
@@ -37,7 +38,6 @@ class MWHookException extends MWException {}
  * @since 1.18
  */
 class Hooks {
-
 	/**
 	 * Array of events mapped to an array of callbacks to be run
 	 * when that event is triggered.
@@ -48,7 +48,7 @@ class Hooks {
 	 * Attach an event handler to a given hook.
 	 *
 	 * @param string $name Name of hook
-	 * @param mixed $callback Callback function to attach
+	 * @param callable $callback Callback function to attach
 	 *
 	 * @since 1.18
 	 */
@@ -64,10 +64,10 @@ class Hooks {
 	 * Clears hooks registered via Hooks::register(). Does not touch $wgHooks.
 	 * This is intended for use while testing and will fail if MW_PHPUNIT_TEST is not defined.
 	 *
-	 * @param string $name the name of the hook to clear.
+	 * @param string $name The name of the hook to clear.
 	 *
 	 * @since 1.21
-	 * @throws MWException if not in testing mode.
+	 * @throws MWException If not in testing mode.
 	 */
 	public static function clear( $name ) {
 		if ( !defined( 'MW_PHPUNIT_TEST' ) ) {
@@ -123,17 +123,18 @@ class Hooks {
 	 * Finally, process the return value and return/throw accordingly.
 	 *
 	 * @param string $event Event name
-	 * @param array $args  Array of parameters passed to hook functions
+	 * @param array $args Array of parameters passed to hook functions
+	 * @param string|null $deprecatedVersion Optionally, mark hook as deprecated with version number
 	 * @return bool True if no handler aborted the hook
 	 *
+	 * @throws Exception
+	 * @throws FatalError
+	 * @throws MWException
 	 * @since 1.22 A hook function is not required to return a value for
 	 *   processing to continue. Not returning a value (or explicitly
 	 *   returning null) is equivalent to returning true.
-	 * @throws MWException
-	 * @throws FatalError
 	 */
-	public static function run( $event, array $args = array() ) {
-		wfProfileIn( 'hook: ' . $event );
+	public static function run( $event, array $args = array(), $deprecatedVersion = null ) {
 		foreach ( self::getHandlers( $event ) as $hook ) {
 			// Turn non-array values into an array. (Can't use casting because of objects.)
 			if ( !is_array( $hook ) ) {
@@ -178,7 +179,7 @@ class Hooks {
 			// Run autoloader (workaround for call_user_func_array bug)
 			// and throw error if not callable.
 			if ( !is_callable( $callback ) ) {
-				throw new MWException( 'Invalid callback in hooks for ' . $event . "\n" );
+				throw new MWException( 'Invalid callback ' . $func . ' in hooks for ' . $event . "\n" );
 			}
 
 			/*
@@ -192,55 +193,23 @@ class Hooks {
 			$badhookmsg = null;
 			$hook_args = array_merge( $hook, $args );
 
-			// Profile first in case the Profiler causes errors.
-			wfProfileIn( $func );
-			set_error_handler( 'Hooks::hookErrorHandler' );
-			try {
-				$retval = call_user_func_array( $callback, $hook_args );
-			} catch ( MWHookException $e ) {
-				$badhookmsg = $e->getMessage();
+			// mark hook as deprecated, if deprecation version is specified
+			if ( $deprecatedVersion !== null ) {
+				wfDeprecated( "$event hook (used in $func)", $deprecatedVersion );
 			}
-			restore_error_handler();
-			wfProfileOut( $func );
+
+			$retval = call_user_func_array( $callback, $hook_args );
 
 			// Process the return value.
 			if ( is_string( $retval ) ) {
 				// String returned means error.
 				throw new FatalError( $retval );
-			} elseif ( $badhookmsg !== null ) {
-				// Exception was thrown from Hooks::hookErrorHandler.
-				throw new MWException(
-					'Detected bug in an extension! ' .
-					"Hook $func has invalid call signature; " . $badhookmsg
-				);
 			} elseif ( $retval === false ) {
-				wfProfileOut( 'hook: ' . $event );
 				// False was returned. Stop processing, but no error.
 				return false;
 			}
 		}
 
-		wfProfileOut( 'hook: ' . $event );
 		return true;
-	}
-
-	/**
-	 * Handle PHP errors issued inside a hook. Catch errors that have to do with
-	 * a function expecting a reference, and let all others pass through.
-	 *
-	 * This REALLY should be protected... but it's public for compatibility
-	 *
-	 * @since 1.18
-	 *
-	 * @param int $errno Error number (unused)
-	 * @param string $errstr Error message
-	 * @throws MWHookException If the error has to do with the function signature
-	 * @return bool Always returns false
-	 */
-	public static function hookErrorHandler( $errno, $errstr ) {
-		if ( strpos( $errstr, 'expected to be a reference, value given' ) !== false ) {
-			throw new MWHookException( $errstr, $errno );
-		}
-		return false;
 	}
 }

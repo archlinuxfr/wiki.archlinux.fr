@@ -8,7 +8,28 @@
  *     $( 'textarea#wpTextbox1' ).wikiEditor( 'addModule', 'toolbar', { ... config ... } );
  *
  */
-( function ( $ ) {
+/*jshint onevar:false, boss:true */
+( function ( $, mw ) {
+
+var hasOwn = Object.prototype.hasOwnProperty,
+
+/**
+ * Array of language codes.
+ */
+fallbackChain = ( function () {
+	var isRTL = $( 'body' ).hasClass( 'rtl' ),
+		chain = mw.language.getFallbackLanguageChain();
+
+	// Do not fallback to 'en'
+	if ( chain.length >= 2 && !/^en-/.test( chain[chain.length - 2] ) ) {
+		chain.pop();
+	}
+	if ( isRTL ) {
+		chain.push( 'default-rtl' );
+	}
+	chain.push( 'default' );
+	return chain;
+} )();
 
 /**
  * Global static object for wikiEditor that provides generally useful functionality to all modules and contexts.
@@ -47,15 +68,15 @@ $.wikiEditor = {
 			msie: [['>=', 7]],
 			// Layout issues in FF < 2
 			firefox: [['>=', 2]],
-			// Text selection bugs galore - this may be a different situation with the new iframe-based solution
+			// Text selection bugs galore
 			opera: [['>=', 9.6]],
 			// jQuery minimums
 			safari: [['>=', 3]],
 			chrome: [['>=', 3]],
 			netscape: [['>=', 9]],
 			blackberry: false,
-			ipod: false,
-			iphone: false
+			ipod: [['>=', 6]],
+			iphone: [['>=', 6]]
 		},
 		// Right-to-left languages
 		rtl: {
@@ -63,15 +84,15 @@ $.wikiEditor = {
 			msie: [['>=', 8]],
 			// Layout issues in FF < 2
 			firefox: [['>=', 2]],
-			// Text selection bugs galore - this may be a different situation with the new iframe-based solution
+			// Text selection bugs galore
 			opera: [['>=', 9.6]],
 			// jQuery minimums
 			safari: [['>=', 3]],
 			chrome: [['>=', 3]],
 			netscape: [['>=', 9]],
 			blackberry: false,
-			ipod: false,
-			iphone: false
+			ipod: [['>=', 6]],
+			iphone: [['>=', 6]]
 		}
 	},
 
@@ -79,7 +100,7 @@ $.wikiEditor = {
 	 * Path to images - this is a bit messy, and it would need to change if this code (and images) gets moved into the
 	 * core - or anywhere for that matter...
 	 */
-	imgPath : mw.config.get( 'wgExtensionAssetsPath' ) + '/WikiEditor/modules/images/',
+	imgPath: mw.config.get( 'wgExtensionAssetsPath' ) + '/WikiEditor/modules/images/',
 
 	/**
 	 * Checks the current browser against the browsers object to determine if the browser has been black-listed or not.
@@ -113,7 +134,7 @@ $.wikiEditor = {
 	isRequired: function ( module, requirement ) {
 		if ( typeof module.req !== 'undefined' ) {
 			for ( var req in module.req ) {
-				if ( module.req[req] == requirement ) {
+				if ( module.req[req] === requirement ) {
 					return true;
 				}
 			}
@@ -122,8 +143,7 @@ $.wikiEditor = {
 	},
 
 	/**
-	 * Provides a way to extract messages from objects. Wraps the mediaWiki.msg() function, which
-	 * may eventually become a wrapper for some kind of core MW functionality.
+	 * Provides a way to extract messages from objects. Wraps a mediaWiki.message( ... ).plain() call.
 	 *
 	 * @param object Object to extract messages from
 	 * @param property String of name of property which contains the message. This should be the base name of the
@@ -132,9 +152,10 @@ $.wikiEditor = {
 	 * with the key 'bar'.
 	 */
 	autoMsg: function ( object, property ) {
+		var i, p;
 		// Accept array of possible properties, of which the first one found will be used
-		if ( typeof property == 'object' ) {
-			for ( var i in property ) {
+		if ( typeof property === 'object' ) {
+			for ( i in property ) {
 				if ( property[i] in object || property[i] + 'Msg' in object ) {
 					property = property[i];
 					break;
@@ -144,11 +165,11 @@ $.wikiEditor = {
 		if ( property in object ) {
 			return object[property];
 		} else if ( property + 'Msg' in object ) {
-			var p = object[property + 'Msg'];
+			p = object[property + 'Msg'];
 			if ( $.isArray( p ) && p.length >= 2 ) {
-				return mediaWiki.message.apply( mediaWiki.message, p ).plain();
+				return mw.message.apply( mw.message, p ).plain();
 			} else {
-				return mediaWiki.message( p ).plain();
+				return mw.message( p ).plain();
 			}
 		} else {
 			return '';
@@ -162,11 +183,17 @@ $.wikiEditor = {
 	 * with a default.
 	 *
 	 * @param object Object to extract property from
-	 * @param lang Language code, defaults to wgUserLanguage
 	 */
-	autoLang: function ( object, lang ) {
-		var defaultKey = $( 'body' ).hasClass( 'rtl' ) ? 'default-rtl' : 'default';
-		return object[lang || mw.config.get( 'wgUserLanguage' )] || object[defaultKey] || object['default'] || object;
+	autoLang: function ( object ) {
+		var i, key;
+
+		for ( i = 0; i < fallbackChain.length; i++ ) {
+			key = fallbackChain[i];
+			if ( hasOwn.call( object, key ) ) {
+				return object[key];
+			}
+		}
+		return object;
 	},
 
 	/**
@@ -175,16 +202,15 @@ $.wikiEditor = {
 	 *
 	 * @param icon Icon object from e.g. toolbar config
 	 * @param path Default icon path, defaults to $.wikiEditor.imgPath
-	 * @param lang Language code, defaults to wgUserLanguage
 	 */
-	autoIcon: function ( icon, path, lang ) {
-		var src = $.wikiEditor.autoLang( icon, lang );
+	autoIcon: function ( icon, path ) {
+		var src = $.wikiEditor.autoLang( icon );
 		path = path || $.wikiEditor.imgPath;
 		// Prepend path if src is not absolute
-		if ( src.substr( 0, 7 ) != 'http://' && src.substr( 0, 8 ) != 'https://' && src[0] != '/' ) {
+		if ( src.substr( 0, 7 ) !== 'http://' && src.substr( 0, 8 ) !== 'https://' && src[0] !== '/' ) {
 			src = path + src;
 		}
-		return src + '?' + mw.loader.version( 'jquery.wikiEditor' );
+		return src + '?' + mw.loader.getVersion( 'jquery.wikiEditor' );
 	},
 
 	/**
@@ -193,17 +219,27 @@ $.wikiEditor = {
 	 * @param icon Icon object, see autoIcon()
 	 * @param offset Offset object
 	 * @param path Icon path, see autoIcon()
-	 * @param lang Language code, defaults to wgUserLanguage
 	 */
-	autoIconOrOffset: function ( icon, offset, path, lang ) {
-		lang = lang || mw.config.get( 'wgUserLanguage' );
-		if ( typeof offset == 'object' && lang in offset ) {
-			return offset[lang];
-		} else if ( typeof icon == 'object' && lang in icon ) {
-			return $.wikiEditor.autoIcon( icon, undefined, lang );
-		} else {
-			return $.wikiEditor.autoLang( offset, lang );
+	autoIconOrOffset: function ( icon, offset, path ) {
+		var i, key, src;
+
+		path = path || $.wikiEditor.imgPath;
+
+		for ( i = 0; i < fallbackChain.length; i++ ) {
+			key = fallbackChain[i];
+			if ( offset && hasOwn.call( offset, key ) ) {
+				return offset[key];
+			}
+			if ( icon && hasOwn.call( icon, key ) ) {
+				src = icon[key];
+				// Prepend path if src is not absolute
+				if ( src.substr( 0, 7 ) !== 'http://' && src.substr( 0, 8 ) !== 'https://' && src[0] !== '/' ) {
+					src = path + src;
+				}
+				return src + '?' + mw.loader.getVersion( 'jquery.wikiEditor' );
+			}
 		}
+		return offset || icon;
 	}
 };
 
@@ -214,21 +250,24 @@ $.fn.wikiEditor = function () {
 
 // Skip any further work when running in browsers that are unsupported
 if ( !$.wikiEditor.isSupported() ) {
-	return $(this);
+	return $( this );
 }
+
+// Save browser profile for detailed tests.
+var profile = $.client.profile();
 
 /* Initialization */
 
 // The wikiEditor context is stored in the element's data, so when this function gets called again we can pick up right
 // where we left off
-var context = $(this).data( 'wikiEditor-context' );
+var context = $( this ).data( 'wikiEditor-context' );
 // On first call, we need to set things up, but on all following calls we can skip right to the API handling
-if ( !context || typeof context == 'undefined' ) {
+if ( !context || typeof context === 'undefined' ) {
 
 	// Star filling the context with useful data - any jQuery selections, as usual should be named with a preceding $
 	context = {
 		// Reference to the textarea element which the wikiEditor is being built around
-		'$textarea': $(this),
+		'$textarea': $( this ),
 		// Container for any number of mutually exclusive views that are accessible by tabs
 		'views': {},
 		// Container for any number of module-specific data - only including data for modules in use on this context
@@ -236,25 +275,9 @@ if ( !context || typeof context == 'undefined' ) {
 		// General place to shouve bits of data into
 		'data': {},
 		// Unique numeric ID of this instance used both for looking up and differentiating instances of wikiEditor
-		'instance': $.wikiEditor.instances.push( $(this) ) - 1,
-		// Array mapping elements in the textarea to character offsets
-		'offsets': null,
-		// Cache for context.fn.htmlToText()
-		'htmlToTextMap': {},
-		// The previous HTML of the iframe, stored to detect whether something really changed.
-		'oldHTML': null,
-		// Same for delayedChange()
-		'oldDelayedHTML': null,
-		// The previous selection of the iframe, stored to detect whether the selection has changed
-		'oldDelayedSel': null,
-		// Saved selection state for IE
+		'instance': $.wikiEditor.instances.push( $( this ) ) - 1,
+		// Saved selection state for old IE (<=10)
 		'savedSelection': null,
-		// Stack of states in { html: [string] } form
-		'history': [],
-		// Current history state position - this is number of steps backwards, so it's always -1 or less
-		'historyPosition': -1,
-		/// The previous historyPosition, stored to detect if change events were due to an undo or redo action
-		'oldDelayedHistoryPosition': -1,
 		// List of extensions active on this context
 		'extensions': []
 	};
@@ -262,7 +285,7 @@ if ( !context || typeof context == 'undefined' ) {
 	/**
 	 * Externally Accessible API
 	 *
-	 * These are available using calls to $(selection).wikiEditor( call, data ) where selection is a jQuery selection
+	 * These are available using calls to $( selection ).wikiEditor( call, data ) where selection is a jQuery selection
 	 * of the textarea that the wikiEditor instance was built around.
 	 */
 
@@ -276,14 +299,14 @@ if ( !context || typeof context == 'undefined' ) {
 		'addModule': function ( context, data ) {
 			var module, call,
 				modules = {};
-			if ( typeof data == 'string' ) {
+			if ( typeof data === 'string' ) {
 				modules[data] = {};
-			} else if ( typeof data == 'object' ) {
+			} else if ( typeof data === 'object' ) {
 				modules = data;
 			}
 			for ( module in modules ) {
 				// Check for the existance of an available / supported module with a matching name and a create function
-				if ( typeof module == 'string' && typeof $.wikiEditor.modules[module] !== 'undefined' &&
+				if ( typeof module === 'string' && typeof $.wikiEditor.modules[module] !== 'undefined' &&
 						$.wikiEditor.isSupported( $.wikiEditor.modules[module] ) )
 				{
 					// Extend the context's core API with this module's own API calls
@@ -325,12 +348,17 @@ if ( !context || typeof context == 'undefined' ) {
 		 * Executes core event filters as well as event handlers provided by modules.
 		 */
 		trigger: function ( name, event ) {
+			// Workaround for a scrolling bug in IE8 (bug 61908)
+			if ( profile.name === 'msie' && profile.versionNumber === 8 ) {
+				context.$textarea.css( 'width', context.$textarea.parent().width() );
+			}
+
 			// Event is an optional argument, but from here on out, at least the type field should be dependable
-			if ( typeof event == 'undefined' ) {
+			if ( typeof event === 'undefined' ) {
 				event = { 'type': 'custom' };
 			}
 			// Ensure there's a place for extra information to live
-			if ( typeof event.data == 'undefined' ) {
+			if ( typeof event.data === 'undefined' ) {
 				event.data = {};
 			}
 
@@ -340,7 +368,7 @@ if ( !context || typeof context == 'undefined' ) {
 					return false;
 				}
 			}
-			var returnFromModules = null; //they return null by default
+			var returnFromModules = null; // they return null by default
 			// Pass the event around to all modules activated on this context
 
 			for ( var module in context.modules ) {
@@ -350,9 +378,9 @@ if ( !context || typeof context == 'undefined' ) {
 					name in $.wikiEditor.modules[module].evt
 				) {
 					var ret = $.wikiEditor.modules[module].evt[name]( context, event );
-					if (ret !== null) {
-						//if 1 returns false, the end result is false
-						if( returnFromModules === null ) {
+					if ( ret !== null ) {
+						// if 1 returns false, the end result is false
+						if ( returnFromModules === null ) {
 							returnFromModules = ret;
 						} else {
 							returnFromModules = returnFromModules && ret;
@@ -393,7 +421,7 @@ if ( !context || typeof context == 'undefined' ) {
 				// Return the newly appended tab
 				return $( '<div>' )
 					.attr( 'rel', 'wikiEditor-ui-view-' + options.name )
-					.addClass( context.view == options.name ? 'current' : null )
+					.addClass( context.view === options.name ? 'current' : null )
 					.append( $( '<a>' )
 						.attr( 'href', '#' )
 						.mousedown( function () {
@@ -402,11 +430,11 @@ if ( !context || typeof context == 'undefined' ) {
 						} )
 						.click( function ( event ) {
 							context.$ui.find( '.wikiEditor-ui-view' ).hide();
-							context.$ui.find( '.' + $(this).parent().attr( 'rel' ) ).show();
+							context.$ui.find( '.' + $( this ).parent().attr( 'rel' ) ).show();
 							context.$tabs.find( 'div' ).removeClass( 'current' );
-							$(this).parent().addClass( 'current' );
-							$(this).blur();
-							if ( 'init' in options && typeof options.init == 'function' ) {
+							$( this ).parent().addClass( 'current' );
+							$( this ).blur();
+							if ( 'init' in options && typeof options.init === 'function' ) {
 								options.init( context );
 							}
 							event.preventDefault();
@@ -430,53 +458,63 @@ if ( !context || typeof context == 'undefined' ) {
 		},
 
 		/**
-		 * Save scrollTop and cursor position for IE
+		 * Save scrollTop and cursor position for old IE (<=10)
+		 * Related to old IE 8 issues that are no longer reproducible
 		 */
 		saveCursorAndScrollTop: function () {
-			if ( $.client.profile().name === 'msie' ) {
-				var IHateIE = {
-					'scrollTop' : context.$textarea.scrollTop(),
+			if ( profile.name === 'msie' && document.selection && document.selection.createRange ) {
+				var IHateIE8 = {
+					'scrollTop': context.$textarea.scrollTop(),
 					'pos': context.$textarea.textSelection( 'getCaretPosition', { startAndEnd: true } )
 				};
-				context.$textarea.data( 'IHateIE', IHateIE );
+				context.$textarea.data( 'IHateIE8', IHateIE8 );
 			}
 		},
 
 		/**
-		 * Restore scrollTo and cursor position for IE
+		 * Restore scrollTo and cursor position for IE (<=10)
+		 * Related to old IE 8 issues that are no longer reproducible
 		 */
 		restoreCursorAndScrollTop: function () {
-			if ( $.client.profile().name === 'msie' ) {
-				var IHateIE = context.$textarea.data( 'IHateIE' );
-				if ( IHateIE ) {
-					context.$textarea.scrollTop( IHateIE.scrollTop );
-					context.$textarea.textSelection( 'setSelection', { start: IHateIE.pos[0], end: IHateIE.pos[1] } );
-					context.$textarea.data( 'IHateIE', null );
+			if ( profile.name === 'msie' && document.selection && document.selection.createRange ) {
+				var IHateIE8 = context.$textarea.data( 'IHateIE' );
+				if ( IHateIE8 ) {
+					context.$textarea.scrollTop( IHateIE8.scrollTop );
+					context.$textarea.textSelection( 'setSelection', { start: IHateIE8.pos[0], end: IHateIE8.pos[1] } );
+					context.$textarea.data( 'IHateIE8', null );
 				}
 			}
 		},
 
 		/**
-		 * Save text selection for IE
+		 * Save text selection for old IE (<=10)
 		 */
 		saveSelection: function () {
-			if ( $.client.profile().name === 'msie' ) {
+			if ( profile.name === 'msie' && document.selection && document.selection.createRange ) {
 				context.$textarea.focus();
 				context.savedSelection = document.selection.createRange();
 			}
 		},
 
 		/**
-		 * Restore text selection for IE
+		 * Restore text selection for old IE (<=10)
 		 */
 		restoreSelection: function () {
-			if ( $.client.profile().name === 'msie' && context.savedSelection !== null ) {
+			if ( profile.name === 'msie' && context.savedSelection !== null ) {
 				context.$textarea.focus();
 				context.savedSelection.select();
 				context.savedSelection = null;
 			}
 		}
 	};
+
+	/**
+	 * Workaround for a scrolling bug in IE8 (bug 61908)
+	 */
+	if ( profile.name === 'msie' && profile.versionNumber === 8 ) {
+		context.$textarea.css( 'height', context.$textarea.height() );
+		context.$textarea.css( 'width', context.$textarea.parent().width() );
+	}
 
 	/**
 	 * Base UI Construction
@@ -493,6 +531,9 @@ if ( !context || typeof context == 'undefined' ) {
 		.append( $( '<span>' + mediaWiki.msg( 'wikieditor-loading' ) + '</span>' )
 			.css( 'marginTop', context.$textarea.height() / 2 ) );
 	*/
+	/* Preserving cursor and focus state, which will get lost due to wrapAll */
+	var hasFocus = context.$textarea.is( ':focus' ),
+		cursorPos = context.$textarea.textSelection( 'getCaretPosition', { startAndEnd: true } );
 	// Encapsulate the textarea with some containers for layout
 	context.$textarea
 	/* Disabling our loading div for now
@@ -504,6 +545,14 @@ if ( !context || typeof context == 'undefined' ) {
 		.wrapAll( $( '<div>' ).addClass( 'wikiEditor-ui-left' ) )
 		.wrapAll( $( '<div>' ).addClass( 'wikiEditor-ui-bottom' ) )
 		.wrapAll( $( '<div>' ).addClass( 'wikiEditor-ui-text' ) );
+	// Restore scroll position after this wrapAll (tracked by mediawiki.action.edit)
+	context.$textarea.prop( 'scrollTop', $( '#wpScrolltop' ).val() );
+	// Restore focus and cursor if needed
+	if ( hasFocus ) {
+		context.$textarea.focus();
+		context.$textarea.textSelection( 'setSelection', { start: cursorPos[0], end: cursorPos[1] } );
+	}
+
 	// Get references to some of the newly created containers
 	context.$ui = context.$textarea.parent().parent().parent().parent().parent();
 	context.$wikitext = context.$textarea.parent().parent().parent().parent();
@@ -514,15 +563,16 @@ if ( !context || typeof context == 'undefined' ) {
 				.append( $( '<div>' ).addClass( 'wikiEditor-ui-tabs' ).hide() )
 				.append( $( '<div>' ).addClass( 'wikiEditor-ui-buttons' ) )
 		)
-		.before( $( '<div style="clear: both;"></div>' ) );
+		.before( $( '<div>' ).addClass( 'wikiEditor-ui-clear' ) );
 	// Get references to some of the newly created containers
 	context.$controls = context.$ui.find( '.wikiEditor-ui-buttons' ).hide();
 	context.$buttons = context.$ui.find( '.wikiEditor-ui-buttons' );
 	context.$tabs = context.$ui.find( '.wikiEditor-ui-tabs' );
 	// Clear all floating after the UI
-	context.$ui.after( $( '<div style="clear: both;"></div>' ) );
+	context.$ui.after( $( '<div>' ).addClass( 'wikiEditor-ui-clear' ) );
 	// Attach a right container
 	context.$wikitext.append( $( '<div>' ).addClass( 'wikiEditor-ui-right' ) );
+	context.$wikitext.append( $( '<div>' ).addClass( 'wikiEditor-ui-clear' ) );
 	// Attach a top container to the left pane
 	context.$wikitext.find( '.wikiEditor-ui-left' ).prepend( $( '<div>' ).addClass( 'wikiEditor-ui-top' ) );
 	// Setup the intial view
@@ -539,9 +589,9 @@ if ( !context || typeof context == 'undefined' ) {
 var args = $.makeArray( arguments );
 
 // Dynamically setup core extensions for modules that are required
-if ( args[0] == 'addModule' && typeof args[1] !== 'undefined' ) {
+if ( args[0] === 'addModule' && typeof args[1] !== 'undefined' ) {
 	var modules = args[1];
-	if ( typeof modules !== "object" ) {
+	if ( typeof modules !== 'object' ) {
 		modules = {};
 		modules[args[1]] = '';
 	}
@@ -573,8 +623,8 @@ if ( args.length > 0 ) {
 }
 
 // Store the context for next time, and support chaining
-return $(this).data( 'wikiEditor-context', context );
+return $( this ).data( 'wikiEditor-context', context );
 
 };
 
-}( jQuery ) );
+}( jQuery, mediaWiki ) );

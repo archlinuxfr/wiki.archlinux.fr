@@ -30,9 +30,9 @@ def unichr3( *args ):
     return [unichr( int( i[2:7], 16 ) ) for i in args if i[2:7]]
 
 # DEFINE
-UNIHAN_VER = '6.2.0'
+UNIHAN_VER = '6.3.0'
 SF_MIRROR = 'dfn'
-SCIM_TABLES_VER = '0.5.11'
+SCIM_TABLES_VER = '0.5.13'
 SCIM_PINYIN_VER = '0.5.92'
 LIBTABE_VER = '0.2.3'
 # END OF DEFINE
@@ -59,7 +59,11 @@ def uncompress( fp, member, encoding = 'U8' ):
     shutil.move( member, name )
     if '/' in member:
         shutil.rmtree( member.split( '/', 1 )[0] )
-    return open( name, 'rb', encoding, 'ignore' )
+    if pyversion[:1] in ['2']:
+        fc = open( name, 'rb', encoding, 'ignore' )
+    else:
+        fc = open( name, 'r', encoding = encoding, errors = 'ignore' )
+    return fc
 
 unzip = lambda path, member, encoding = 'U8': \
         uncompress( zf.ZipFile( path ), member, encoding )
@@ -136,7 +140,10 @@ def unihanParser( path ):
 
 def applyExcludes( mlist, path ):
     """ Apply exclude rules from path to mlist. """
-    excludes = open( path, 'rb', 'U8' ).read().split()
+    if pyversion[:1] in ['2']:
+        excludes = open( path, 'rb', 'U8' ).read().split()
+    else:
+        excludes = open( path, 'r', encoding = 'U8' ).read().split()
     excludes = [word.split( '#' )[0].strip() for word in excludes]
     excludes = '|'.join( excludes )
     excptn = re.compile( '.*(?:%s).*' % excludes )
@@ -145,24 +152,27 @@ def applyExcludes( mlist, path ):
     return mlist
 
 def charManualTable( path ):
-    fp = open( path, 'rb', 'U8' )
-    ret = {}
-    for line in fp:
-        elems = line.split( '#' )[0].split( '|' )
-        elems = unichr3( *elems )
-        if len( elems ) > 1:
-            ret[elems[0]] = elems[1:]
-    return ret
+   fp = open( path, 'r', encoding = 'U8' )
+   for line in fp:
+       elems = line.split( '#' )[0].split( '|' )
+       elems = unichr3( *elems )
+       if len( elems ) > 1:
+           yield elems[0], elems[1:]
         
 def toManyRules( src_table ):
     tomany = set()
-    for ( f, t ) in src_table.iteritems():
-        for i in range( 1, len( t ) ):
-            tomany.add( t[i] )
+    if pyversion[:1] in ['2']:
+        for ( f, t ) in src_table.iteritems():
+            for i in range( 1, len( t ) ):
+                tomany.add( t[i] )
+    else:
+        for ( f, t ) in src_table.items():
+            for i in range( 1, len( t ) ):
+                tomany.add( t[i] )
     return tomany
 
 def removeRules( path, table ):
-    fp = open( path, 'rb', 'U8' )
+    fp = open( path, 'r', encoding = 'U8' )
     texc = list()
     for line in fp:
         elems = line.split( '=>' )
@@ -179,22 +189,30 @@ def removeRules( path, table ):
         if t:
             texc.append( t )
     texcptn = re.compile( '^(?:%s)$' % '|'.join( texc ) )
-    for (tmp_f, tmp_t) in table.copy().iteritems():
-        if texcptn.match( tmp_t ):
-            table.pop( tmp_f )
+    if pyversion[:1] in ['2']:
+        for (tmp_f, tmp_t) in table.copy().iteritems():
+            if texcptn.match( tmp_t ):
+                table.pop( tmp_f )
+    else:
+        for (tmp_f, tmp_t) in table.copy().items():
+            if texcptn.match( tmp_t ):
+                table.pop( tmp_f )
     return table
 
 def customRules( path ):
-    fp = open( path, 'rb', 'U8' )
+    fp = open( path, 'r', encoding = 'U8' )
     ret = dict()
     for line in fp:
-        elems = line.split( '#' )[0].split()
+        line = line.rstrip( '\r\n' )
+        if '#' in line:
+            line = line.split( '#' )[0].rstrip()
+        elems = line.split( '\t' )
         if len( elems ) > 1:
             ret[elems[0]] = elems[1]
     return ret
 
 def dictToSortedList( src_table, pos ):
-    return sorted( src_table.items(), key = lambda m: m[pos] )
+    return sorted( src_table.items(), key = lambda m: ( m[pos], m[1 - pos] ) )
 
 def translate( text, conv_table ):
     i = 0
@@ -210,11 +228,11 @@ def translate( text, conv_table ):
     return text
 
 def manualWordsTable( path, conv_table, reconv_table ):
-    fp = open( path, 'rb', 'U8' )
+    fp = open( path, 'r', encoding = 'U8' )
     reconv_table = {}
     wordlist = [line.split( '#' )[0].strip() for line in fp]
     wordlist = list( set( wordlist ) )
-    wordlist.sort( key = len, reverse = True )
+    wordlist.sort( key = lambda w: ( len(w), w ), reverse = True )
     while wordlist:
         word = wordlist.pop()
         new_word = translate( word, conv_table )
@@ -226,7 +244,7 @@ def manualWordsTable( path, conv_table, reconv_table ):
 
 def defaultWordsTable( src_wordlist, src_tomany, char_conv_table, char_reconv_table ):
     wordlist = list( src_wordlist )
-    wordlist.sort( key = len, reverse = True )
+    wordlist.sort( key = lambda w: ( len(w), w ), reverse = True )
     word_conv_table = {}
     word_reconv_table = {}
     conv_table = char_conv_table.copy()
@@ -261,7 +279,7 @@ def PHPArray( table ):
 def main():
     #Get Unihan.zip:
     url = 'http://www.unicode.org/Public/%s/ucd/Unihan.zip' % UNIHAN_VER
-    han_dest = 'Unihan.zip'
+    han_dest = 'Unihan-%s.zip' % UNIHAN_VER
     download( url, han_dest )
     
     # Get scim-tables-$(SCIM_TABLES_VER).tar.gz:
@@ -282,11 +300,17 @@ def main():
     # Unihan.txt
     ( t2s_1tomany, s2t_1tomany ) = unihanParser( han_dest )
 
+    t2s_1tomany.update( charManualTable( 'symme_supp.manual' ) )
     t2s_1tomany.update( charManualTable( 'trad2simp.manual' ) )
+    s2t_1tomany.update( ( t[0], [f] ) for ( f, t ) in charManualTable( 'symme_supp.manual' ) )
     s2t_1tomany.update( charManualTable( 'simp2trad.manual' ) )
     
-    t2s_1to1 = dict( [( f, t[0] ) for ( f, t ) in t2s_1tomany.iteritems()] )
-    s2t_1to1 = dict( [( f, t[0] ) for ( f, t ) in s2t_1tomany.iteritems()] )
+    if pyversion[:1] in ['2']:
+      t2s_1to1 = dict( [( f, t[0] ) for ( f, t ) in t2s_1tomany.iteritems()] )
+      s2t_1to1 = dict( [( f, t[0] ) for ( f, t ) in s2t_1tomany.iteritems()] )
+    else:
+      t2s_1to1 = dict( [( f, t[0] ) for ( f, t ) in t2s_1tomany.items()] )
+      s2t_1to1 = dict( [( f, t[0] ) for ( f, t ) in s2t_1tomany.items()] )
     
     s_tomany = toManyRules( t2s_1tomany )
     t_tomany = toManyRules( s2t_1tomany )
@@ -333,17 +357,21 @@ def main():
     
     # Final tables
     # sorted list toHans
-    t2s_1to1 = dict( [( f, t ) for ( f, t ) in t2s_1to1.iteritems() if f != t] )
+    if pyversion[:1] in ['2']:
+        t2s_1to1 = dict( [( f, t ) for ( f, t ) in t2s_1to1.iteritems() if f != t] )
+    else:
+        t2s_1to1 = dict( [( f, t ) for ( f, t ) in t2s_1to1.items() if f != t] )
     toHans = dictToSortedList( t2s_1to1, 0 ) + dictToSortedList( t2s_word2word, 1 )
     # sorted list toHant
-    s2t_1to1 = dict( [( f, t ) for ( f, t ) in s2t_1to1.iteritems() if f != t] )
+    if pyversion[:1] in ['2']:
+        s2t_1to1 = dict( [( f, t ) for ( f, t ) in s2t_1to1.iteritems() if f != t] )
+    else:
+        s2t_1to1 = dict( [( f, t ) for ( f, t ) in s2t_1to1.items() if f != t] )
     toHant = dictToSortedList( s2t_1to1, 0 ) + dictToSortedList( s2t_word2word, 1 )
     # sorted list toCN
     toCN = dictToSortedList( customRules( 'toCN.manual' ), 1 )
     # sorted list toHK
     toHK = dictToSortedList( customRules( 'toHK.manual' ), 1 )
-    # sorted list toSG
-    toSG = dictToSortedList( customRules( 'toSG.manual' ), 1 )
     # sorted list toTW
     toTW = dictToSortedList( customRules( 'toTW.manual' ), 1 )
     
@@ -352,7 +380,7 @@ def main():
 /**
  * Simplified / Traditional Chinese conversion tables
  *
- * Automatically generated using code and data in includes/zhtable/
+ * Automatically generated using code and data in maintenance/language/zhtable/
  * Do not modify directly!
  *
  * @file
@@ -368,11 +396,12 @@ $zh2Hant = array(\n'''
         +  PHPArray( toHK ) \
         +  '\n);\n\n$zh2CN = array(\n' \
         +  PHPArray( toCN ) \
-        +  '\n);\n\n$zh2SG = array(\n' \
-        +  PHPArray( toSG ) \
         +  '\n);\n'
     
-    f = open( os.path.join( '..', '..', '..', 'includes', 'ZhConversion.php' ), 'wb', encoding = 'utf8' )
+    if pyversion[:1] in ['2']:
+        f = open( os.path.join( '..', '..', '..', 'includes', 'ZhConversion.php' ), 'wb', encoding = 'utf8' )
+    else:
+        f = open( os.path.join( '..', '..', '..', 'includes', 'ZhConversion.php' ), 'w', buffering = 4096, encoding = 'utf8' )
     print ('Writing ZhConversion.php ... ')
     f.write( php )
     f.close()

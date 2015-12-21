@@ -1,7 +1,7 @@
 <?php
 /**
- * Version of opensearch_desc.php to used in web server requiring .php5 extension
- * to execute scripts with PHP5 engine.
+ * Version of opensearch_desc.php to be used in web servers that require the .php5
+ * extension to execute scripts with the PHP5 engine.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,5 +20,7 @@
  *
  * @file
  */
+
+define( 'MW_ENTRY_PHP5', true );
 
 require './opensearch_desc.php';

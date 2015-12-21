@@ -21,6 +21,8 @@
  * @todo document
  * @ingroup Maintenance
  */
+use \Cdb\Exception as CdbException;
+use \Cdb\Reader as CdbReader;
 
 /** */
 require_once __DIR__ . '/commandLine.inc';
@@ -52,7 +54,7 @@ do {
 	$bad = false;
 	$showhelp = false;
 	$quit = false;
-	static $fileHandle;
+	static $fileHandle = false;
 
 	$line = Maintenance::readconsole();
 	if ( $line === false ) {
@@ -75,7 +77,11 @@ do {
 			}
 			$file = $args[0];
 			print "Loading cdb file $file...";
-			$fileHandle = CdbReader::open( $file );
+			try {
+				$fileHandle = CdbReader::open( $file );
+			} catch ( CdbException $e ) {
+			}
+
 			if ( !$fileHandle ) {
 				print "not a cdb file or unable to read it\n";
 			} else {
@@ -91,7 +97,12 @@ do {
 				print "Need to specify a key, Luke\n";
 				break;
 			}
-			$res = $fileHandle->get( $args[0] );
+			try {
+				$res = $fileHandle->get( $args[0] );
+			} catch ( CdbException $e ) {
+				print "Unable to read key from file\n";
+				break;
+			}
 			if ( $res === false ) {
 				print "No such key/value pair\n";
 			} elseif ( is_string( $res ) ) {

@@ -28,16 +28,17 @@
  * @since 1.17
  */
 class MysqlUpdater extends DatabaseUpdater {
-
 	protected function getCoreUpdateList() {
 		return array(
+			array( 'disableContentHandlerUseDB' ),
+
 			// 1.2
 			array( 'addField', 'ipblocks', 'ipb_id', 'patch-ipblocks.sql' ),
 			array( 'addField', 'ipblocks', 'ipb_expiry', 'patch-ipb_expiry.sql' ),
 			array( 'doInterwikiUpdate' ),
 			array( 'doIndexUpdate' ),
-			array( 'addTable', 'hitcounter', 'patch-hitcounter.sql' ),
 			array( 'addField', 'recentchanges', 'rc_type', 'patch-rc_type.sql' ),
+			array( 'addIndex', 'recentchanges', 'new_name_timestamp', 'patch-rc-newindex.sql' ),
 
 			// 1.3
 			array( 'addField', 'user', 'user_real_name', 'patch-user-realname.sql' ),
@@ -218,6 +219,7 @@ class MysqlUpdater extends DatabaseUpdater {
 			array( 'addField', 'archive', 'ar_content_format', 'patch-archive-ar_content_format.sql' ),
 			array( 'addField', 'archive', 'ar_content_model', 'patch-archive-ar_content_model.sql' ),
 			array( 'addField', 'page', 'page_content_model', 'patch-page-page_content_model.sql' ),
+			array( 'enableContentHandlerUseDB' ),
 			array( 'dropField', 'site_stats', 'ss_admins', 'patch-drop-ss_admins.sql' ),
 			array( 'dropField', 'recentchanges', 'rc_moved_to_title', 'patch-rc_moved.sql' ),
 			array( 'addTable', 'sites', 'patch-sites.sql' ),
@@ -239,6 +241,40 @@ class MysqlUpdater extends DatabaseUpdater {
 				'patch-iwlinks-from-title-index.sql' ),
 			array( 'addField', 'archive', 'ar_id', 'patch-archive-ar_id.sql' ),
 			array( 'addField', 'externallinks', 'el_id', 'patch-externallinks-el_id.sql' ),
+
+			// 1.23
+			array( 'addField', 'recentchanges', 'rc_source', 'patch-rc_source.sql' ),
+			array( 'addIndex', 'logging', 'log_user_text_type_time',
+				'patch-logging_user_text_type_time_index.sql' ),
+			array( 'addIndex', 'logging', 'log_user_text_time', 'patch-logging_user_text_time_index.sql' ),
+			array( 'addField', 'page', 'page_links_updated', 'patch-page_links_updated.sql' ),
+			array( 'addField', 'user', 'user_password_expires', 'patch-user_password_expire.sql' ),
+
+			// 1.24
+			array( 'addField', 'page_props', 'pp_sortkey', 'patch-pp_sortkey.sql' ),
+			array( 'dropField', 'recentchanges', 'rc_cur_time', 'patch-drop-rc_cur_time.sql' ),
+			array( 'addIndex', 'watchlist', 'wl_user_notificationtimestamp',
+				'patch-watchlist-user-notificationtimestamp-index.sql' ),
+			array( 'addField', 'page', 'page_lang', 'patch-page_lang.sql' ),
+			array( 'addField', 'pagelinks', 'pl_from_namespace', 'patch-pl_from_namespace.sql' ),
+			array( 'addField', 'templatelinks', 'tl_from_namespace', 'patch-tl_from_namespace.sql' ),
+			array( 'addField', 'imagelinks', 'il_from_namespace', 'patch-il_from_namespace.sql' ),
+			array( 'modifyField', 'image', 'img_major_mime',
+				'patch-img_major_mime-chemical.sql' ),
+			array( 'modifyField', 'oldimage', 'oi_major_mime',
+				'patch-oi_major_mime-chemical.sql' ),
+			array( 'modifyField', 'filearchive', 'fa_major_mime',
+				'patch-fa_major_mime-chemical.sql' ),
+
+			// 1.25
+			array( 'doUserNewTalkUseridUnsigned' ),
+			// note this patch covers other _comment and _description fields too
+			array( 'modifyField', 'recentchanges', 'rc_comment', 'patch-editsummary-length.sql' ),
+
+			// 1.26
+			array( 'dropTable', 'hitcounter' ),
+			array( 'dropField', 'site_stats', 'ss_total_views', 'patch-drop-ss_total_views.sql' ),
+			array( 'dropField', 'page', 'page_counter', 'patch-drop-page_counter.sql' ),
 		);
 	}
 
@@ -246,15 +282,17 @@ class MysqlUpdater extends DatabaseUpdater {
 	 * 1.4 betas were missing the 'binary' marker from logging.log_title,
 	 * which causes a collation mismatch error on joins in MySQL 4.1.
 	 *
-	 * @param string $table table name
-	 * @param string $field field name to check
-	 * @param string $patchFile path to the patch to correct the field
+	 * @param string $table Table name
+	 * @param string $field Field name to check
+	 * @param string $patchFile Path to the patch to correct the field
+	 * @return bool
 	 */
 	protected function checkBin( $table, $field, $patchFile ) {
 		if ( !$this->doTable( $table ) ) {
 			return true;
 		}
 
+		/** @var MySQLField $fieldInfo */
 		$fieldInfo = $this->db->fieldInfo( $table, $field );
 		if ( $fieldInfo->isBinary() ) {
 			$this->output( "...$table table has correct $field encoding.\n" );
@@ -266,10 +304,10 @@ class MysqlUpdater extends DatabaseUpdater {
 	/**
 	 * Check whether an index contain a field
 	 *
-	 * @param string $table table name
-	 * @param string $index index name to check
-	 * @param string $field field that should be in the index
-	 * @return Boolean
+	 * @param string $table Table name
+	 * @param string $index Index name to check
+	 * @param string $field Field that should be in the index
+	 * @return bool
 	 */
 	protected function indexHasField( $table, $index, $field ) {
 		if ( !$this->doTable( $table ) ) {
@@ -382,6 +420,16 @@ class MysqlUpdater extends DatabaseUpdater {
 				'wl_notificationtimestamp' => 'wl_notificationtimestamp'
 			), array( 'NOT (wl_namespace & 1)' ), __METHOD__, 'IGNORE' );
 		$this->output( "done.\n" );
+
+		$this->output( "Adding missing watchlist subject page rows... " );
+		$this->db->insertSelect( 'watchlist', 'watchlist',
+			array(
+				'wl_user' => 'wl_user',
+				'wl_namespace' => 'wl_namespace & ~1',
+				'wl_title' => 'wl_title',
+				'wl_notificationtimestamp' => 'wl_notificationtimestamp'
+			), array( 'wl_namespace & 1' ), __METHOD__, 'IGNORE' );
+		$this->output( "done.\n" );
 	}
 
 	function doSchemaRestructuring() {
@@ -477,7 +525,6 @@ class MysqlUpdater extends DatabaseUpdater {
 			page_namespace int NOT NULL,
 			page_title varchar(255) binary NOT NULL,
 			page_restrictions tinyblob NOT NULL,
-			page_counter bigint(20) unsigned NOT NULL default '0',
 			page_is_redirect tinyint(1) unsigned NOT NULL default '0',
 			page_is_new tinyint(1) unsigned NOT NULL default '0',
 			page_random real unsigned NOT NULL,
@@ -559,9 +606,9 @@ class MysqlUpdater extends DatabaseUpdater {
 		$this->output( "......Setting up page table.\n" );
 		$this->db->query(
 			"INSERT INTO $page (page_id, page_namespace, page_title,
-				page_restrictions, page_counter, page_is_redirect, page_is_new, page_random,
+				page_restrictions, page_is_redirect, page_is_new, page_random,
 				page_touched, page_latest, page_len)
-			SELECT cur_id, cur_namespace, cur_title, cur_restrictions, cur_counter,
+			SELECT cur_id, cur_namespace, cur_title, cur_restrictions,
 				cur_is_redirect, cur_is_new, cur_random, cur_touched, rev_id, LENGTH(cur_text)
 			FROM $cur,$revision
 			WHERE cur_id=rev_page AND rev_timestamp=cur_timestamp AND rev_id > {$maxold}",
@@ -620,25 +667,23 @@ class MysqlUpdater extends DatabaseUpdater {
 		);
 
 		global $wgContLang;
-		foreach ( MWNamespace::getCanonicalNamespaces() as $ns => $name ) {
+		foreach ( $wgContLang->getNamespaces() as $ns => $name ) {
 			if ( $ns == 0 ) {
 				continue;
 			}
 
 			$this->output( "Cleaning up broken links for namespace $ns... " );
-
-			$pagelinks = $this->db->tableName( 'pagelinks' );
-			$name = $wgContLang->getNsText( $ns );
-			$prefix = $this->db->strencode( $name );
-			$likeprefix = str_replace( '_', '\\_', $prefix );
-
-			$sql = "UPDATE $pagelinks
-					   SET pl_namespace=$ns,
-						   pl_title=TRIM(LEADING '$prefix:' FROM pl_title)
-					 WHERE pl_namespace=0
-					   AND pl_title LIKE '$likeprefix:%'";
-
-			$this->db->query( $sql, __METHOD__ );
+			$this->db->update( 'pagelinks',
+				array(
+					'pl_namespace' => $ns,
+					"pl_title = TRIM(LEADING {$this->db->addQuotes( "$name:" )} FROM pl_title)",
+				),
+				array(
+					'pl_namespace' => 0,
+					'pl_title' . $this->db->buildLike( "$name:", $this->db->anyString() ),
+				),
+				__METHOD__
+			);
 			$this->output( "done.\n" );
 		}
 	}
@@ -887,18 +932,6 @@ class MysqlUpdater extends DatabaseUpdater {
 		}
 	}
 
-	protected function doEnableProfiling() {
-		global $wgProfileToDatabase;
-
-		if ( !$this->doTable( 'profiling' ) ) {
-			return true;
-		}
-
-		if ( $wgProfileToDatabase === true && !$this->db->tableExists( 'profiling', __METHOD__ ) ) {
-			$this->applyPatch( 'patch-profiling.sql', false, 'Add profiling table' );
-		}
-	}
-
 	protected function doMaybeProfilingMemoryUpdate() {
 		if ( !$this->doTable( 'profiling' ) ) {
 			return true;
@@ -1032,6 +1065,28 @@ class MysqlUpdater extends DatabaseUpdater {
 			'patch-iwl_prefix_title_from-non-unique.sql',
 			false,
 			'Making iwl_prefix_title_from index non-UNIQUE'
+		);
+	}
+
+	protected function doUserNewTalkUseridUnsigned() {
+		if ( !$this->doTable( 'user_newtalk' ) ) {
+			return true;
+		}
+
+		$info = $this->db->fieldInfo( 'user_newtalk', 'user_id' );
+		if ( $info === false ) {
+			return true;
+		}
+		if ( $info->isUnsigned() ) {
+			$this->output( "...user_id is already unsigned int.\n" );
+
+			return true;
+		}
+
+		return $this->applyPatch(
+			'patch-user-newtalk-userid-unsigned.sql',
+			false,
+			'Making user_id unsigned int'
 		);
 	}
 }

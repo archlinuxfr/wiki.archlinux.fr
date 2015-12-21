@@ -34,7 +34,7 @@ class MostinterwikisPage extends QueryPage {
 		parent::__construct( $name );
 	}
 
-	function isExpensive() {
+	public function isExpensive() {
 		return true;
 	}
 
@@ -42,7 +42,7 @@ class MostinterwikisPage extends QueryPage {
 		return false;
 	}
 
-	function getQueryInfo() {
+	public function getQueryInfo() {
 		return array(
 			'tables' => array(
 				'langlinks',
@@ -71,7 +71,7 @@ class MostinterwikisPage extends QueryPage {
 	/**
 	 * Pre-fill the link cache
 	 *
-	 * @param DatabaseBase $db
+	 * @param IDatabase $db
 	 * @param ResultWrapper $res
 	 */
 	function preprocessResults( $db, $res ) {
@@ -92,8 +92,8 @@ class MostinterwikisPage extends QueryPage {
 	}
 
 	/**
-	 * @param $skin Skin
-	 * @param $result
+	 * @param Skin $skin
+	 * @param object $result
 	 * @return string
 	 */
 	function formatResult( $skin, $result ) {

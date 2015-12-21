@@ -35,6 +35,7 @@ class PatrolLogFormatter extends LogFormatter {
 		if ( isset( $params[5] ) && $params[5] ) {
 			$key .= '-auto';
 		}
+
 		return $key;
 	}
 
@@ -58,6 +59,29 @@ class PatrolLogFormatter extends LogFormatter {
 		}
 
 		$params[3] = Message::rawParam( $revlink );
+
+		return $params;
+	}
+
+	protected function getParametersForApi() {
+		$entry = $this->entry;
+		$params = $entry->getParameters();
+
+		static $map = array(
+			'4:number:curid',
+			'5:number:previd',
+			'6:bool:auto',
+			'4::curid' => '4:number:curid',
+			'5::previd' => '5:number:previd',
+			'6::auto' => '6:bool:auto',
+		);
+		foreach ( $map as $index => $key ) {
+			if ( isset( $params[$index] ) ) {
+				$params[$key] = $params[$index];
+				unset( $params[$index] );
+			}
+		}
+
 		return $params;
 	}
 }

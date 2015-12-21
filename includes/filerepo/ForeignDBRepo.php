@@ -27,17 +27,37 @@
  * @ingroup FileRepo
  */
 class ForeignDBRepo extends LocalRepo {
-	# Settings
-	var $dbType, $dbServer, $dbUser, $dbPassword, $dbName, $dbFlags,
-		$tablePrefix, $hasSharedCache;
+	/** @var string */
+	protected $dbType;
+
+	/** @var string */
+	protected $dbServer;
+
+	/** @var string */
+	protected $dbUser;
+
+	/** @var string */
+	protected $dbPassword;
+
+	/** @var string */
+	protected $dbName;
+
+	/** @var string */
+	protected $dbFlags;
+
+	/** @var string */
+	protected $tablePrefix;
+
+	/** @var bool */
+	protected $hasSharedCache;
 
 	# Other stuff
-	var $dbConn;
-	var $fileFactory = array( 'ForeignDBFile', 'newFromTitle' );
-	var $fileFromRowFactory = array( 'ForeignDBFile', 'newFromRow' );
+	protected $dbConn;
+	protected $fileFactory = array( 'ForeignDBFile', 'newFromTitle' );
+	protected $fileFromRowFactory = array( 'ForeignDBFile', 'newFromRow' );
 
 	/**
-	 * @param $info array|null
+	 * @param array|null $info
 	 */
 	function __construct( $info ) {
 		parent::__construct( $info );
@@ -56,7 +76,26 @@ class ForeignDBRepo extends LocalRepo {
 	 */
 	function getMasterDB() {
 		if ( !isset( $this->dbConn ) ) {
-			$this->dbConn = DatabaseBase::factory( $this->dbType,
+			$func = $this->getDBFactory();
+			$this->dbConn = $func( DB_MASTER );
+		}
+
+		return $this->dbConn;
+	}
+
+	/**
+	 * @return DatabaseBase
+	 */
+	function getSlaveDB() {
+		return $this->getMasterDB();
+	}
+
+	/**
+	 * @return Closure
+	 */
+	protected function getDBFactory() {
+		return function( $index ) {
+			return DatabaseBase::factory( $this->dbType,
 				array(
 					'host' => $this->dbServer,
 					'user' => $this->dbUser,
@@ -67,15 +106,7 @@ class ForeignDBRepo extends LocalRepo {
 					'foreign' => true,
 				)
 			);
-		}
-		return $this->dbConn;
-	}
-
-	/**
-	 * @return DatabaseBase
-	 */
-	function getSlaveDB() {
-		return $this->getMasterDB();
+		};
 	}
 
 	/**
@@ -95,6 +126,7 @@ class ForeignDBRepo extends LocalRepo {
 		if ( $this->hasSharedCache() ) {
 			$args = func_get_args();
 			array_unshift( $args, $this->dbName, $this->tablePrefix );
+
 			return call_user_func_array( 'wfForeignMemcKey', $args );
 		} else {
 			return false;
@@ -103,5 +135,15 @@ class ForeignDBRepo extends LocalRepo {
 
 	protected function assertWritableRepo() {
 		throw new MWException( get_class( $this ) . ': write operations are not supported.' );
+	}
+
+	/**
+	 * Return information about the repository.
+	 *
+	 * @return array
+	 * @since 1.22
+	 */
+	function getInfo() {
+		return FileRepo::getInfo();
 	}
 }

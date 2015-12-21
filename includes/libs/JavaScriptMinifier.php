@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile File external to MediaWiki. Ignore coding conventions checks.
 /**
  * JavaScript Minifier
  *
@@ -563,6 +564,14 @@ class JavaScriptMinifier {
 			} elseif( $last === $ch && ( $ch === '+' || $ch === '-' || $ch === '/' ) ) {
 				$out .= ' ';
 				$lineLength++;
+			}
+			if (
+				$type === self::TYPE_LITERAL
+				&& ( $token === 'true' || $token === 'false' )
+				&& ( $state === self::EXPRESSION || $state === self::PROPERTY_EXPRESSION )
+				&& $last !== '.'
+			) {
+				$token = ( $token === 'true' ) ? '!0' : '!1';
 			}
 
 			$out .= $token;

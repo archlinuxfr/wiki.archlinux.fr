@@ -1,5 +1,7 @@
 .svn
 *~
+*.orig
+*.rej
 *.kate-swp
 .classpath
 .idea
@@ -11,7 +13,7 @@ LocalSettings.php
 StartProfiler.php
 cscope.files
 cscope.out
-favicon.ico
+/favicon.ico
 nbproject*
 project.index
 static*
@@ -30,3 +32,4 @@ maintenance/.mwsql_history
 images/*.*
 images/cache
 cache/html/*
+cache/*.lesscache

@@ -27,7 +27,6 @@
  * @ingroup Media
  */
 class PNGHandler extends BitmapHandler {
-
 	const BROKEN_FILE = '0';
 
 	/**
@@ -41,6 +40,7 @@ class PNGHandler extends BitmapHandler {
 		} catch ( Exception $e ) {
 			// Broken file?
 			wfDebug( __METHOD__ . ': ' . $e->getMessage() . "\n" );
+
 			return self::BROKEN_FILE;
 		}
 
@@ -48,28 +48,42 @@ class PNGHandler extends BitmapHandler {
 	}
 
 	/**
-	 * @param $image File
+	 * @param File $image
+	 * @param bool|IContextSource $context Context to use (optional)
 	 * @return array|bool
 	 */
-	function formatMetadata( $image ) {
-		$meta = $image->getMetadata();
-
-		if ( !$meta ) {
-			return false;
-		}
-		$meta = unserialize( $meta );
-		if ( !isset( $meta['metadata'] ) || count( $meta['metadata'] ) <= 1 ) {
+	function formatMetadata( $image, $context = false ) {
+		$meta = $this->getCommonMetaArray( $image );
+		if ( count( $meta ) === 0 ) {
 			return false;
 		}
 
-		if ( isset( $meta['metadata']['_MW_PNG_VERSION'] ) ) {
-			unset( $meta['metadata']['_MW_PNG_VERSION'] );
-		}
-		return $this->formatMetadataHelper( $meta['metadata'] );
+		return $this->formatMetadataHelper( $meta, $context );
 	}
 
 	/**
-	 * @param $image File
+	 * Get a file type independent array of metadata.
+	 *
+	 * @param File $image
+	 * @return array The metadata array
+	 */
+	public function getCommonMetaArray( File $image ) {
+		$meta = $image->getMetadata();
+
+		if ( !$meta ) {
+			return array();
+		}
+		$meta = unserialize( $meta );
+		if ( !isset( $meta['metadata'] ) ) {
+			return array();
+		}
+		unset( $meta['metadata']['_MW_PNG_VERSION'] );
+
+		return $meta['metadata'];
+	}
+
+	/**
+	 * @param File $image
 	 * @return bool
 	 */
 	function isAnimatedImage( $image ) {
@@ -80,12 +94,14 @@ class PNGHandler extends BitmapHandler {
 				return true;
 			}
 		}
+
 		return false;
 	}
+
 	/**
 	 * We do not support making APNG thumbnails, so always false
-	 * @param $image File
-	 * @return bool false
+	 * @param File $image
+	 * @return bool False
 	 */
 	function canAnimateThumbnail( $image ) {
 		return false;
@@ -102,34 +118,38 @@ class PNGHandler extends BitmapHandler {
 			return self::METADATA_GOOD;
 		}
 
-		wfSuppressWarnings();
+		MediaWiki\suppressWarnings();
 		$data = unserialize( $metadata );
-		wfRestoreWarnings();
+		MediaWiki\restoreWarnings();
 
 		if ( !$data || !is_array( $data ) ) {
 			wfDebug( __METHOD__ . " invalid png metadata\n" );
+
 			return self::METADATA_BAD;
 		}
 
 		if ( !isset( $data['metadata']['_MW_PNG_VERSION'] )
-			|| $data['metadata']['_MW_PNG_VERSION'] != PNGMetadataExtractor::VERSION ) {
+			|| $data['metadata']['_MW_PNG_VERSION'] != PNGMetadataExtractor::VERSION
+		) {
 			wfDebug( __METHOD__ . " old but compatible png metadata\n" );
+
 			return self::METADATA_COMPATIBLE;
 		}
+
 		return self::METADATA_GOOD;
 	}
 
 	/**
-	 * @param $image File
+	 * @param File $image
 	 * @return string
 	 */
 	function getLongDesc( $image ) {
 		global $wgLang;
 		$original = parent::getLongDesc( $image );
 
-		wfSuppressWarnings();
+		MediaWiki\suppressWarnings();
 		$metadata = unserialize( $image->getMetadata() );
-		wfRestoreWarnings();
+		MediaWiki\restoreWarnings();
 
 		if ( !$metadata || $metadata['frameCount'] <= 0 ) {
 			return $original;
@@ -155,4 +175,10 @@ class PNGHandler extends BitmapHandler {
 		return $wgLang->commaList( $info );
 	}
 
+	// PNGs should be easy to support, but it will need some sharpening applied
+	// and another user test to check if the perceived quality change is noticeable
+
+	public function supportsBucketing() {
+		return false;
+	}
 }

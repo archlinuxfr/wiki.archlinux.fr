@@ -27,44 +27,38 @@ require_once __DIR__ . '/Maintenance.php';
  * @ingroup Maintenance
  */
 class CheckLess extends Maintenance {
+
 	public function __construct() {
 		parent::__construct();
-		$this->mDescription = 'Checks LESS files for errors';
+		$this->mDescription =
+			'Checks LESS files for errors by running the LessTestSuite PHPUnit test suite';
 	}
 
 	public function execute() {
-		$result = false;
-		$resourceLoader = new ResourceLoader();
-		foreach ( $resourceLoader->getModuleNames() as $name ) {
-			/** @var ResourceLoaderFileModule $module */
-			$module = $resourceLoader->getModule( $name );
-			if ( !$module || !$module instanceof ResourceLoaderFileModule ) {
-				continue;
-			}
+		global $IP;
 
-			$hadErrors = false;
-			foreach ( $module->getAllStyleFiles() as $file ) {
-				if ( $module->getStyleSheetLang( $file ) !== 'less' ) {
-					continue;
-				}
-				try {
-					$compiler = ResourceLoader::getLessCompiler();
-					$compiler->compileFile( $file );
-				} catch ( Exception $e ) {
-					if ( !$hadErrors ) {
-						$this->error( "Errors checking module $name:\n" );
-						$hadErrors = true;
-					}
-					$this->error( $e->getMessage() . "\n" );
-					$result = true;
-				}
-			}
+		// NOTE (phuedx, 2014-03-26) wgAutoloadClasses isn't set up
+		// by either of the dependencies at the top of the file, so
+		// require it here.
+		require_once __DIR__ . '/../tests/TestsAutoLoader.php';
+
+		// If phpunit isn't available by autoloader try pulling it in
+		if ( !class_exists( 'PHPUnit_Framework_TestCase' ) ) {
+			require_once 'PHPUnit/Autoload.php';
 		}
-		if ( !$result ) {
-			$this->output( "No errors found\n" );
-		} else {
-			die( 1 );
+
+		// RequestContext::resetMain() will print warnings unless this
+		// is defined.
+		if ( !defined( 'MW_PHPUNIT_TEST' ) ) {
+			define( 'MW_PHPUNIT_TEST', true );
 		}
+
+		$textUICommand = new PHPUnit_TextUI_Command();
+		$argv = array(
+			"$IP/tests/phpunit/phpunit.php",
+			"$IP/tests/phpunit/suites/LessTestSuite.php"
+		);
+		$textUICommand->run( $argv );
 	}
 }
 

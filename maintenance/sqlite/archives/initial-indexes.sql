@@ -69,7 +69,6 @@ CREATE TABLE /*_*/page_tmp (
   page_namespace int NOT NULL,
   page_title varchar(255) binary NOT NULL,
   page_restrictions tinyblob NOT NULL,
-  page_counter bigint unsigned NOT NULL default 0,
   page_is_redirect tinyint unsigned NOT NULL default 0,
   page_is_new tinyint unsigned NOT NULL default 0,
   page_random real unsigned NOT NULL,
@@ -164,7 +163,6 @@ CREATE INDEX /*i*/ll_lang_title ON /*_*/langlinks_tmp (ll_lang, ll_title);
 
 CREATE TABLE /*_*/site_stats_tmp (
   ss_row_id int unsigned NOT NULL,
-  ss_total_views bigint unsigned default 0,
   ss_total_edits bigint unsigned default 0,
   ss_good_articles bigint unsigned default 0,
   ss_total_pages bigint default '-1',
@@ -237,13 +235,13 @@ CREATE UNIQUE INDEX /*i*/iw_prefix ON /*_*/interwiki_tmp (iw_prefix);
 
 
 CREATE TABLE /*_*/page_restrictions_tmp (
+  pr_id int unsigned NOT NULL PRIMARY KEY AUTO_INCREMENT,
   pr_page int NOT NULL,
   pr_type varbinary(60) NOT NULL,
   pr_level varbinary(60) NOT NULL,
   pr_cascade tinyint NOT NULL,
   pr_user int NULL,
-  pr_expiry varbinary(14) NULL,
-  pr_id int unsigned NOT NULL PRIMARY KEY AUTO_INCREMENT
+  pr_expiry varbinary(14) NULL
 );
 
 CREATE UNIQUE INDEX /*i*/pr_pagetype ON /*_*/page_restrictions_tmp (pr_page,pr_type);

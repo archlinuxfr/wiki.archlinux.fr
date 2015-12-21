@@ -29,12 +29,12 @@
  * @since 1.19
  */
 class LockManagerGroup {
-	/** @var Array (domain => LockManager) */
+	/** @var array (domain => LockManager) */
 	protected static $instances = array();
 
 	protected $domain; // string; domain (usually wiki ID)
 
-	/** @var Array of (name => ('class' => ..., 'config' => ..., 'instance' => ...)) */
+	/** @var array Array of (name => ('class' => ..., 'config' => ..., 'instance' => ...)) */
 	protected $managers = array();
 
 	/**
@@ -45,7 +45,7 @@ class LockManagerGroup {
 	}
 
 	/**
-	 * @param string $domain Domain (usually wiki ID)
+	 * @param bool|string $domain Domain (usually wiki ID). Default: false.
 	 * @return LockManagerGroup
 	 */
 	public static function singleton( $domain = false ) {
@@ -54,13 +54,12 @@ class LockManagerGroup {
 			self::$instances[$domain] = new self( $domain );
 			self::$instances[$domain]->initFromGlobals();
 		}
+
 		return self::$instances[$domain];
 	}
 
 	/**
 	 * Destroy the singleton instances
-	 *
-	 * @return void
 	 */
 	public static function destroySingletons() {
 		self::$instances = array();
@@ -68,8 +67,6 @@ class LockManagerGroup {
 
 	/**
 	 * Register lock managers from the global variables
-	 *
-	 * @return void
 	 */
 	protected function initFromGlobals() {
 		global $wgLockManagers;
@@ -80,19 +77,18 @@ class LockManagerGroup {
 	/**
 	 * Register an array of file lock manager configurations
 	 *
-	 * @param $configs Array
-	 * @return void
-	 * @throws MWException
+	 * @param array $configs
+	 * @throws Exception
 	 */
 	protected function register( array $configs ) {
 		foreach ( $configs as $config ) {
 			$config['domain'] = $this->domain;
 			if ( !isset( $config['name'] ) ) {
-				throw new MWException( "Cannot register a lock manager with no name." );
+				throw new Exception( "Cannot register a lock manager with no name." );
 			}
 			$name = $config['name'];
 			if ( !isset( $config['class'] ) ) {
-				throw new MWException( "Cannot register lock manager `{$name}` with no class." );
+				throw new Exception( "Cannot register lock manager `{$name}` with no class." );
 			}
 			$class = $config['class'];
 			unset( $config['class'] ); // lock manager won't need this
@@ -107,13 +103,13 @@ class LockManagerGroup {
 	/**
 	 * Get the lock manager object with a given name
 	 *
-	 * @param $name string
+	 * @param string $name
 	 * @return LockManager
-	 * @throws MWException
+	 * @throws Exception
 	 */
 	public function get( $name ) {
 		if ( !isset( $this->managers[$name] ) ) {
-			throw new MWException( "No lock manager defined with the name `$name`." );
+			throw new Exception( "No lock manager defined with the name `$name`." );
 		}
 		// Lazy-load the actual lock manager instance
 		if ( !isset( $this->managers[$name]['instance'] ) ) {
@@ -121,21 +117,23 @@ class LockManagerGroup {
 			$config = $this->managers[$name]['config'];
 			$this->managers[$name]['instance'] = new $class( $config );
 		}
+
 		return $this->managers[$name]['instance'];
 	}
 
 	/**
 	 * Get the config array for a lock manager object with a given name
 	 *
-	 * @param $name string
-	 * @return Array
-	 * @throws MWException
+	 * @param string $name
+	 * @return array
+	 * @throws Exception
 	 */
 	public function config( $name ) {
 		if ( !isset( $this->managers[$name] ) ) {
-			throw new MWException( "No lock manager defined with the name `$name`." );
+			throw new Exception( "No lock manager defined with the name `$name`." );
 		}
 		$class = $this->managers[$name]['class'];
+
 		return array( 'class' => $class ) + $this->managers[$name]['config'];
 	}
 
@@ -157,7 +155,7 @@ class LockManagerGroup {
 	 * Throws an exception if no lock manager could be found.
 	 *
 	 * @return LockManager
-	 * @throws MWException
+	 * @throws Exception
 	 */
 	public function getAny() {
 		return isset( $this->managers['default'] )

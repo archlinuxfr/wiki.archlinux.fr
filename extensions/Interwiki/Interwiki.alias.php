@@ -19,7 +19,7 @@ $specialPageAliases['ar'] = array(
 	'Interwiki' => array( 'إنترويكي' ),
 );
 
-/** Egyptian Spoken Arabic (مصرى) */
+/** Egyptian Arabic (مصرى) */
 $specialPageAliases['arz'] = array(
 	'Interwiki' => array( 'إنترويكى' ),
 );
@@ -29,9 +29,19 @@ $specialPageAliases['as'] = array(
 	'Interwiki' => array( 'আন্তঃৱিকি' ),
 );
 
+/** Avaric (авар) */
+$specialPageAliases['av'] = array(
+	'Interwiki' => array( 'Интервики' ),
+);
+
 /** Bulgarian (български) */
 $specialPageAliases['bg'] = array(
 	'Interwiki' => array( 'Междууикита' ),
+);
+
+/** Western Balochi (بلوچی رخشانی) */
+$specialPageAliases['bgn'] = array(
+	'Interwiki' => array( 'مانجین_ویکی' ),
 );
 
 /** Breton (brezhoneg) */
@@ -51,7 +61,12 @@ $specialPageAliases['cdo'] = array(
 
 /** Chechen (нохчийн) */
 $specialPageAliases['ce'] = array(
-	'Interwiki' => array( 'Юкъарвики' ),
+	'Interwiki' => array( 'Юкъарвикаш' ),
+);
+
+/** Central Kurdish (کوردیی ناوەندی) */
+$specialPageAliases['ckb'] = array(
+	'Interwiki' => array( 'نێوانویکی' ),
 );
 
 /** German (Deutsch) */
@@ -84,7 +99,7 @@ $specialPageAliases['fa'] = array(
 	'Interwiki' => array( 'میان‌ویکی' ),
 );
 
-/** Franco-Provençal (arpetan) */
+/** Arpitan (arpetan) */
 $specialPageAliases['frp'] = array(
 	'Interwiki' => array( 'Entèrvouiqui' ),
 );
@@ -97,6 +112,11 @@ $specialPageAliases['gag'] = array(
 /** Galician (galego) */
 $specialPageAliases['gl'] = array(
 	'Interwiki' => array( 'Interwikis' ),
+);
+
+/** Hawaiian (Hawai`i) */
+$specialPageAliases['haw'] = array(
+	'Interwiki' => array( 'Waenawiki' ),
 );
 
 /** Hebrew (עברית) */
@@ -157,6 +177,11 @@ $specialPageAliases['la'] = array(
 /** Ladino (Ladino) */
 $specialPageAliases['lad'] = array(
 	'Interwiki' => array( 'Interviki' ),
+);
+
+/** Northern Luri (لۊری شومالی) */
+$specialPageAliases['lrc'] = array(
+	'Interwiki' => array( 'مینجا_ڤیکی' ),
 );
 
 /** Macedonian (македонски) */
@@ -251,5 +276,5 @@ $specialPageAliases['zh-hans'] = array(
 
 /** Traditional Chinese (中文（繁體）‎) */
 $specialPageAliases['zh-hant'] = array(
-	'Interwiki' => array( '跨維基連結' ),
+	'Interwiki' => array( '跨Wiki', '跨維基' ),
 );

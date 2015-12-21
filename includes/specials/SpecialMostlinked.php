@@ -35,7 +35,7 @@ class MostlinkedPage extends QueryPage {
 		parent::__construct( $name );
 	}
 
-	function isExpensive() {
+	public function isExpensive() {
 		return true;
 	}
 
@@ -43,7 +43,7 @@ class MostlinkedPage extends QueryPage {
 		return false;
 	}
 
-	function getQueryInfo() {
+	public function getQueryInfo() {
 		return array(
 			'tables' => array( 'pagelinks', 'page' ),
 			'fields' => array(
@@ -74,7 +74,7 @@ class MostlinkedPage extends QueryPage {
 	/**
 	 * Pre-fill the link cache
 	 *
-	 * @param DatabaseBase $db
+	 * @param IDatabase $db
 	 * @param ResultWrapper $res
 	 */
 	function preprocessResults( $db, $res ) {
@@ -93,9 +93,9 @@ class MostlinkedPage extends QueryPage {
 	/**
 	 * Make a link to "what links here" for the specified title
 	 *
-	 * @param $title Title being queried
-	 * @param string $caption text to display on the link
-	 * @return String
+	 * @param Title $title Title being queried
+	 * @param string $caption Text to display on the link
+	 * @return string
 	 */
 	function makeWlhLink( $title, $caption ) {
 		$wlh = SpecialPage::getTitleFor( 'Whatlinkshere', $title->getPrefixedDBkey() );

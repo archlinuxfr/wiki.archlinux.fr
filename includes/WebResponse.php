@@ -28,20 +28,44 @@
 class WebResponse {
 
 	/**
-	 * Output a HTTP header, wrapper for PHP's
-	 * header()
-	 * @param string $string header to output
-	 * @param bool $replace replace current similar header
-	 * @param $http_response_code null|int Forces the HTTP response code to the specified value.
+	 * Output an HTTP header, wrapper for PHP's header()
+	 * @param string $string Header to output
+	 * @param bool $replace Replace current similar header
+	 * @param null|int $http_response_code Forces the HTTP response code to the specified value.
 	 */
 	public function header( $string, $replace = true, $http_response_code = null ) {
 		header( $string, $replace, $http_response_code );
 	}
 
 	/**
+	 * Get a response header
+	 * @param string $key The name of the header to get (case insensitive).
+	 * @return string|null The header value (if set); null otherwise.
+	 * @since 1.25
+	 */
+	public function getHeader( $key ) {
+		foreach ( headers_list() as $header ) {
+			list( $name, $val ) = explode( ':', $header, 2 );
+			if ( !strcasecmp( $name, $key ) ) {
+				return trim( $val );
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Output an HTTP status code header
+	 * @since 1.26
+	 * @param int $code Status code
+	 */
+	public function statusHeader( $code ) {
+		HttpStatus::header( $code );
+	}
+
+	/**
 	 * Set the browser cookie
-	 * @param string $name name of cookie
-	 * @param string $value value to give cookie
+	 * @param string $name The name of the cookie.
+	 * @param string $value The value to be stored in the cookie.
 	 * @param int|null $expire Unix timestamp (in seconds) when the cookie should expire.
 	 *        0 (the default) causes it to expire $wgCookieExpiration seconds from now.
 	 *        null causes it to be a session cookie.
@@ -52,17 +76,17 @@ class WebResponse {
 	 *     secure: bool, secure attribute ($wgCookieSecure)
 	 *     httpOnly: bool, httpOnly attribute ($wgCookieHttpOnly)
 	 *     raw: bool, if true uses PHP's setrawcookie() instead of setcookie()
-	 *   For backwards compatability, if $options is not an array then it and
+	 *   For backwards compatibility, if $options is not an array then it and
 	 *   the following two parameters will be interpreted as values for
 	 *   'prefix', 'domain', and 'secure'
 	 * @since 1.22 Replaced $prefix, $domain, and $forceSecure with $options
 	 */
-	public function setcookie( $name, $value, $expire = 0, $options = null ) {
+	public function setcookie( $name, $value, $expire = 0, $options = array() ) {
 		global $wgCookiePath, $wgCookiePrefix, $wgCookieDomain;
 		global $wgCookieSecure, $wgCookieExpiration, $wgCookieHttpOnly;
 
 		if ( !is_array( $options ) ) {
-			// Backwards compatability
+			// Backwards compatibility
 			$options = array( 'prefix' => $options );
 			if ( func_num_args() >= 5 ) {
 				$options['domain'] = func_get_arg( 4 );
@@ -88,15 +112,9 @@ class WebResponse {
 			$expire = time() + $wgCookieExpiration;
 		}
 
-		// Don't mark the cookie as httpOnly if the requesting user-agent is
-		// known to have trouble with httpOnly cookies.
-		if ( !wfHttpOnlySafe() ) {
-			$options['httpOnly'] = false;
-		}
-
 		$func = $options['raw'] ? 'setrawcookie' : 'setcookie';
 
-		if ( wfRunHooks( 'WebResponseSetCookie', array( &$name, &$value, &$expire, $options ) ) ) {
+		if ( Hooks::run( 'WebResponseSetCookie', array( &$name, &$value, &$expire, $options ) ) ) {
 			wfDebugLog( 'cookie',
 				$func . ': "' . implode( '", "',
 					array(
@@ -130,9 +148,9 @@ class FauxResponse extends WebResponse {
 
 	/**
 	 * Stores a HTTP header
-	 * @param string $string header to output
-	 * @param bool $replace replace current similar header
-	 * @param $http_response_code null|int Forces the HTTP response code to the specified value.
+	 * @param string $string Header to output
+	 * @param bool $replace Replace current similar header
+	 * @param null|int $http_response_code Forces the HTTP response code to the specified value.
 	 */
 	public function header( $string, $replace = true, $http_response_code = null ) {
 		if ( substr( $string, 0, 5 ) == 'HTTP/' ) {
@@ -154,10 +172,18 @@ class FauxResponse extends WebResponse {
 	}
 
 	/**
-	 * @param string $key The name of the header to get (case insensitive).
-	 * @return string
+	 * @since 1.26
+	 * @param int $code Status code
 	 */
-	public function getheader( $key ) {
+	public function statusHeader( $code ) {
+		$this->code = intval( $code );
+	}
+
+	/**
+	 * @param string $key The name of the header to get (case insensitive).
+	 * @return string|null The header value (if set); null otherwise.
+	 */
+	public function getHeader( $key ) {
 		$key = strtoupper( $key );
 
 		if ( isset( $this->headers[$key] ) ) {
@@ -169,27 +195,25 @@ class FauxResponse extends WebResponse {
 	/**
 	 * Get the HTTP response code, null if not set
 	 *
-	 * @return Int or null
+	 * @return int|null
 	 */
 	public function getStatusCode() {
 		return $this->code;
 	}
 
 	/**
-	 * @todo document. It just ignore optional parameters.
-	 *
-	 * @param string $name name of cookie
-	 * @param string $value value to give cookie
-	 * @param int $expire number of seconds til cookie expires (Default: 0)
-	 * @param array $options ignored
+	 * @param string $name The name of the cookie.
+	 * @param string $value The value to be stored in the cookie.
+	 * @param int|null $expire Ignored in this faux subclass.
+	 * @param array $options Ignored in this faux subclass.
 	 */
-	public function setcookie( $name, $value, $expire = 0, $options = null ) {
+	public function setcookie( $name, $value, $expire = 0, $options = array() ) {
 		$this->cookies[$name] = $value;
 	}
 
 	/**
-	 * @param $name string
-	 * @return string
+	 * @param string $name
+	 * @return string|null
 	 */
 	public function getcookie( $name ) {
 		if ( isset( $this->cookies[$name] ) ) {

@@ -31,18 +31,14 @@
  */
 class ApiQueryBlocks extends ApiQueryBase {
 
-	/**
-	 * @var Array
-	 */
-	protected $usernames;
-
-	public function __construct( $query, $moduleName ) {
+	public function __construct( ApiQuery $query, $moduleName ) {
 		parent::__construct( $query, $moduleName, 'bk' );
 	}
 
 	public function execute() {
 		global $wgContLang;
 
+		$db = $this->getDB();
 		$params = $this->extractRequestParams();
 		$this->requireMaxOneParameter( $params, 'users', 'ip' );
 
@@ -61,44 +57,61 @@ class ApiQueryBlocks extends ApiQueryBase {
 		$result = $this->getResult();
 
 		$this->addTables( 'ipblocks' );
-		$this->addFields( 'ipb_auto' );
+		$this->addFields( array( 'ipb_auto', 'ipb_id', 'ipb_timestamp' ) );
 
-		$this->addFieldsIf( 'ipb_id', $fld_id );
 		$this->addFieldsIf( array( 'ipb_address', 'ipb_user' ), $fld_user || $fld_userid );
 		$this->addFieldsIf( 'ipb_by_text', $fld_by );
 		$this->addFieldsIf( 'ipb_by', $fld_byid );
-		$this->addFieldsIf( 'ipb_timestamp', $fld_timestamp );
 		$this->addFieldsIf( 'ipb_expiry', $fld_expiry );
 		$this->addFieldsIf( 'ipb_reason', $fld_reason );
 		$this->addFieldsIf( array( 'ipb_range_start', 'ipb_range_end' ), $fld_range );
 		$this->addFieldsIf( array( 'ipb_anon_only', 'ipb_create_account', 'ipb_enable_autoblock',
-									'ipb_block_email', 'ipb_deleted', 'ipb_allow_usertalk' ),
-							$fld_flags );
+			'ipb_block_email', 'ipb_deleted', 'ipb_allow_usertalk' ),
+			$fld_flags );
 
 		$this->addOption( 'LIMIT', $params['limit'] + 1 );
-		$this->addTimestampWhereRange( 'ipb_timestamp', $params['dir'], $params['start'], $params['end'] );
+		$this->addTimestampWhereRange(
+			'ipb_timestamp',
+			$params['dir'],
+			$params['start'],
+			$params['end']
+		);
+		// Include in ORDER BY for uniqueness
+		$this->addWhereRange( 'ipb_id', $params['dir'], null, null );
 
-		$db = $this->getDB();
+		if ( !is_null( $params['continue'] ) ) {
+			$cont = explode( '|', $params['continue'] );
+			$this->dieContinueUsageIf( count( $cont ) != 2 );
+			$op = ( $params['dir'] == 'newer' ? '>' : '<' );
+			$continueTimestamp = $db->addQuotes( $db->timestamp( $cont[0] ) );
+			$continueId = (int)$cont[1];
+			$this->dieContinueUsageIf( $continueId != $cont[1] );
+			$this->addWhere( "ipb_timestamp $op $continueTimestamp OR " .
+				"(ipb_timestamp = $continueTimestamp AND " .
+				"ipb_id $op= $continueId)"
+			);
+		}
 
 		if ( isset( $params['ids'] ) ) {
 			$this->addWhereFld( 'ipb_id', $params['ids'] );
 		}
 		if ( isset( $params['users'] ) ) {
+			$usernames = array();
 			foreach ( (array)$params['users'] as $u ) {
-				$this->prepareUsername( $u );
+				$usernames[] = $this->prepareUsername( $u );
 			}
-			$this->addWhereFld( 'ipb_address', $this->usernames );
+			$this->addWhereFld( 'ipb_address', $usernames );
 			$this->addWhereFld( 'ipb_auto', 0 );
 		}
 		if ( isset( $params['ip'] ) ) {
-			global $wgBlockCIDRLimit;
+			$blockCIDRLimit = $this->getConfig()->get( 'BlockCIDRLimit' );
 			if ( IP::isIPv4( $params['ip'] ) ) {
 				$type = 'IPv4';
-				$cidrLimit = $wgBlockCIDRLimit['IPv4'];
+				$cidrLimit = $blockCIDRLimit['IPv4'];
 				$prefixLen = 0;
 			} elseif ( IP::isIPv6( $params['ip'] ) ) {
 				$type = 'IPv6';
-				$cidrLimit = $wgBlockCIDRLimit['IPv6'];
+				$cidrLimit = $blockCIDRLimit['IPv6'];
 				$prefixLen = 3; // IP::toHex output is prefixed with "v6-"
 			} else {
 				$this->dieUsage( 'IP parameter is not valid', 'param_ip' );
@@ -107,7 +120,10 @@ class ApiQueryBlocks extends ApiQueryBase {
 			# Check range validity, if it's a CIDR
 			list( $ip, $range ) = IP::parseCIDR( $params['ip'] );
 			if ( $ip !== false && $range !== false && $range < $cidrLimit ) {
-				$this->dieUsage( "$type CIDR ranges broader than /$cidrLimit are not accepted", 'cidrtoobroad' );
+				$this->dieUsage(
+					"$type CIDR ranges broader than /$cidrLimit are not accepted",
+					'cidrtoobroad'
+				);
 			}
 
 			# Let IP::parseRange handle calculating $upper, instead of duplicating the logic here.
@@ -134,9 +150,9 @@ class ApiQueryBlocks extends ApiQueryBase {
 
 			/* Check for conflicting parameters. */
 			if ( ( isset( $show['account'] ) && isset( $show['!account'] ) )
-					|| ( isset( $show['ip'] ) && isset( $show['!ip'] ) )
-					|| ( isset( $show['range'] ) && isset( $show['!range'] ) )
-					|| ( isset( $show['temp'] ) && isset( $show['!temp'] ) )
+				|| ( isset( $show['ip'] ) && isset( $show['!ip'] ) )
+				|| ( isset( $show['range'] ) && isset( $show['!range'] ) )
+				|| ( isset( $show['temp'] ) && isset( $show['!temp'] ) )
 			) {
 				$this->dieUsageMsg( 'show' );
 			}
@@ -145,8 +161,10 @@ class ApiQueryBlocks extends ApiQueryBase {
 			$this->addWhereIf( 'ipb_user != 0', isset( $show['account'] ) );
 			$this->addWhereIf( 'ipb_user != 0 OR ipb_range_end > ipb_range_start', isset( $show['!ip'] ) );
 			$this->addWhereIf( 'ipb_user = 0 AND ipb_range_end = ipb_range_start', isset( $show['ip'] ) );
-			$this->addWhereIf( 'ipb_expiry = ' . $db->addQuotes( $db->getInfinity() ), isset( $show['!temp'] ) );
-			$this->addWhereIf( 'ipb_expiry != ' . $db->addQuotes( $db->getInfinity() ), isset( $show['temp'] ) );
+			$this->addWhereIf( 'ipb_expiry = ' .
+				$db->addQuotes( $db->getInfinity() ), isset( $show['!temp'] ) );
+			$this->addWhereIf( 'ipb_expiry != ' .
+				$db->addQuotes( $db->getInfinity() ), isset( $show['temp'] ) );
 			$this->addWhereIf( 'ipb_range_end = ipb_range_start', isset( $show['!range'] ) );
 			$this->addWhereIf( 'ipb_range_end > ipb_range_start', isset( $show['range'] ) );
 		}
@@ -166,24 +184,26 @@ class ApiQueryBlocks extends ApiQueryBase {
 		foreach ( $res as $row ) {
 			if ( ++$count > $params['limit'] ) {
 				// We've had enough
-				$this->setContinueEnumParameter( 'start', wfTimestamp( TS_ISO_8601, $row->ipb_timestamp ) );
+				$this->setContinueEnumParameter( 'continue', "$row->ipb_timestamp|$row->ipb_id" );
 				break;
 			}
-			$block = array();
+			$block = array(
+				ApiResult::META_TYPE => 'assoc',
+			);
 			if ( $fld_id ) {
-				$block['id'] = $row->ipb_id;
+				$block['id'] = (int)$row->ipb_id;
 			}
 			if ( $fld_user && !$row->ipb_auto ) {
 				$block['user'] = $row->ipb_address;
 			}
 			if ( $fld_userid && !$row->ipb_auto ) {
-				$block['userid'] = $row->ipb_user;
+				$block['userid'] = (int)$row->ipb_user;
 			}
 			if ( $fld_by ) {
 				$block['by'] = $row->ipb_by_text;
 			}
 			if ( $fld_byid ) {
-				$block['byid'] = $row->ipb_by;
+				$block['byid'] = (int)$row->ipb_by;
 			}
 			if ( $fld_timestamp ) {
 				$block['timestamp'] = wfTimestamp( TS_ISO_8601, $row->ipb_timestamp );
@@ -200,35 +220,21 @@ class ApiQueryBlocks extends ApiQueryBase {
 			}
 			if ( $fld_flags ) {
 				// For clarity, these flags use the same names as their action=block counterparts
-				if ( $row->ipb_auto ) {
-					$block['automatic'] = '';
-				}
-				if ( $row->ipb_anon_only ) {
-					$block['anononly'] = '';
-				}
-				if ( $row->ipb_create_account ) {
-					$block['nocreate'] = '';
-				}
-				if ( $row->ipb_enable_autoblock ) {
-					$block['autoblock'] = '';
-				}
-				if ( $row->ipb_block_email ) {
-					$block['noemail'] = '';
-				}
-				if ( $row->ipb_deleted ) {
-					$block['hidden'] = '';
-				}
-				if ( $row->ipb_allow_usertalk ) {
-					$block['allowusertalk'] = '';
-				}
+				$block['automatic'] = (bool)$row->ipb_auto;
+				$block['anononly'] = (bool)$row->ipb_anon_only;
+				$block['nocreate'] = (bool)$row->ipb_create_account;
+				$block['autoblock'] = (bool)$row->ipb_enable_autoblock;
+				$block['noemail'] = (bool)$row->ipb_block_email;
+				$block['hidden'] = (bool)$row->ipb_deleted;
+				$block['allowusertalk'] = (bool)$row->ipb_allow_usertalk;
 			}
 			$fit = $result->addValue( array( 'query', $this->getModuleName() ), null, $block );
 			if ( !$fit ) {
-				$this->setContinueEnumParameter( 'start', wfTimestamp( TS_ISO_8601, $row->ipb_timestamp ) );
+				$this->setContinueEnumParameter( 'continue', "$row->ipb_timestamp|$row->ipb_id" );
 				break;
 			}
 		}
-		$result->setIndexedTagName_internal( array( 'query', $this->getModuleName() ), 'block' );
+		$result->addIndexedTagName( array( 'query', $this->getModuleName() ), 'block' );
 	}
 
 	protected function prepareUsername( $user ) {
@@ -241,10 +247,12 @@ class ApiQueryBlocks extends ApiQueryBase {
 		if ( $name === false ) {
 			$this->dieUsage( "User name {$user} is not valid", 'param_user' );
 		}
-		$this->usernames[] = $name;
+		return $name;
 	}
 
 	public function getAllowedParams() {
+		$blockCIDRLimit = $this->getConfig()->get( 'BlockCIDRLimit' );
+
 		return array(
 			'start' => array(
 				ApiBase::PARAM_TYPE => 'timestamp'
@@ -257,7 +265,8 @@ class ApiQueryBlocks extends ApiQueryBase {
 					'newer',
 					'older'
 				),
-				ApiBase::PARAM_DFLT => 'older'
+				ApiBase::PARAM_DFLT => 'older',
+				ApiBase::PARAM_HELP_MSG => 'api-help-param-direction',
 			),
 			'ids' => array(
 				ApiBase::PARAM_TYPE => 'integer',
@@ -266,7 +275,13 @@ class ApiQueryBlocks extends ApiQueryBase {
 			'users' => array(
 				ApiBase::PARAM_ISMULTI => true
 			),
-			'ip' => null,
+			'ip' => array(
+				ApiBase::PARAM_HELP_MSG => array(
+					'apihelp-query+blocks-param-ip',
+					$blockCIDRLimit['IPv4'],
+					$blockCIDRLimit['IPv6'],
+				),
+			),
 			'limit' => array(
 				ApiBase::PARAM_DFLT => 10,
 				ApiBase::PARAM_TYPE => 'limit',
@@ -288,7 +303,8 @@ class ApiQueryBlocks extends ApiQueryBase {
 					'range',
 					'flags'
 				),
-				ApiBase::PARAM_ISMULTI => true
+				ApiBase::PARAM_ISMULTI => true,
+				ApiBase::PARAM_HELP_MSG_PER_VALUE => array(),
 			),
 			'show' => array(
 				ApiBase::PARAM_TYPE => array(
@@ -303,128 +319,18 @@ class ApiQueryBlocks extends ApiQueryBase {
 				),
 				ApiBase::PARAM_ISMULTI => true
 			),
+			'continue' => array(
+				ApiBase::PARAM_HELP_MSG => 'api-help-param-continue',
+			),
 		);
 	}
 
-	public function getParamDescription() {
-		global $wgBlockCIDRLimit;
-		$p = $this->getModulePrefix();
+	protected function getExamplesMessages() {
 		return array(
-			'start' => 'The timestamp to start enumerating from',
-			'end' => 'The timestamp to stop enumerating at',
-			'dir' => $this->getDirectionDescription( $p ),
-			'ids' => 'List of block IDs to list (optional)',
-			'users' => 'List of users to search for (optional)',
-			'ip' => array(
-				'Get all blocks applying to this IP or CIDR range, including range blocks.',
-				"Cannot be used together with bkusers. CIDR ranges broader than " .
-					"IPv4/{$wgBlockCIDRLimit['IPv4']} or IPv6/{$wgBlockCIDRLimit['IPv6']} " .
-					"are not accepted"
-			),
-			'limit' => 'The maximum amount of blocks to list',
-			'prop' => array(
-				'Which properties to get',
-				' id         - Adds the ID of the block',
-				' user       - Adds the username of the blocked user',
-				' userid     - Adds the user ID of the blocked user',
-				' by         - Adds the username of the blocking user',
-				' byid       - Adds the user ID of the blocking user',
-				' timestamp  - Adds the timestamp of when the block was given',
-				' expiry     - Adds the timestamp of when the block expires',
-				' reason     - Adds the reason given for the block',
-				' range      - Adds the range of IPs affected by the block',
-				' flags      - Tags the ban with (autoblock, anononly, etc)',
-			),
-			'show' => array(
-				'Show only items that meet this criteria.',
-				"For example, to see only indefinite blocks on IPs, set {$p}show=ip|!temp"
-			),
-		);
-	}
-
-	public function getResultProperties() {
-		return array(
-			'id' => array(
-				'id' => 'integer'
-			),
-			'user' => array(
-				'user' => array(
-					ApiBase::PROP_TYPE => 'string',
-					ApiBase::PROP_NULLABLE => true
-				)
-			),
-			'userid' => array(
-				'userid' => array(
-					ApiBase::PROP_TYPE => 'integer',
-					ApiBase::PROP_NULLABLE => true
-				)
-			),
-			'by' => array(
-				'by' => 'string'
-			),
-			'byid' => array(
-				'byid' => 'integer'
-			),
-			'timestamp' => array(
-				'timestamp' => 'timestamp'
-			),
-			'expiry' => array(
-				'expiry' => 'timestamp'
-			),
-			'reason' => array(
-				'reason' => 'string'
-			),
-			'range' => array(
-				'rangestart' => array(
-					ApiBase::PROP_TYPE => 'string',
-					ApiBase::PROP_NULLABLE => true
-				),
-				'rangeend' => array(
-					ApiBase::PROP_TYPE => 'string',
-					ApiBase::PROP_NULLABLE => true
-				)
-			),
-			'flags' => array(
-				'automatic' => 'boolean',
-				'anononly' => 'boolean',
-				'nocreate' => 'boolean',
-				'autoblock' => 'boolean',
-				'noemail' => 'boolean',
-				'hidden' => 'boolean',
-				'allowusertalk' => 'boolean'
-			)
-		);
-	}
-
-	public function getDescription() {
-		return 'List all blocked users and IP addresses';
-	}
-
-	public function getPossibleErrors() {
-		global $wgBlockCIDRLimit;
-		return array_merge( parent::getPossibleErrors(),
-			$this->getRequireOnlyOneParameterErrorMessages( array( 'users', 'ip' ) ),
-			array(
-				array(
-					'code' => 'cidrtoobroad',
-					'info' => "IPv4 CIDR ranges broader than /{$wgBlockCIDRLimit['IPv4']} are not accepted"
-				),
-				array(
-					'code' => 'cidrtoobroad',
-					'info' => "IPv6 CIDR ranges broader than /{$wgBlockCIDRLimit['IPv6']} are not accepted"
-				),
-				array( 'code' => 'param_ip', 'info' => 'IP parameter is not valid' ),
-				array( 'code' => 'param_user', 'info' => 'User parameter may not be empty' ),
-				array( 'code' => 'param_user', 'info' => 'User name user is not valid' ),
-				array( 'show' ),
-			)
-		);
-	}
-
-	public function getExamples() {
-		return array(
-			'api.php?action=query&list=blocks',
-			'api.php?action=query&list=blocks&bkusers=Alice|Bob'
+			'action=query&list=blocks'
+				=> 'apihelp-query+blocks-example-simple',
+			'action=query&list=blocks&bkusers=Alice|Bob'
+				=> 'apihelp-query+blocks-example-users',
 		);
 	}
 

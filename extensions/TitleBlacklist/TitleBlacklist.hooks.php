@@ -32,7 +32,12 @@ class TitleBlacklistHooks {
 		if ( $action == 'create' || $action == 'edit' || $action == 'upload' ) {
 			$blacklisted = TitleBlacklist::singleton()->userCannot( $title, $user, $action );
 			if ( $blacklisted instanceof TitleBlacklistEntry ) {
-				$result = array( $blacklisted->getErrorMessage( 'edit' ),
+				$errmsg = $blacklisted->getErrorMessage( 'edit' );
+				ApiBase::$messageMap[$errmsg] = array(
+					'code' => $errmsg,
+					'info' => 'TitleBlacklist prevents this title from being created'
+				);
+				$result = array( $errmsg,
 					htmlspecialchars( $blacklisted->getRaw() ),
 					$title->getFullText() );
 				return false;
@@ -42,27 +47,62 @@ class TitleBlacklistHooks {
 	}
 
 	/**
-	 * AbortMove hook
+	 * Display a notice if a user is only able to create or edit a page
+	 * because they have tboverride.
 	 *
-	 * @param $old Title
-	 * @param $nt Title
-	 * @param $user User
-	 * @param $err
+	 * @param Title $title
+	 * @param integer $oldid
+	 * @param array &$notices
+	 */
+	public static function displayBlacklistOverrideNotice( Title $title, $oldid, array &$notices ) {
+		if ( !RequestContext::getMain()->getUser()->isAllowed( 'tboverride' ) ) {
+			return true;
+		}
+
+		$blacklisted = TitleBlacklist::singleton()->isBlacklisted(
+			$title,
+			$title->exists() ? 'edit' : 'create'
+		);
+		if ( !$blacklisted ) {
+			return true;
+		}
+
+		$params = $blacklisted->getParams();
+		$msg = wfMessage( 'titleblacklist-warning' );
+		$notices['titleblacklist'] = $msg->rawParams(
+			htmlspecialchars( $blacklisted->getRaw() ) )->parseAsBlock();
+		return true;
+	}
+
+	/**
+	 * MovePageCheckPermissions hook (1.25+)
+	 *
+	 * @param Title $oldTitle
+	 * @param Title $newTitle
+	 * @param User $user
+	 * @param $reason
+	 * @param Status $status
 	 * @return bool
 	 */
-	public static function abortMove( $old, $nt, $user, &$err ) {
+	public static function onMovePageCheckPermissions( Title $oldTitle, Title $newTitle, User $user, $reason, Status $status ) {
 		$titleBlacklist = TitleBlacklist::singleton();
-		$blacklisted = $titleBlacklist->userCannot( $nt, $user, 'move' );
+		$blacklisted = $titleBlacklist->userCannot( $newTitle, $user, 'move' );
 		if ( !$blacklisted ) {
-			$blacklisted = $titleBlacklist->userCannot( $old, $user, 'edit' );
+			$blacklisted = $titleBlacklist->userCannot( $oldTitle, $user, 'edit' );
 		}
 		if ( $blacklisted instanceof TitleBlacklistEntry ) {
-			$err = wfMessage( $blacklisted->getErrorMessage( 'move' ),
+			$errmsg = $blacklisted->getErrorMessage( 'move' );
+			ApiBase::$messageMap[$errmsg] = array(
+				'code' => $errmsg,
+				'info' => 'TitleBlacklist prevents this new title from being created or old title from being edited'
+			);
+			$status->fatal( $errmsg,
 				$blacklisted->getRaw(),
-				$old->getFullText(),
-				$nt->getFullText() )->parse();
+				$oldTitle->getFullText(),
+				$newTitle->getFullText() );
 			return false;
 		}
+
 		return true;
 	}
 
@@ -70,17 +110,26 @@ class TitleBlacklistHooks {
 	 * Check whether a user name is acceptable,
 	 * and set a message if unacceptable.
 	 *
-	 * Used by abortNewAccount and centralAuthAutoCreate
+	 * Used by abortNewAccount and centralAuthAutoCreate.
+	 * May also be called externally to vet alternate account names.
 	 *
 	 * @return bool Acceptable
 	 */
-	private static function acceptNewUserName( $userName, $permissionsUser, &$err, $override = true ) {
+	public static function acceptNewUserName( $userName, $permissionsUser, &$err, $override = true, $log = false ) {
+		global $wgUser;
 		$title = Title::makeTitleSafe( NS_USER, $userName );
 		$blacklisted = TitleBlacklist::singleton()->userCannot( $title, $permissionsUser,
 			'new-account', $override );
 		if ( $blacklisted instanceof TitleBlacklistEntry ) {
 			$message = $blacklisted->getErrorMessage( 'new-account' );
+			ApiBase::$messageMap[$message] = array(
+				'code' => $message,
+				'info' => 'TitleBlacklist prevents this username from being created'
+			);
 			$err = wfMessage( $message, $blacklisted->getRaw(), $userName )->parse();
+			if ( $log ) {
+				self::logFilterHitUsername( $wgUser, $title, $blacklisted->getRaw() );
+			}
 			return false;
 		}
 		return true;
@@ -90,18 +139,28 @@ class TitleBlacklistHooks {
 	 * AbortNewAccount hook
 	 *
 	 * @param User $user
+	 * @param string &$message
+	 * @return bool
 	 */
 	public static function abortNewAccount( $user, &$message ) {
 		global $wgUser, $wgRequest;
 		$override = $wgRequest->getCheck( 'wpIgnoreTitleBlacklist' );
-		return self::acceptNewUserName( $user->getName(), $wgUser, $message, $override );
+		return self::acceptNewUserName( $user->getName(), $wgUser, $message, $override, true );
 	}
 
-	/** CentralAuthAutoCreate hook */
-	public static function centralAuthAutoCreate( $user, $userName ) {
-		$message = ''; # Will be ignored
-		$anon = new User;
-		return self::acceptNewUserName( $userName, $anon, $message );
+	/**
+	 * AbortAutoAccount hook
+	 *
+	 * @param User $user
+	 * @param string &$message
+	 * @return bool
+	 */
+	public static function abortAutoAccount( $user, &$message ) {
+		global $wgTitleBlacklistBlockAutoAccountCreation;
+		if ( $wgTitleBlacklistBlockAutoAccountCreation ) {
+			return self::abortNewAccount( $user, $message );
+		}
+		return true;
 	}
 
 	/**
@@ -132,23 +191,6 @@ class TitleBlacklistHooks {
 				Html::element( 'br', array( 'clear' => 'all' ) ) . "\n";
 
 			// $error will be displayed by the edit class
-			return true;
-		} elseif ( !$section ) {
-			# Block redirects to nonexistent blacklisted titles
-			$retitle = Title::newFromRedirect( $text );
-			if ( $retitle !== null && !$retitle->exists() )  {
-				$blacklisted = TitleBlacklist::singleton()->userCannot( $retitle, $wgUser, 'create' );
-				if ( $blacklisted instanceof TitleBlacklistEntry ) {
-					$error = Html::openElement( 'div', array( 'class' => 'errorbox' ) ) .
-						wfMessage( 'titleblacklist-forbidden-edit',
-							$blacklisted->getRaw(),
-							$retitle->getFullText() )->escaped() .
-						Html::closeElement( 'div' ) . "\n" .
-						Html::element( 'br', array( 'clear' => 'all' ) ) . "\n";
-				}
-			}
-
-			return true;
 		}
 		return true;
 	}
@@ -176,6 +218,53 @@ class TitleBlacklistHooks {
 			$template->addInputItem( 'wpIgnoreTitleBlacklist',
 				$wgRequest->getCheck( 'wpIgnoreTitleBlacklist' ),
 				'checkbox', 'titleblacklist-override' );
+		}
+		return true;
+	}
+
+	/**
+	 * Logs the filter username hit to Special:Log if
+	 * $wgTitleBlacklistLogHits is enabled.
+	 *
+	 * @param User $user
+	 * @param Title $title
+	 * @param string $entry
+	 */
+	public static function logFilterHitUsername( $user, $title, $entry ) {
+		global $wgTitleBlacklistLogHits;
+		if ( $wgTitleBlacklistLogHits ) {
+			$logEntry = new ManualLogEntry( 'titleblacklist', 'hit-username' );
+			$logEntry->setPerformer( $user );
+			$logEntry->setTarget( $title );
+			$logEntry->setParameters( array(
+				'4::entry' => $entry,
+			) );
+			$logid = $logEntry->insert();
+			$logEntry->publish( $logid );
+		}
+	}
+
+	/**
+	 * Add phpunit tests
+	 *
+	 * @param array &$files List of test cases and directories to search
+	 * @return bool
+	 */
+	public static function unitTestsList( &$files ) {
+		$files = array_merge( $files, glob( __DIR__ . '/tests/*Test.php' ) );
+		return true;
+	}
+
+	/**
+	 * External Lua library for Scribunto
+	 *
+	 * @param string $engine
+	 * @param array $extraLibraries
+	 * @return bool
+	 */
+	public static function scribuntoExternalLibraries( $engine, array &$extraLibraries ) {
+		if( $engine == 'lua' ) {
+			$extraLibraries['mw.ext.TitleBlacklist'] = 'Scribunto_LuaTitleBlacklistLibrary';
 		}
 		return true;
 	}

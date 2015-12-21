@@ -38,12 +38,21 @@ class EmailConfirmation extends UnlistedSpecialPage {
 	 * Main execution point
 	 *
 	 * @param null|string $code Confirmation code passed to the page
+	 * @throws PermissionsError
+	 * @throws ReadOnlyError
+	 * @throws UserNotLoggedIn
 	 */
 	function execute( $code ) {
+		// Ignore things like master queries/connections on GET requests.
+		// It's very convenient to just allow formless link usage.
+		Profiler::instance()->getTransactionProfiler()->resetExpectations();
+
 		$this->setHeaders();
 
 		$this->checkReadOnly();
 		$this->checkPermissions();
+
+		$this->requireLogin( 'confirmemail_needlogin' );
 
 		// This could also let someone check the current email address, so
 		// require both permissions.
@@ -52,22 +61,10 @@ class EmailConfirmation extends UnlistedSpecialPage {
 		}
 
 		if ( $code === null || $code === '' ) {
-			if ( $this->getUser()->isLoggedIn() ) {
-				if ( Sanitizer::validateEmail( $this->getUser()->getEmail() ) ) {
-					$this->showRequestForm();
-				} else {
-					$this->getOutput()->addWikiMsg( 'confirmemail_noemail' );
-				}
+			if ( Sanitizer::validateEmail( $this->getUser()->getEmail() ) ) {
+				$this->showRequestForm();
 			} else {
-				$llink = Linker::linkKnown(
-					SpecialPage::getTitleFor( 'Userlogin' ),
-					$this->msg( 'loginreqlink' )->escaped(),
-					array(),
-					array( 'returnto' => $this->getTitle()->getPrefixedText() )
-				);
-				$this->getOutput()->addHTML(
-					$this->msg( 'confirmemail_needlogin' )->rawParams( $llink )->parse()
-				);
+				$this->getOutput()->addWikiMsg( 'confirmemail_noemail' );
 			}
 		} else {
 			$this->attemptConfirm( $code );
@@ -90,19 +87,17 @@ class EmailConfirmation extends UnlistedSpecialPage {
 			} else {
 				$out->addWikiText( $status->getWikiText( 'confirmemail_sendfailed' ) );
 			}
+		} elseif ( $user->isEmailConfirmed() ) {
+			// date and time are separate parameters to facilitate localisation.
+			// $time is kept for backward compat reasons.
+			// 'emailauthenticated' is also used in SpecialPreferences.php
+			$lang = $this->getLanguage();
+			$emailAuthenticated = $user->getEmailAuthenticationTimestamp();
+			$time = $lang->userTimeAndDate( $emailAuthenticated, $user );
+			$d = $lang->userDate( $emailAuthenticated, $user );
+			$t = $lang->userTime( $emailAuthenticated, $user );
+			$out->addWikiMsg( 'emailauthenticated', $time, $d, $t );
 		} else {
-			if ( $user->isEmailConfirmed() ) {
-				// date and time are separate parameters to facilitate localisation.
-				// $time is kept for backward compat reasons.
-				// 'emailauthenticated' is also used in SpecialPreferences.php
-				$lang = $this->getLanguage();
-				$emailAuthenticated = $user->getEmailAuthenticationTimestamp();
-				$time = $lang->userTimeAndDate( $emailAuthenticated, $user );
-				$d = $lang->userDate( $emailAuthenticated, $user );
-				$t = $lang->userTime( $emailAuthenticated, $user );
-				$out->addWikiMsg( 'emailauthenticated', $time, $d, $t );
-			}
-
 			if ( $user->isEmailConfirmationPending() ) {
 				$out->wrapWikiMsg(
 					"<div class=\"error mw-confirmemail-pending\">\n$1\n</div>",
@@ -113,7 +108,7 @@ class EmailConfirmation extends UnlistedSpecialPage {
 			$out->addWikiMsg( 'confirmemail_text' );
 			$form = Html::openElement(
 				'form',
-				array( 'method' => 'post', 'action' => $this->getTitle()->getLocalURL() )
+				array( 'method' => 'post', 'action' => $this->getPageTitle()->getLocalURL() )
 			) . "\n";
 			$form .= Html::hidden( 'token', $user->getEditToken() ) . "\n";
 			$form .= Xml::submitButton( $this->msg( 'confirmemail_send' )->text() ) . "\n";
@@ -129,7 +124,7 @@ class EmailConfirmation extends UnlistedSpecialPage {
 	 * @param string $code Confirmation code
 	 */
 	function attemptConfirm( $code ) {
-		$user = User::newFromConfirmationCode( $code );
+		$user = User::newFromConfirmationCode( $code, User::READ_LATEST );
 		if ( !is_object( $user ) ) {
 			$this->getOutput()->addWikiMsg( 'confirmemail_invalid' );
 
@@ -160,6 +155,10 @@ class EmailInvalidation extends UnlistedSpecialPage {
 	}
 
 	function execute( $code ) {
+		// Ignore things like master queries/connections on GET requests.
+		// It's very convenient to just allow formless link usage.
+		Profiler::instance()->getTransactionProfiler()->resetExpectations();
+
 		$this->setHeaders();
 		$this->checkReadOnly();
 		$this->checkPermissions();
@@ -173,7 +172,7 @@ class EmailInvalidation extends UnlistedSpecialPage {
 	 * @param string $code Confirmation code
 	 */
 	function attemptInvalidate( $code ) {
-		$user = User::newFromConfirmationCode( $code );
+		$user = User::newFromConfirmationCode( $code, User::READ_LATEST );
 		if ( !is_object( $user ) ) {
 			$this->getOutput()->addWikiMsg( 'confirmemail_invalid' );
 

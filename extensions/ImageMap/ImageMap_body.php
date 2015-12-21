@@ -1,7 +1,9 @@
 <?php
-
 /**
- * Image map extension.
+ * Main file for extension ImageMap.
+ *
+ * @file
+ * @ingroup Extensions
  *
  * Syntax:
  * <imagemap>
@@ -25,6 +27,15 @@ class ImageMap {
 	const BOTTOM_LEFT = 2;
 	const TOP_LEFT = 3;
 	const NONE = 4;
+
+	/**
+	 * @param Parser $parser
+	 * @return bool
+	 */
+	public static function onParserFirstCallInit( Parser &$parser ) {
+		$parser->setHook( 'imagemap', array( 'ImageMap', 'render' ) );
+		return true;
+	}
 
 	/**
 	 * @param $input

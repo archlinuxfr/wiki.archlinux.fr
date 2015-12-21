@@ -29,7 +29,7 @@
  */
 class ApiQueryExtLinksUsage extends ApiQueryGeneratorBase {
 
-	public function __construct( $query, $moduleName ) {
+	public function __construct( ApiQuery $query, $moduleName ) {
 		parent::__construct( $query, $moduleName, 'eu' );
 	}
 
@@ -46,7 +46,7 @@ class ApiQueryExtLinksUsage extends ApiQueryGeneratorBase {
 	}
 
 	/**
-	 * @param $resultPageSet ApiPageSet
+	 * @param ApiPageSet $resultPageSet
 	 * @return void
 	 */
 	private function run( $resultPageSet = null ) {
@@ -59,9 +59,8 @@ class ApiQueryExtLinksUsage extends ApiQueryGeneratorBase {
 		$this->addOption( 'USE INDEX', 'el_index' );
 		$this->addWhere( 'page_id=el_from' );
 
-		global $wgMiserMode;
 		$miser_ns = array();
-		if ( $wgMiserMode ) {
+		if ( $this->getConfig()->get( 'MiserMode' ) ) {
 			$miser_ns = $params['namespace'];
 		} else {
 			$this->addWhereFld( 'page_namespace', $params['namespace'] );
@@ -101,8 +100,9 @@ class ApiQueryExtLinksUsage extends ApiQueryGeneratorBase {
 		$result = $this->getResult();
 		$count = 0;
 		foreach ( $res as $row ) {
-			if ( ++ $count > $limit ) {
-				// We've reached the one extra which shows that there are additional pages to be had. Stop here...
+			if ( ++$count > $limit ) {
+				// We've reached the one extra which shows that there are
+				// additional pages to be had. Stop here...
 				$this->setContinueEnumParameter( 'offset', $offset + $limit );
 				break;
 			}
@@ -112,7 +112,9 @@ class ApiQueryExtLinksUsage extends ApiQueryGeneratorBase {
 			}
 
 			if ( is_null( $resultPageSet ) ) {
-				$vals = array();
+				$vals = array(
+					ApiResult::META_TYPE => 'assoc',
+				);
 				if ( $fld_ids ) {
 					$vals['pageid'] = intval( $row->page_id );
 				}
@@ -139,13 +141,13 @@ class ApiQueryExtLinksUsage extends ApiQueryGeneratorBase {
 		}
 
 		if ( is_null( $resultPageSet ) ) {
-			$result->setIndexedTagName_internal( array( 'query', $this->getModuleName() ),
-					$this->getModulePrefix() );
+			$result->addIndexedTagName( array( 'query', $this->getModuleName() ),
+				$this->getModulePrefix() );
 		}
 	}
 
 	public function getAllowedParams() {
-		return array(
+		$ret = array(
 			'prop' => array(
 				ApiBase::PARAM_ISMULTI => true,
 				ApiBase::PARAM_DFLT => 'ids|title|url',
@@ -153,10 +155,12 @@ class ApiQueryExtLinksUsage extends ApiQueryGeneratorBase {
 					'ids',
 					'title',
 					'url'
-				)
+				),
+				ApiBase::PARAM_HELP_MSG_PER_VALUE => array(),
 			),
 			'offset' => array(
-				ApiBase::PARAM_TYPE => 'integer'
+				ApiBase::PARAM_TYPE => 'integer',
+				ApiBase::PARAM_HELP_MSG => 'api-help-param-continue',
 			),
 			'protocol' => array(
 				ApiBase::PARAM_TYPE => self::prepareProtocols(),
@@ -176,6 +180,14 @@ class ApiQueryExtLinksUsage extends ApiQueryGeneratorBase {
 			),
 			'expandurl' => false,
 		);
+
+		if ( $this->getConfig()->get( 'MiserMode' ) ) {
+			$ret['namespace'][ApiBase::PARAM_HELP_MSG_APPEND] = array(
+				'api-help-param-limited-in-miser-mode',
+			);
+		}
+
+		return $ret;
 	}
 
 	public static function prepareProtocols() {
@@ -186,6 +198,7 @@ class ApiQueryExtLinksUsage extends ApiQueryGeneratorBase {
 				$protocols[] = substr( $p, 0, strpos( $p, ':' ) );
 			}
 		}
+
 		return $protocols;
 	}
 
@@ -206,66 +219,10 @@ class ApiQueryExtLinksUsage extends ApiQueryGeneratorBase {
 		}
 	}
 
-	public function getParamDescription() {
-		global $wgMiserMode;
-		$p = $this->getModulePrefix();
-		$desc = array(
-			'prop' => array(
-				'What pieces of information to include',
-				' ids    - Adds the ID of page',
-				' title  - Adds the title and namespace ID of the page',
-				' url    - Adds the URL used in the page',
-			),
-			'offset' => 'Used for paging. Use the value returned for "continue"',
-			'protocol' => array(
-				"Protocol of the URL. If empty and {$p}query set, the protocol is http.",
-				"Leave both this and {$p}query empty to list all external links"
-			),
-			'query' => 'Search string without protocol. See [[Special:LinkSearch]]. Leave empty to list all external links',
-			'namespace' => 'The page namespace(s) to enumerate.',
-			'limit' => 'How many pages to return.',
-			'expandurl' => 'Expand protocol-relative URLs with the canonical protocol',
-		);
-
-		if ( $wgMiserMode ) {
-			$desc['namespace'] = array(
-				$desc['namespace'],
-				"NOTE: Due to \$wgMiserMode, using this may result in fewer than \"{$p}limit\" results",
-				'returned before continuing; in extreme cases, zero results may be returned',
-			);
-		}
-
-		return $desc;
-	}
-
-	public function getResultProperties() {
+	protected function getExamplesMessages() {
 		return array(
-			'ids' => array(
-				'pageid' => 'integer'
-			),
-			'title' => array(
-				'ns' => 'namespace',
-				'title' => 'string'
-			),
-			'url' => array(
-				'url' => 'string'
-			)
-		);
-	}
-
-	public function getDescription() {
-		return 'Enumerate pages that contain a given URL';
-	}
-
-	public function getPossibleErrors() {
-		return array_merge( parent::getPossibleErrors(), array(
-			array( 'code' => 'bad_query', 'info' => 'Invalid query' ),
-		) );
-	}
-
-	public function getExamples() {
-		return array(
-			'api.php?action=query&list=exturlusage&euquery=www.mediawiki.org'
+			'action=query&list=exturlusage&euquery=www.mediawiki.org'
+				=> 'apihelp-query+exturlusage-example-simple',
 		);
 	}
 

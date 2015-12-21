@@ -19,9 +19,14 @@ $specialPageAliases['ar'] = array(
 	'Nuke' => array( 'حذف_كمي' ),
 );
 
-/** Egyptian Spoken Arabic (مصرى) */
+/** Egyptian Arabic (مصرى) */
 $specialPageAliases['arz'] = array(
 	'Nuke' => array( 'مسح_كامل' ),
+);
+
+/** Avaric (авар) */
+$specialPageAliases['av'] = array(
+	'Nuke' => array( 'Множественное_удаление' ),
 );
 
 /** Bashkir (башҡортса) */
@@ -34,6 +39,11 @@ $specialPageAliases['be-tarask'] = array(
 	'Nuke' => array( 'Масавае_выдаленьне' ),
 );
 
+/** Western Balochi (بلوچی رخشانی) */
+$specialPageAliases['bgn'] = array(
+	'Nuke' => array( 'دسته_جمین_پاک_کورتین' ),
+);
+
 /** Banjar (Bahasa Banjar) */
 $specialPageAliases['bjn'] = array(
 	'Nuke' => array( 'Nuklir' ),
@@ -41,7 +51,7 @@ $specialPageAliases['bjn'] = array(
 
 /** Chechen (нохчийн) */
 $specialPageAliases['ce'] = array(
-	'Nuke' => array( 'Дуккха_дӀаяккхар' ),
+	'Nuke' => array( 'Дуккха_дӀаяхар' ),
 );
 
 /** German (Deutsch) */
@@ -61,7 +71,7 @@ $specialPageAliases['dsb'] = array(
 
 /** Spanish (español) */
 $specialPageAliases['es'] = array(
-	'Nuke' => array( 'BorradoMasivo', 'Borrado_en_masa' ),
+	'Nuke' => array( 'BorradoMasivo', 'Borrado_en_masa', 'Borrado_masivo' ),
 );
 
 /** Estonian (eesti) */
@@ -76,7 +86,7 @@ $specialPageAliases['fa'] = array(
 
 /** Finnish (suomi) */
 $specialPageAliases['fi'] = array(
-	'Nuke' => array( 'Massapoisto' ),
+	'Nuke' => array( 'Massapoista' ),
 );
 
 /** Galician (galego) */
@@ -164,6 +174,11 @@ $specialPageAliases['lb'] = array(
 	'Nuke' => array( 'Masseläschung' ),
 );
 
+/** Northern Luri (لۊری شومالی) */
+$specialPageAliases['lrc'] = array(
+	'Nuke' => array( 'أتومی' ),
+);
+
 /** Literary Chinese (文言) */
 $specialPageAliases['lzh'] = array(
 	'Nuke' => array( '量刪' ),
@@ -201,7 +216,7 @@ $specialPageAliases['nl'] = array(
 
 /** Norwegian Nynorsk (norsk nynorsk) */
 $specialPageAliases['nn'] = array(
-	'Nuke' => array( 'Massesletting' ),
+	'Nuke' => array( 'Massesletting', 'Masseslett' ),
 );
 
 /** Polish (polski) */
@@ -262,6 +277,11 @@ $specialPageAliases['uk'] = array(
 /** Vietnamese (Tiếng Việt) */
 $specialPageAliases['vi'] = array(
 	'Nuke' => array( 'Xóa_hàng_loạt', 'Xoá_hàng_loạt' ),
+);
+
+/** Chinese (中文) */
+$specialPageAliases['zh'] = array(
+	'Nuke' => array( '大量删除', '大量刪除' ),
 );
 
 /** Simplified Chinese (中文（简体）‎) */

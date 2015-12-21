@@ -27,7 +27,7 @@ require_once __DIR__ . '/Maintenance.php';
 /**
  * Maintenance script to delete archived (non-current) files from storage.
  *
- * @TODO: Maybe add some simple logging
+ * @todo Maybe add some simple logging
  *
  * @ingroup Maintenance
  * @since 1.22
@@ -73,7 +73,6 @@ class EraseArchivedFile extends Maintenance {
 
 		$this->output( "Purging all thumbnails for file '$filename'..." );
 		$file->purgeCache();
-		$file->purgeHistory();
 		$this->output( "done.\n" );
 
 		if ( $afile instanceof ArchivedFile ) {

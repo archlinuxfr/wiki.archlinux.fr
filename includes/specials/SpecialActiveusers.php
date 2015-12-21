@@ -31,33 +31,35 @@
  * @ingroup SpecialPage
  */
 class ActiveUsersPager extends UsersPager {
-
 	/**
 	 * @var FormOptions
 	 */
 	protected $opts;
 
 	/**
-	 * @var Array
+	 * @var array
 	 */
 	protected $hideGroups = array();
 
 	/**
-	 * @var Array
+	 * @var array
 	 */
 	protected $hideRights = array();
 
 	/**
-	 * @param $context IContextSource
-	 * @param $group null Unused
+	 * @var array
+	 */
+	private $blockStatusByUid;
+
+	/**
+	 * @param IContextSource $context
+	 * @param null $group Unused
 	 * @param string $par Parameter passed to the page
 	 */
 	function __construct( IContextSource $context = null, $group = null, $par = null ) {
-		global $wgActiveUserDays;
-
 		parent::__construct( $context );
 
-		$this->RCMaxAge = $wgActiveUserDays;
+		$this->RCMaxAge = $this->getConfig()->get( 'ActiveUserDays' );
 		$un = $this->getRequest()->getText( 'username', $par );
 		$this->requestedUser = '';
 		if ( $un != '' ) {
@@ -87,44 +89,49 @@ class ActiveUsersPager extends UsersPager {
 	}
 
 	function getIndexField() {
-		return 'rc_user_text';
+		return 'qcc_title';
 	}
 
 	function getQueryInfo() {
 		$dbr = $this->getDatabase();
 
-		$conds = array( 'rc_user > 0' ); // Users - no anons
-		$conds[] = 'rc_log_type IS NULL OR rc_log_type != ' . $dbr->addQuotes( 'newusers' );
-		$conds[] = 'rc_timestamp >= ' . $dbr->addQuotes(
-			$dbr->timestamp( wfTimestamp( TS_UNIX ) - $this->RCMaxAge * 24 * 3600 ) );
-
+		$activeUserSeconds = $this->getConfig()->get( 'ActiveUserDays' ) * 86400;
+		$timestamp = $dbr->timestamp( wfTimestamp( TS_UNIX ) - $activeUserSeconds );
+		$conds = array(
+			'qcc_type' => 'activeusers',
+			'qcc_namespace' => NS_USER,
+			'user_name = qcc_title',
+			'rc_user_text = qcc_title',
+			'rc_type != ' . $dbr->addQuotes( RC_EXTERNAL ), // Don't count wikidata.
+			'rc_log_type IS NULL OR rc_log_type != ' . $dbr->addQuotes( 'newusers' ),
+			'rc_timestamp >= ' . $dbr->addQuotes( $timestamp ),
+		);
 		if ( $this->requestedUser != '' ) {
-			$conds[] = 'rc_user_text >= ' . $dbr->addQuotes( $this->requestedUser );
+			$conds[] = 'qcc_title >= ' . $dbr->addQuotes( $this->requestedUser );
 		}
-
 		if ( !$this->getUser()->isAllowed( 'hideuser' ) ) {
 			$conds[] = 'NOT EXISTS (' . $dbr->selectSQLText(
-				'ipblocks', '1', array( 'rc_user=ipb_user', 'ipb_deleted' => 1 )
+				'ipblocks', '1', array( 'ipb_user=user_id', 'ipb_deleted' => 1 )
 			) . ')';
 		}
 
+		if ( $dbr->implicitGroupby() ) {
+			$options = array( 'GROUP BY' => array( 'qcc_title' ) );
+		} else {
+			$options = array( 'GROUP BY' => array( 'user_name', 'user_id', 'qcc_title' ) );
+		}
+
 		return array(
-			'tables' => array( 'recentchanges' ),
-			'fields' => array(
-				'user_name' => 'rc_user_text', // for Pager inheritance
-				'rc_user_text', // for Pager
-				'user_id' => 'MAX(rc_user)', // Postgres
-				'recentedits' => 'COUNT(*)'
-			),
-			'options' => array(
-				'GROUP BY' => array( 'rc_user_text' ),
-				'USE INDEX' => array( 'recentchanges' => 'rc_user_text' )
-			),
+			'tables' => array( 'querycachetwo', 'user', 'recentchanges' ),
+			'fields' => array( 'user_name', 'user_id', 'recentedits' => 'COUNT(*)', 'qcc_title' ),
+			'options' => $options,
 			'conds' => $conds
 		);
 	}
 
 	function doBatchLookups() {
+		parent::doBatchLookups();
+
 		$uids = array();
 		foreach ( $this->mResult as $row ) {
 			$uids[] = $row->user_id;
@@ -173,7 +180,8 @@ class ActiveUsersPager extends UsersPager {
 		// Note: This is a different loop than for user rights,
 		// because we're reusing it to build the group links
 		// at the same time
-		foreach ( $user->getGroups() as $group ) {
+		$groups_list = self::getGroups( intval( $row->user_id ), $this->userGroupCache );
+		foreach ( $groups_list as $group ) {
 			if ( in_array( $group, $this->hideGroups ) ) {
 				return '';
 			}
@@ -196,25 +204,35 @@ class ActiveUsersPager extends UsersPager {
 	}
 
 	function getPageHeader() {
-		global $wgScript;
-
 		$self = $this->getTitle();
 		$limit = $this->mLimit ? Html::hidden( 'limit', $this->mLimit ) : '';
 
-		$out = Xml::openElement( 'form', array( 'method' => 'get', 'action' => $wgScript ) ); # Form tag
+		# Form tag
+		$out = Xml::openElement( 'form', array( 'method' => 'get', 'action' => wfScript() ) );
 		$out .= Xml::fieldset( $this->msg( 'activeusers' )->text() ) . "\n";
 		$out .= Html::hidden( 'title', $self->getPrefixedDBkey() ) . $limit . "\n";
 
+		# Username field
 		$out .= Xml::inputLabel( $this->msg( 'activeusers-from' )->text(),
-			'username', 'offset', 20, $this->requestedUser, array( 'tabindex' => 1 ) ) . '<br />';# Username field
+			'username', 'offset', 20, $this->requestedUser,
+			array( 'class' => 'mw-ui-input-inline', 'tabindex' => 1 ) ) . '<br />';
 
 		$out .= Xml::checkLabel( $this->msg( 'activeusers-hidebots' )->text(),
 			'hidebots', 'hidebots', $this->opts->getValue( 'hidebots' ), array( 'tabindex' => 2 ) );
 
-		$out .= Xml::checkLabel( $this->msg( 'activeusers-hidesysops' )->text(),
-			'hidesysops', 'hidesysops', $this->opts->getValue( 'hidesysops' ), array( 'tabindex' => 3 ) ) . '<br />';
+		$out .= Xml::checkLabel(
+			$this->msg( 'activeusers-hidesysops' )->text(),
+			'hidesysops',
+			'hidesysops',
+			$this->opts->getValue( 'hidesysops' ),
+			array( 'tabindex' => 3 )
+		) . '<br />';
 
-		$out .= Xml::submitButton( $this->msg( 'allpagessubmit' )->text(), array( 'tabindex' => 4 ) ) . "\n";# Submit button and form bottom
+		# Submit button and form bottom
+		$out .= Xml::submitButton(
+			$this->msg( 'allpagessubmit' )->text(),
+			array( 'tabindex' => 4 )
+		) . "\n";
 		$out .= Xml::closeElement( 'fieldset' );
 		$out .= Xml::closeElement( 'form' );
 
@@ -237,17 +255,37 @@ class SpecialActiveUsers extends SpecialPage {
 	/**
 	 * Show the special page
 	 *
-	 * @param $par Mixed: parameter passed to the page or null
+	 * @param string $par Parameter passed to the page or null
 	 */
 	public function execute( $par ) {
-		global $wgActiveUserDays;
+		$days = $this->getConfig()->get( 'ActiveUserDays' );
 
 		$this->setHeaders();
 		$this->outputHeader();
 
 		$out = $this->getOutput();
 		$out->wrapWikiMsg( "<div class='mw-activeusers-intro'>\n$1\n</div>",
-			array( 'activeusers-intro', $this->getLanguage()->formatNum( $wgActiveUserDays ) ) );
+			array( 'activeusers-intro', $this->getLanguage()->formatNum( $days ) ) );
+
+		// Mention the level of cache staleness...
+		$dbr = wfGetDB( DB_SLAVE, 'recentchanges' );
+		$rcMax = $dbr->selectField( 'recentchanges', 'MAX(rc_timestamp)' );
+		if ( $rcMax ) {
+			$cTime = $dbr->selectField( 'querycache_info',
+				'qci_timestamp',
+				array( 'qci_type' => 'activeusers' )
+			);
+			if ( $cTime ) {
+				$secondsOld = wfTimestamp( TS_UNIX, $rcMax ) - wfTimestamp( TS_UNIX, $cTime );
+			} else {
+				$rcMin = $dbr->selectField( 'recentchanges', 'MIN(rc_timestamp)' );
+				$secondsOld = time() - wfTimestamp( TS_UNIX, $rcMin );
+			}
+			if ( $secondsOld > 0 ) {
+				$out->addWikiMsg( 'cachedspecial-viewing-cached-ttl',
+				$this->getLanguage()->formatDuration( $secondsOld ) );
+			}
+		}
 
 		$up = new ActiveUsersPager( $this->getContext(), null, $par );
 

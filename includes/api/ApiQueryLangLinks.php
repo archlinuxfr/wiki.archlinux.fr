@@ -31,7 +31,7 @@
  */
 class ApiQueryLangLinks extends ApiQueryBase {
 
-	public function __construct( $query, $moduleName ) {
+	public function __construct( ApiQuery $query, $moduleName ) {
 		parent::__construct( $query, $moduleName, 'll' );
 	}
 
@@ -41,9 +41,17 @@ class ApiQueryLangLinks extends ApiQueryBase {
 		}
 
 		$params = $this->extractRequestParams();
+		$prop = array_flip( (array)$params['prop'] );
 
 		if ( isset( $params['title'] ) && !isset( $params['lang'] ) ) {
 			$this->dieUsageMsg( array( 'missingparam', 'lang' ) );
+		}
+
+		// Handle deprecated param
+		$this->requireMaxOneParameter( $params, 'url', 'prop' );
+		if ( $params['url'] ) {
+			$this->logFeatureUsage( 'prop=langlinks&llurl' );
+			$prop = array( 'url' => 1 );
 		}
 
 		$this->addFields( array(
@@ -86,9 +94,9 @@ class ApiQueryLangLinks extends ApiQueryBase {
 				$this->addOption( 'ORDER BY', 'll_lang' . $sort );
 			} else {
 				$this->addOption( 'ORDER BY', array(
-							'll_from' . $sort,
-							'll_lang' . $sort
-				));
+					'll_from' . $sort,
+					'll_lang' . $sort
+				) );
 			}
 		}
 
@@ -104,13 +112,19 @@ class ApiQueryLangLinks extends ApiQueryBase {
 				break;
 			}
 			$entry = array( 'lang' => $row->ll_lang );
-			if ( $params['url'] ) {
+			if ( isset( $prop['url'] ) ) {
 				$title = Title::newFromText( "{$row->ll_lang}:{$row->ll_title}" );
 				if ( $title ) {
 					$entry['url'] = wfExpandUrl( $title->getFullURL(), PROTO_CURRENT );
 				}
 			}
-			ApiResult::setContent( $entry, $row->ll_title );
+			if ( isset( $prop['langname'] ) ) {
+				$entry['langname'] = Language::fetchLanguageName( $row->ll_lang, $params['inlanguagecode'] );
+			}
+			if ( isset( $prop['autonym'] ) ) {
+				$entry['autonym'] = Language::fetchLanguageName( $row->ll_lang );
+			}
+			ApiResult::setContentValue( $entry, 'title', $row->ll_title );
 			$fit = $this->addPageSubItem( $row->ll_from, $entry );
 			if ( !$fit ) {
 				$this->setContinueEnumParameter( 'continue', "{$row->ll_from}|{$row->ll_lang}" );
@@ -124,16 +138,17 @@ class ApiQueryLangLinks extends ApiQueryBase {
 	}
 
 	public function getAllowedParams() {
+		global $wgContLang;
 		return array(
-			'limit' => array(
-				ApiBase::PARAM_DFLT => 10,
-				ApiBase::PARAM_TYPE => 'limit',
-				ApiBase::PARAM_MIN => 1,
-				ApiBase::PARAM_MAX => ApiBase::LIMIT_BIG1,
-				ApiBase::PARAM_MAX2 => ApiBase::LIMIT_BIG2
+			'prop' => array(
+				ApiBase::PARAM_ISMULTI => true,
+				ApiBase::PARAM_TYPE => array(
+					'url',
+					'langname',
+					'autonym',
+				),
+				ApiBase::PARAM_HELP_MSG_PER_VALUE => array(),
 			),
-			'continue' => null,
-			'url' => false,
 			'lang' => null,
 			'title' => null,
 			'dir' => array(
@@ -143,50 +158,32 @@ class ApiQueryLangLinks extends ApiQueryBase {
 					'descending'
 				)
 			),
+			'inlanguagecode' => $wgContLang->getCode(),
+			'limit' => array(
+				ApiBase::PARAM_DFLT => 10,
+				ApiBase::PARAM_TYPE => 'limit',
+				ApiBase::PARAM_MIN => 1,
+				ApiBase::PARAM_MAX => ApiBase::LIMIT_BIG1,
+				ApiBase::PARAM_MAX2 => ApiBase::LIMIT_BIG2
+			),
+			'continue' => array(
+				ApiBase::PARAM_HELP_MSG => 'api-help-param-continue',
+			),
+			'url' => array(
+				ApiBase::PARAM_DFLT => false,
+				ApiBase::PARAM_DEPRECATED => true,
+			),
 		);
 	}
 
-	public function getParamDescription() {
+	protected function getExamplesMessages() {
 		return array(
-			'limit' => 'How many langlinks to return',
-			'continue' => 'When more results are available, use this to continue',
-			'url' => 'Whether to get the full URL',
-			'lang' => 'Language code',
-			'title' => "Link to search for. Must be used with {$this->getModulePrefix()}lang",
-			'dir' => 'The direction in which to list',
-		);
-	}
-
-	public function getResultProperties() {
-		return array(
-			'' => array(
-				'lang' => 'string',
-				'url' => array(
-					ApiBase::PROP_TYPE => 'string',
-					ApiBase::PROP_NULLABLE => true
-				),
-				'*' => 'string'
-			)
-		);
-	}
-
-	public function getDescription() {
-		return 'Returns all interlanguage links from the given page(s)';
-	}
-
-	public function getPossibleErrors() {
-		return array_merge( parent::getPossibleErrors(), array(
-			array( 'missingparam', 'lang' ),
-		) );
-	}
-
-	public function getExamples() {
-		return array(
-			'api.php?action=query&prop=langlinks&titles=Main%20Page&redirects=' => 'Get interlanguage links from the [[Main Page]]',
+			'action=query&prop=langlinks&titles=Main%20Page&redirects='
+				=> 'apihelp-query+langlinks-example-simple',
 		);
 	}
 
 	public function getHelpUrls() {
-		return 'https://www.mediawiki.org/wiki/API:Properties#langlinks_.2F_ll';
+		return 'https://www.mediawiki.org/wiki/API:Langlinks';
 	}
 }

@@ -78,18 +78,23 @@ $urls[] = array(
 	'method' => 'get',
 	'template' => $searchPage->getCanonicalURL( 'search={searchTerms}' ) );
 
-if ( $wgEnableAPI ) {
-	// JSON interface for search suggestions.
-	// Supported in Firefox 2 and later.
-	$urls[] = array(
-		'type' => 'application/x-suggestions+json',
-		'method' => 'get',
-		'template' => SearchEngine::getOpenSearchTemplate() );
+foreach ( $wgOpenSearchTemplates as $type => $template ) {
+	if ( !$template && $wgEnableAPI ) {
+		$template = ApiOpenSearch::getOpenSearchTemplate( $type );
+	}
+
+	if ( $template ) {
+		$urls[] = array(
+			'type' => $type,
+			'method' => 'get',
+			'template' => $template,
+		);
+	}
 }
 
 // Allow hooks to override the suggestion URL settings in a more
 // general way than overriding the whole search engine...
-wfRunHooks( 'OpenSearchUrls', array( &$urls ) );
+Hooks::run( 'OpenSearchUrls', array( &$urls ) );
 
 foreach ( $urls as $attribs ) {
 	print Xml::element( 'Url', $attribs );

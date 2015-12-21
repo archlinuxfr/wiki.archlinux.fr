@@ -42,6 +42,11 @@ require_once __DIR__ . '/Maintenance.php';
  * @ingroup Maintenance
  */
 class FindHooks extends Maintenance {
+	/*
+	 * Hooks that are ignored
+	 */
+	protected static $ignore = array( 'testRunLegacyHooks' );
+
 	public function __construct() {
 		parent::__construct();
 		$this->mDescription = 'Find hooks that are undocumented, missing, or just plain wrong';
@@ -58,34 +63,57 @@ class FindHooks extends Maintenance {
 		$documented = $this->getHooksFromDoc( $IP . '/docs/hooks.txt' );
 		$potential = array();
 		$bad = array();
+
+		// TODO: Don't hardcode the list of directories
 		$pathinc = array(
 			$IP . '/',
 			$IP . '/includes/',
 			$IP . '/includes/actions/',
 			$IP . '/includes/api/',
 			$IP . '/includes/cache/',
+			$IP . '/includes/changes/',
+			$IP . '/includes/changetags/',
+			$IP . '/includes/clientpool/',
 			$IP . '/includes/content/',
 			$IP . '/includes/context/',
+			$IP . '/includes/dao/',
 			$IP . '/includes/db/',
+			$IP . '/includes/debug/',
+			$IP . '/includes/deferred/',
 			$IP . '/includes/diff/',
+			$IP . '/includes/exception/',
+			$IP . '/includes/externalstore/',
+			$IP . '/includes/filebackend/',
 			$IP . '/includes/filerepo/',
 			$IP . '/includes/filerepo/file/',
+			$IP . '/includes/gallery/',
+			$IP . '/includes/htmlform/',
 			$IP . '/includes/installer/',
 			$IP . '/includes/interwiki/',
+			$IP . '/includes/jobqueue/',
+			$IP . '/includes/json/',
 			$IP . '/includes/logging/',
+			$IP . '/includes/mail/',
 			$IP . '/includes/media/',
+			$IP . '/includes/page/',
 			$IP . '/includes/parser/',
+			$IP . '/includes/password/',
+			$IP . '/includes/rcfeed/',
 			$IP . '/includes/resourceloader/',
 			$IP . '/includes/revisiondelete/',
 			$IP . '/includes/search/',
+			$IP . '/includes/site/',
+			$IP . '/includes/skins/',
+			$IP . '/includes/specialpage/',
 			$IP . '/includes/specials/',
 			$IP . '/includes/upload/',
+			$IP . '/includes/utils/',
 			$IP . '/languages/',
 			$IP . '/maintenance/',
+			$IP . '/maintenance/language/',
 			$IP . '/tests/',
 			$IP . '/tests/parser/',
 			$IP . '/tests/phpunit/suites/',
-			$IP . '/skins/',
 		);
 
 		foreach ( $pathinc as $dir ) {
@@ -94,24 +122,26 @@ class FindHooks extends Maintenance {
 		}
 
 		$potential = array_unique( $potential );
-		$bad = array_unique( $bad );
-		$todo = array_diff( $potential, $documented );
-		$deprecated = array_diff( $documented, $potential );
+		$bad = array_diff( array_unique( $bad ), self::$ignore );
+		$todo = array_diff( $potential, $documented, self::$ignore );
+		$deprecated = array_diff( $documented, $potential, self::$ignore );
 
 		// let's show the results:
 		$this->printArray( 'Undocumented', $todo );
 		$this->printArray( 'Documented and not found', $deprecated );
 		$this->printArray( 'Unclear hook calls', $bad );
 
-		if ( count( $todo ) == 0 && count( $deprecated ) == 0 && count( $bad ) == 0 )
-		{
+		if ( count( $todo ) == 0 && count( $deprecated ) == 0 && count( $bad ) == 0 ) {
 			$this->output( "Looks good!\n" );
+		} else {
+			$this->error( 'The script finished with errors.', 1 );
 		}
 	}
 
 	/**
 	 * Get the hook documentation, either locally or from MediaWiki.org
-	 * @return array of documented hooks
+	 * @param string $doc
+	 * @return array Array of documented hooks
 	 */
 	private function getHooksFromDoc( $doc ) {
 		if ( $this->hasOption( 'online' ) ) {
@@ -123,62 +153,78 @@ class FindHooks extends Maintenance {
 
 	/**
 	 * Get hooks from a local file (for example docs/hooks.txt)
-	 * @param $doc string: filename to look in
-	 * @return array of documented hooks
+	 * @param string $doc Filename to look in
+	 * @return array Array of documented hooks
 	 */
 	private function getHooksFromLocalDoc( $doc ) {
-			$m = array();
-			$content = file_get_contents( $doc );
-			preg_match_all( "/\n'(.*?)'/", $content, $m );
-			return array_unique( $m[1] );
+		$m = array();
+		$content = file_get_contents( $doc );
+		preg_match_all( "/\n'(.*?)':/", $content, $m );
+
+		return array_unique( $m[1] );
 	}
 
 	/**
 	 * Get hooks from www.mediawiki.org using the API
-	 * @return array of documented hooks
+	 * @return array Array of documented hooks
 	 */
 	private function getHooksFromOnlineDoc() {
-			// All hooks
-			$allhookdata = Http::get( 'http://www.mediawiki.org/w/api.php?action=query&list=categorymembers&cmtitle=Category:MediaWiki_hooks&cmlimit=500&format=php' );
-			$allhookdata = unserialize( $allhookdata );
-			$allhooks = array();
-			foreach ( $allhookdata['query']['categorymembers'] as $page ) {
-				$found = preg_match( '/Manual\:Hooks\/([a-zA-Z0-9- :]+)/', $page['title'], $matches );
-				if ( $found ) {
-					$hook = str_replace( ' ', '_', $matches[1] );
-					$allhooks[] = $hook;
+		$allhooks = $this->getHooksFromOnlineDocCategory( 'MediaWiki_hooks' );
+		$removed = $this->getHooksFromOnlineDocCategory( 'Removed_hooks' );
+		return array_diff( $allhooks, $removed );
+	}
+
+	/**
+	 * @param string $title
+	 * @return array
+	 */
+	private function getHooksFromOnlineDocCategory( $title ) {
+		$params = array(
+			'action' => 'query',
+			'list' => 'categorymembers',
+			'cmtitle' => "Category:$title",
+			'cmlimit' => 500,
+			'format' => 'json',
+			'continue' => '',
+		);
+
+		$retval = array();
+		while ( true ) {
+			$json = Http::get( wfAppendQuery( 'http://www.mediawiki.org/w/api.php', $params ), array(), __METHOD__ );
+			$data = FormatJson::decode( $json, true );
+			foreach ( $data['query']['categorymembers'] as $page ) {
+				if ( preg_match( '/Manual\:Hooks\/([a-zA-Z0-9- :]+)/', $page['title'], $m ) ) {
+					$retval[] = str_replace( ' ', '_', $m[1] );
 				}
 			}
-			// Removed hooks
-			$oldhookdata = Http::get( 'http://www.mediawiki.org/w/api.php?action=query&list=categorymembers&cmtitle=Category:Removed_hooks&cmlimit=500&format=php' );
-			$oldhookdata = unserialize( $oldhookdata );
-			$removed = array();
-			foreach ( $oldhookdata['query']['categorymembers'] as $page ) {
-				$found = preg_match( '/Manual\:Hooks\/([a-zA-Z0-9- :]+)/', $page['title'], $matches );
-				if ( $found ) {
-					$hook = str_replace( ' ', '_', $matches[1] );
-					$removed[] = $hook;
-				}
+			if ( !isset( $data['continue'] ) ) {
+				return $retval;
 			}
-			return array_diff( $allhooks, $removed );
+			$params = array_replace( $params, $data['continue'] );
+		}
 	}
 
 	/**
 	 * Get hooks from a PHP file
-	 * @param $file string Full filename to the PHP file.
-	 * @return array of hooks found.
+	 * @param string $file Full filename to the PHP file.
+	 * @return array Array of hooks found
 	 */
 	private function getHooksFromFile( $file ) {
 		$content = file_get_contents( $file );
 		$m = array();
-		preg_match_all( '/(?:wfRunHooks|Hooks\:\:run|ContentHandler\:\:runLegacyHooks)\(\s*([\'"])(.*?)\1/', $content, $m );
+		preg_match_all(
+			'/(?:wfRunHooks|Hooks\:\:run|ContentHandler\:\:runLegacyHooks)\(\s*([\'"])(.*?)\1/',
+			$content,
+			$m
+		);
+
 		return $m[2];
 	}
 
 	/**
 	 * Get hooks from the source code.
-	 * @param $path Directory where the include files can be found
-	 * @return array of hooks found.
+	 * @param string $path Directory where the include files can be found
+	 * @return array Array of hooks found
 	 */
 	private function getHooksFromPath( $path ) {
 		$hooks = array();
@@ -191,13 +237,14 @@ class FindHooks extends Maintenance {
 			}
 			closedir( $dh );
 		}
+
 		return $hooks;
 	}
 
 	/**
 	 * Get bad hooks (where the hook name could not be determined) from a PHP file
-	 * @param $file string Full filename to the PHP file.
-	 * @return array of bad wfRunHooks() lines
+	 * @param string $file Full filename to the PHP file.
+	 * @return array Array of bad wfRunHooks() lines
 	 */
 	private function getBadHooksFromFile( $file ) {
 		$content = file_get_contents( $file );
@@ -208,13 +255,14 @@ class FindHooks extends Maintenance {
 		foreach ( $m[0] as $match ) {
 			$list[] = $match . "(" . $file . ")";
 		}
+
 		return $list;
 	}
 
 	/**
 	 * Get bad hooks from the source code.
-	 * @param $path Directory where the include files can be found
-	 * @return array of bad wfRunHooks() lines
+	 * @param string $path Directory where the include files can be found
+	 * @return array Array of bad wfRunHooks() lines
 	 */
 	private function getBadHooksFromPath( $path ) {
 		$hooks = array();
@@ -228,19 +276,21 @@ class FindHooks extends Maintenance {
 			}
 			closedir( $dh );
 		}
+
 		return $hooks;
 	}
 
 	/**
 	 * Nicely output the array
-	 * @param $msg String: a message to show before the value
-	 * @param $arr Array: an array
-	 * @param $sort Boolean: whether to sort the array (Default: true)
+	 * @param string $msg A message to show before the value
+	 * @param array $arr
+	 * @param bool $sort Whether to sort the array (Default: true)
 	 */
 	private function printArray( $msg, $arr, $sort = true ) {
 		if ( $sort ) {
 			asort( $arr );
 		}
+
 		foreach ( $arr as $v ) {
 			$this->output( "$msg: $v\n" );
 		}

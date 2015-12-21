@@ -33,7 +33,7 @@ class ListredirectsPage extends QueryPage {
 		parent::__construct( $name );
 	}
 
-	function isExpensive() {
+	public function isExpensive() {
 		return true;
 	}
 
@@ -45,7 +45,7 @@ class ListredirectsPage extends QueryPage {
 		return false;
 	}
 
-	function getQueryInfo() {
+	public function getQueryInfo() {
 		return array(
 			'tables' => array( 'p1' => 'page', 'redirect', 'p2' => 'page' ),
 			'fields' => array( 'namespace' => 'p1.page_namespace',
@@ -72,24 +72,23 @@ class ListredirectsPage extends QueryPage {
 	/**
 	 * Cache page existence for performance
 	 *
-	 * @param DatabaseBase $db
+	 * @param IDatabase $db
 	 * @param ResultWrapper $res
 	 */
 	function preprocessResults( $db, $res ) {
-		$batch = new LinkBatch;
+		if ( !$res->numRows() ) {
+			return;
+		}
 
+		$batch = new LinkBatch;
 		foreach ( $res as $row ) {
 			$batch->add( $row->namespace, $row->title );
 			$batch->addObj( $this->getRedirectTarget( $row ) );
 		}
-
 		$batch->execute();
 
 		// Back to start for display
-		if ( $res->numRows() > 0 ) {
-			// If there are no rows we get an error seeking.
-			$db->dataSeek( $res, 0 );
-		}
+		$res->seek( 0 );
 	}
 
 	protected function getRedirectTarget( $row ) {

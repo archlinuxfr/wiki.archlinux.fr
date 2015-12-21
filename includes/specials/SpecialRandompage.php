@@ -56,7 +56,9 @@ class RandomPage extends SpecialPage {
 	public function execute( $par ) {
 		global $wgContLang;
 
-		if ( $par ) {
+		if ( is_string( $par ) ) {
+			// Testing for stringiness since we want to catch
+			// the empty string to mean main namespace only.
 			$this->setNamespace( $wgContLang->getNsIndex( $par ) );
 		}
 
@@ -80,7 +82,7 @@ class RandomPage extends SpecialPage {
 	/**
 	 * Get a comma-delimited list of namespaces we don't have
 	 * any pages in
-	 * @return String
+	 * @return string
 	 */
 	private function getNsList() {
 		global $wgContLang;
@@ -98,13 +100,13 @@ class RandomPage extends SpecialPage {
 
 	/**
 	 * Choose a random title.
-	 * @return Title object (or null if nothing to choose from)
+	 * @return Title|null Title object (or null if nothing to choose from)
 	 */
 	public function getRandomTitle() {
 		$randstr = wfRandom();
 		$title = null;
 
-		if ( !wfRunHooks(
+		if ( !Hooks::run(
 			'SpecialRandomGetRandomTitle',
 			array( &$randstr, &$this->isRedir, &$this->namespaces, &$this->extra, &$title )
 		) ) {
@@ -133,21 +135,26 @@ class RandomPage extends SpecialPage {
 
 	protected function getQueryInfo( $randstr ) {
 		$redirect = $this->isRedirect() ? 1 : 0;
+		$tables = array( 'page' );
+		$conds = array_merge( array(
+			'page_namespace' => $this->namespaces,
+			'page_is_redirect' => $redirect,
+			'page_random >= ' . $randstr
+		), $this->extra );
+		$joinConds = array();
+
+		// Allow extensions to modify the query
+		Hooks::run( 'RandomPageQuery', array( &$tables, &$conds, &$joinConds ) );
 
 		return array(
-			'tables' => array( 'page' ),
+			'tables' => $tables,
 			'fields' => array( 'page_title', 'page_namespace' ),
-			'conds' => array_merge( array(
-				'page_namespace' => $this->namespaces,
-				'page_is_redirect' => $redirect,
-				'page_random >= ' . $randstr
-			), $this->extra ),
+			'conds' => $conds,
 			'options' => array(
 				'ORDER BY' => 'page_random',
-				'USE INDEX' => 'page_random',
 				'LIMIT' => 1,
 			),
-			'join_conds' => array()
+			'join_conds' => $joinConds
 		);
 	}
 

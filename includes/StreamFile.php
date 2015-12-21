@@ -39,29 +39,24 @@ class StreamFile {
 	 * @return bool Success
 	 */
 	public static function stream( $fname, $headers = array(), $sendErrors = true ) {
-		wfProfileIn( __METHOD__ );
 
 		if ( FileBackend::isStoragePath( $fname ) ) { // sanity
-			wfProfileOut( __METHOD__ );
 			throw new MWException( __FUNCTION__ . " given storage path '$fname'." );
 		}
 
-		wfSuppressWarnings();
+		MediaWiki\suppressWarnings();
 		$stat = stat( $fname );
-		wfRestoreWarnings();
+		MediaWiki\restoreWarnings();
 
 		$res = self::prepareForStream( $fname, $stat, $headers, $sendErrors );
 		if ( $res == self::NOT_MODIFIED ) {
 			$ok = true; // use client cache
 		} elseif ( $res == self::READY_STREAM ) {
-			wfProfileIn( __METHOD__ . '-send' );
 			$ok = readfile( $fname );
-			wfProfileOut( __METHOD__ . '-send' );
 		} else {
 			$ok = false; // failed
 		}
 
-		wfProfileOut( __METHOD__ );
 		return $ok;
 	}
 
@@ -83,7 +78,7 @@ class StreamFile {
 	) {
 		if ( !is_array( $info ) ) {
 			if ( $sendErrors ) {
-				header( 'HTTP/1.0 404 Not Found' );
+				HttpStatus::header( 404 );
 				header( 'Cache-Control: no-cache' );
 				header( 'Content-Type: text/html; charset=utf-8' );
 				$encFile = htmlspecialchars( $path );
@@ -131,7 +126,7 @@ class StreamFile {
 			$modsince = preg_replace( '/;.*$/', '', $_SERVER['HTTP_IF_MODIFIED_SINCE'] );
 			if ( wfTimestamp( TS_UNIX, $info['mtime'] ) <= strtotime( $modsince ) ) {
 				ini_set( 'zlib.output_compression', 0 );
-				header( "HTTP/1.0 304 Not Modified" );
+				HttpStatus::header( 304 );
 				return self::NOT_MODIFIED; // ok
 			}
 		}
@@ -158,10 +153,14 @@ class StreamFile {
 		# used for thumbnails (thumb.php)
 		if ( $wgTrivialMimeDetection ) {
 			switch ( $ext ) {
-				case 'gif': return 'image/gif';
-				case 'png': return 'image/png';
-				case 'jpg': return 'image/jpeg';
-				case 'jpeg': return 'image/jpeg';
+				case 'gif':
+					return 'image/gif';
+				case 'png':
+					return 'image/png';
+				case 'jpg':
+					return 'image/jpeg';
+				case 'jpeg':
+					return 'image/jpeg';
 			}
 
 			return 'unknown/unknown';
@@ -185,8 +184,8 @@ class StreamFile {
 				return 'unknown/unknown';
 			}
 			if ( $wgCheckFileExtensions && $wgStrictFileExtensions
-				&& !UploadBase::checkFileExtensionList( $extList, $wgFileExtensions ) )
-			{
+				&& !UploadBase::checkFileExtensionList( $extList, $wgFileExtensions )
+			) {
 				return 'unknown/unknown';
 			}
 			if ( $wgVerifyMimeType && in_array( strtolower( $type ), $wgMimeTypeBlacklist ) ) {

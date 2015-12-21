@@ -27,40 +27,25 @@
  */
 class ResourceLoaderUserCSSPrefsModule extends ResourceLoaderModule {
 
-	/* Protected Members */
-
-	protected $modifiedTime = array();
-
 	protected $origin = self::ORIGIN_CORE_INDIVIDUAL;
 
-	/* Methods */
-
 	/**
-	 * @param $context ResourceLoaderContext
-	 * @return array|int|Mixed
+	 * @return bool
 	 */
-	public function getModifiedTime( ResourceLoaderContext $context ) {
-		$hash = $context->getHash();
-		if ( isset( $this->modifiedTime[$hash] ) ) {
-			return $this->modifiedTime[$hash];
-		}
-
-		global $wgUser;
-		return $this->modifiedTime[$hash] = wfTimestamp( TS_UNIX, $wgUser->getTouched() );
+	public function enableModuleContentVersion() {
+		return true;
 	}
 
 	/**
-	 * @param $context ResourceLoaderContext
+	 * @param ResourceLoaderContext $context
 	 * @return array
 	 */
 	public function getStyles( ResourceLoaderContext $context ) {
-		global $wgAllowUserCssPrefs, $wgUser;
-
-		if ( !$wgAllowUserCssPrefs ) {
+		if ( !$this->getConfig()->get( 'AllowUserCssPrefs' ) ) {
 			return array();
 		}
 
-		$options = $wgUser->getOptions();
+		$options = $context->getUserObj()->getOptions();
 
 		// Build CSS rules
 		$rules = array();
@@ -71,17 +56,8 @@ class ResourceLoaderUserCSSPrefsModule extends ResourceLoaderModule {
 				( $options['underline'] ? 'underline' : 'none' ) . "; }";
 		} else {
 			# The scripts of these languages are very hard to read with underlines
-			$rules[] = 'a:lang(ar), a:lang(ckb), a:lang(kk-arab), ' .
-			'a:lang(mzn), a:lang(ps), a:lang(ur) { text-decoration: none; }';
-		}
-		if ( $options['justify'] ) {
-			$rules[] = "#article, #bodyContent, #mw_content { text-align: justify; }\n";
-		}
-		if ( !$options['showtoc'] ) {
-			$rules[] = "#toc { display: none; }\n";
-		}
-		if ( !$options['editsection'] ) {
-			$rules[] = ".mw-editsection { display: none; }\n";
+			$rules[] = 'a:lang(ar), a:lang(kk-arab), a:lang(mzn), ' .
+			'a:lang(ps), a:lang(ur) { text-decoration: none; }';
 		}
 		if ( $options['editfont'] !== 'default' ) {
 			// Double-check that $options['editfont'] consists of safe characters only
@@ -101,12 +77,5 @@ class ResourceLoaderUserCSSPrefsModule extends ResourceLoaderModule {
 	 */
 	public function getGroup() {
 		return 'private';
-	}
-
-	/**
-	 * @return array
-	 */
-	public function getDependencies() {
-		return array( 'mediawiki.user' );
 	}
 }

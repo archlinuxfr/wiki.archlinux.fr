@@ -26,20 +26,62 @@
  * Abstraction for resource loader modules which pull from wiki pages
  *
  * This can only be used for wiki pages in the MediaWiki and User namespaces,
- * because of its dependence on the functionality of
- * Title::isCssJsSubpage.
+ * because of its dependence on the functionality of Title::isCssJsSubpage.
+ *
+ * This module supports being used as a placeholder for a module on a remote wiki.
+ * To do so, getDB() must be overloaded to return a foreign database object that
+ * allows local wikis to query page metadata.
+ *
+ * Safe for calls on local wikis are:
+ * - Option getters:
+ *   - getGroup()
+ *   - getPosition()
+ *   - getPages()
+ * - Basic methods that strictly involve the foreign database
+ *   - getDB()
+ *   - isKnownEmpty()
+ *   - getTitleInfo()
  */
-abstract class ResourceLoaderWikiModule extends ResourceLoaderModule {
+class ResourceLoaderWikiModule extends ResourceLoaderModule {
+	/** @var string Position on the page to load this module at */
+	protected $position = 'bottom';
 
-	/* Protected Members */
-
-	# Origin is user-supplied code
+	// Origin defaults to users with sitewide authority
 	protected $origin = self::ORIGIN_USER_SITEWIDE;
 
-	// In-object cache for title mtimes
-	protected $titleMtimes = array();
+	// In-process cache for title info
+	protected $titleInfo = array();
 
-	/* Abstract Protected Methods */
+	// List of page names that contain CSS
+	protected $styles = array();
+
+	// List of page names that contain JavaScript
+	protected $scripts = array();
+
+	// Group of module
+	protected $group;
+
+	/**
+	 * @param array $options For back-compat, this can be omitted in favour of overwriting getPages.
+	 */
+	public function __construct( array $options = null ) {
+		if ( is_null( $options ) ) {
+			return;
+		}
+
+		foreach ( $options as $member => $option ) {
+			switch ( $member ) {
+				case 'position':
+					$this->isPositionDefined = true;
+					// Don't break since we need the member set as well
+				case 'styles':
+				case 'scripts':
+				case 'group':
+					$this->{$member} = $option;
+					break;
+			}
+		}
+	}
 
 	/**
 	 * Subclasses should return an associative array of resources in the module.
@@ -54,36 +96,72 @@ abstract class ResourceLoaderWikiModule extends ResourceLoaderModule {
 	 * There is an optional media key, the value of which can be the
 	 * medium ('screen', 'print', etc.) of the stylesheet.
 	 *
-	 * @param $context ResourceLoaderContext
+	 * @param ResourceLoaderContext $context
 	 * @return array
 	 */
-	abstract protected function getPages( ResourceLoaderContext $context );
+	protected function getPages( ResourceLoaderContext $context ) {
+		$config = $this->getConfig();
+		$pages = array();
 
-	/* Protected Methods */
+		// Filter out pages from origins not allowed by the current wiki configuration.
+		if ( $config->get( 'UseSiteJs' ) ) {
+			foreach ( $this->scripts as $script ) {
+				$pages[$script] = array( 'type' => 'script' );
+			}
+		}
+
+		if ( $config->get( 'UseSiteCss' ) ) {
+			foreach ( $this->styles as $style ) {
+				$pages[$style] = array( 'type' => 'style' );
+			}
+		}
+
+		return $pages;
+	}
 
 	/**
-	 * Get the Database object used in getTitleMTimes(). Defaults to the local slave DB
-	 * but subclasses may want to override this to return a remote DB object, or to return
-	 * null if getTitleMTimes() shouldn't access the DB at all.
+	 * Get group name
 	 *
-	 * NOTE: This ONLY works for getTitleMTimes() and getModifiedTime(), NOT FOR ANYTHING ELSE.
-	 * In particular, it doesn't work for getting the content of JS and CSS pages. That functionality
-	 * will use the local DB irrespective of the return value of this method.
+	 * @return string
+	 */
+	public function getGroup() {
+		return $this->group;
+	}
+
+	/**
+	 * Get the Database object used in getTitleInfo().
 	 *
-	 * @return DatabaseBase|null
+	 * Defaults to the local slave DB. Subclasses may want to override this to return a foreign
+	 * database object, or null if getTitleInfo() shouldn't access the database.
+	 *
+	 * NOTE: This ONLY works for getTitleInfo() and isKnownEmpty(), NOT FOR ANYTHING ELSE.
+	 * In particular, it doesn't work for getContent() or getScript() etc.
+	 *
+	 * @return IDatabase|null
 	 */
 	protected function getDB() {
 		return wfGetDB( DB_SLAVE );
 	}
 
 	/**
-	 * @param $title Title
+	 * @param string $title
 	 * @return null|string
 	 */
-	protected function getContent( $title ) {
-		if ( !$title->isCssJsSubpage() && !$title->isCssOrJsPage() ) {
+	protected function getContent( $titleText ) {
+		$title = Title::newFromText( $titleText );
+		if ( !$title ) {
 			return null;
 		}
+
+		$handler = ContentHandler::getForTitle( $title );
+		if ( $handler->isSupportedFormat( CONTENT_FORMAT_CSS ) ) {
+			$format = CONTENT_FORMAT_CSS;
+		} elseif ( $handler->isSupportedFormat( CONTENT_FORMAT_JAVASCRIPT ) ) {
+			$format = CONTENT_FORMAT_JAVASCRIPT;
+		} else {
+			return null;
+		}
+
 		$revision = Revision::newFromTitle( $title, false, Revision::READ_NORMAL );
 		if ( !$revision ) {
 			return null;
@@ -96,20 +174,11 @@ abstract class ResourceLoaderWikiModule extends ResourceLoaderModule {
 			return null;
 		}
 
-		$model = $content->getModel();
-
-		if ( $model !== CONTENT_MODEL_CSS && $model !== CONTENT_MODEL_JAVASCRIPT ) {
-			wfDebugLog( 'resourceloader', __METHOD__ . ': bad content model $model for JS/CSS page!' );
-			return null;
-		}
-
-		return $content->getNativeData(); //NOTE: this is safe, we know it's JS or CSS
+		return $content->serialize( $format );
 	}
 
-	/* Methods */
-
 	/**
-	 * @param $context ResourceLoaderContext
+	 * @param ResourceLoaderContext $context
 	 * @return string
 	 */
 	public function getScript( ResourceLoaderContext $context ) {
@@ -118,116 +187,139 @@ abstract class ResourceLoaderWikiModule extends ResourceLoaderModule {
 			if ( $options['type'] !== 'script' ) {
 				continue;
 			}
-			$title = Title::newFromText( $titleText );
-			if ( !$title || $title->isRedirect() ) {
-				continue;
-			}
-			$script = $this->getContent( $title );
+			$script = $this->getContent( $titleText );
 			if ( strval( $script ) !== '' ) {
 				$script = $this->validateScriptFile( $titleText, $script );
-				if ( strpos( $titleText, '*/' ) === false ) {
-					$scripts .= "/* $titleText */\n";
-				}
-				$scripts .= $script . "\n";
+				$scripts .= ResourceLoader::makeComment( $titleText ) . $script . "\n";
 			}
 		}
 		return $scripts;
 	}
 
 	/**
-	 * @param $context ResourceLoaderContext
+	 * @param ResourceLoaderContext $context
 	 * @return array
 	 */
 	public function getStyles( ResourceLoaderContext $context ) {
-		global $wgScriptPath;
-
 		$styles = array();
 		foreach ( $this->getPages( $context ) as $titleText => $options ) {
 			if ( $options['type'] !== 'style' ) {
 				continue;
 			}
-			$title = Title::newFromText( $titleText );
-			if ( !$title || $title->isRedirect() ) {
-				continue;
-			}
 			$media = isset( $options['media'] ) ? $options['media'] : 'all';
-			$style = $this->getContent( $title );
+			$style = $this->getContent( $titleText );
 			if ( strval( $style ) === '' ) {
 				continue;
 			}
 			if ( $this->getFlip( $context ) ) {
 				$style = CSSJanus::transform( $style, true, false );
 			}
-			$style = CSSMin::remap( $style, false, $wgScriptPath, true );
+			$style = CSSMin::remap( $style, false, $this->getConfig()->get( 'ScriptPath' ), true );
 			if ( !isset( $styles[$media] ) ) {
 				$styles[$media] = array();
 			}
-			if ( strpos( $titleText, '*/' ) === false ) {
-				$style = "/* $titleText */\n" . $style;
-			}
+			$style = ResourceLoader::makeComment( $titleText ) . $style;
 			$styles[$media][] = $style;
 		}
 		return $styles;
 	}
 
 	/**
-	 * @param $context ResourceLoaderContext
-	 * @return int|mixed
+	 * Disable module content versioning.
+	 *
+	 * This class does not support generating content outside of a module
+	 * request due to foreign database support.
+	 *
+	 * See getDefinitionSummary() for meta-data versioning.
+	 *
+	 * @return bool
 	 */
-	public function getModifiedTime( ResourceLoaderContext $context ) {
-		$modifiedTime = 1; // wfTimestamp() interprets 0 as "now"
-		$mtimes = $this->getTitleMtimes( $context );
-		if ( count( $mtimes ) ) {
-			$modifiedTime = max( $modifiedTime, max( $mtimes ) );
-		}
-		$modifiedTime = max( $modifiedTime, $this->getMsgBlobMtime( $context->getLanguage() ) );
-		return $modifiedTime;
+	public function enableModuleContentVersion() {
+		return false;
 	}
 
 	/**
-	 * @param $context ResourceLoaderContext
+	 * @param ResourceLoaderContext $context
+	 * @return array
+	 */
+	public function getDefinitionSummary( ResourceLoaderContext $context ) {
+		$summary = parent::getDefinitionSummary( $context );
+		$summary[] = array(
+			'pages' => $this->getPages( $context ),
+			// Includes SHA1 of content
+			'titleInfo' => $this->getTitleInfo( $context ),
+		);
+		return $summary;
+	}
+
+	/**
+	 * @param ResourceLoaderContext $context
 	 * @return bool
 	 */
 	public function isKnownEmpty( ResourceLoaderContext $context ) {
-		return count( $this->getTitleMtimes( $context ) ) == 0;
+		$revisions = $this->getTitleInfo( $context );
+
+		// For user modules, don't needlessly load if there are no non-empty pages
+		if ( $this->getGroup() === 'user' ) {
+			foreach ( $revisions as $revision ) {
+				if ( $revision['rev_len'] > 0 ) {
+					// At least one non-empty page, module should be loaded
+					return false;
+				}
+			}
+			return true;
+		}
+
+		// Bug 68488: For other modules (i.e. ones that are called in cached html output) only check
+		// page existance. This ensures that, if some pages in a module are temporarily blanked,
+		// we don't end omit the module's script or link tag on some pages.
+		return count( $revisions ) === 0;
 	}
 
 	/**
-	 * Get the modification times of all titles that would be loaded for
-	 * a given context.
-	 * @param $context ResourceLoaderContext: Context object
-	 * @return array( prefixed DB key => UNIX timestamp ), nonexistent titles are dropped
+	 * Get the information about the wiki pages for a given context.
+	 * @param ResourceLoaderContext $context
+	 * @return array Keyed by page name. Contains arrays with 'rev_len' and 'rev_sha1' keys
 	 */
-	protected function getTitleMtimes( ResourceLoaderContext $context ) {
+	protected function getTitleInfo( ResourceLoaderContext $context ) {
 		$dbr = $this->getDB();
 		if ( !$dbr ) {
 			// We're dealing with a subclass that doesn't have a DB
 			return array();
 		}
 
-		$hash = $context->getHash();
-		if ( isset( $this->titleMtimes[$hash] ) ) {
-			return $this->titleMtimes[$hash];
-		}
+		$pages = $this->getPages( $context );
+		$key = implode( '|', array_keys( $pages ) );
+		if ( !isset( $this->titleInfo[$key] ) ) {
+			$this->titleInfo[$key] = array();
+			$batch = new LinkBatch;
+			foreach ( $pages as $titleText => $options ) {
+				$batch->addObj( Title::newFromText( $titleText ) );
+			}
 
-		$this->titleMtimes[$hash] = array();
-		$batch = new LinkBatch;
-		foreach ( $this->getPages( $context ) as $titleText => $options ) {
-			$batch->addObj( Title::newFromText( $titleText ) );
-		}
-
-		if ( !$batch->isEmpty() ) {
-			$res = $dbr->select( 'page',
-				array( 'page_namespace', 'page_title', 'page_touched' ),
-				$batch->constructSet( 'page', $dbr ),
-				__METHOD__
-			);
-			foreach ( $res as $row ) {
-				$title = Title::makeTitle( $row->page_namespace, $row->page_title );
-				$this->titleMtimes[$hash][$title->getPrefixedDBkey()] =
-					wfTimestamp( TS_UNIX, $row->page_touched );
+			if ( !$batch->isEmpty() ) {
+				$res = $dbr->select( array( 'page', 'revision' ),
+					array( 'page_namespace', 'page_title', 'rev_len', 'rev_sha1' ),
+					$batch->constructSet( 'page', $dbr ),
+					__METHOD__,
+					array(),
+					array( 'revision' => array( 'INNER JOIN', array( 'page_latest=rev_id' ) ) )
+				);
+				foreach ( $res as $row ) {
+					// Avoid including ids or timestamps of revision/page tables so
+					// that versions are not wasted
+					$title = Title::makeTitle( $row->page_namespace, $row->page_title );
+					$this->titleInfo[$key][$title->getPrefixedText()] = array(
+						'rev_len' => $row->rev_len,
+						'rev_sha1' => $row->rev_sha1,
+					);
+				}
 			}
 		}
-		return $this->titleMtimes[$hash];
+		return $this->titleInfo[$key];
+	}
+
+	public function getPosition() {
+		return $this->position;
 	}
 }

@@ -32,7 +32,7 @@
  */
 class ApiQueryAllCategories extends ApiQueryGeneratorBase {
 
-	public function __construct( $query, $moduleName ) {
+	public function __construct( ApiQuery $query, $moduleName ) {
 		parent::__construct( $query, $moduleName, 'ac' );
 	}
 
@@ -49,7 +49,7 @@ class ApiQueryAllCategories extends ApiQueryGeneratorBase {
 	}
 
 	/**
-	 * @param $resultPageSet ApiPageSet
+	 * @param ApiPageSet $resultPageSet
 	 */
 	private function run( $resultPageSet = null ) {
 		$db = $this->getDB();
@@ -67,8 +67,12 @@ class ApiQueryAllCategories extends ApiQueryGeneratorBase {
 		}
 
 		$dir = ( $params['dir'] == 'descending' ? 'older' : 'newer' );
-		$from = ( is_null( $params['from'] ) ? null : $this->titlePartToKey( $params['from'] ) );
-		$to = ( is_null( $params['to'] ) ? null : $this->titlePartToKey( $params['to'] ) );
+		$from = ( $params['from'] === null
+			? null
+			: $this->titlePartToKey( $params['from'], NS_CATEGORY ) );
+		$to = ( $params['to'] === null
+			? null
+			: $this->titlePartToKey( $params['to'], NS_CATEGORY ) );
 		$this->addWhereRange( 'cat_title', $dir, $from, $to );
 
 		$min = $params['min'];
@@ -80,7 +84,9 @@ class ApiQueryAllCategories extends ApiQueryGeneratorBase {
 		}
 
 		if ( isset( $params['prefix'] ) ) {
-			$this->addWhere( 'cat_title' . $db->buildLike( $this->titlePartToKey( $params['prefix'] ), $db->anyString() ) );
+			$this->addWhere( 'cat_title' . $db->buildLike(
+				$this->titlePartToKey( $params['prefix'], NS_CATEGORY ),
+				$db->anyString() ) );
 		}
 
 		$this->addOption( 'LIMIT', $params['limit'] + 1 );
@@ -109,8 +115,9 @@ class ApiQueryAllCategories extends ApiQueryGeneratorBase {
 		$result = $this->getResult();
 		$count = 0;
 		foreach ( $res as $row ) {
-			if ( ++ $count > $params['limit'] ) {
-				// We've reached the one extra which shows that there are additional cats to be had. Stop here...
+			if ( ++$count > $params['limit'] ) {
+				// We've reached the one extra which shows that there are
+				// additional cats to be had. Stop here...
 				$this->setContinueEnumParameter( 'continue', $row->cat_title );
 				break;
 			}
@@ -121,15 +128,15 @@ class ApiQueryAllCategories extends ApiQueryGeneratorBase {
 				$pages[] = $titleObj;
 			} else {
 				$item = array();
-				ApiResult::setContent( $item, $titleObj->getText() );
+				ApiResult::setContentValue( $item, 'category', $titleObj->getText() );
 				if ( isset( $prop['size'] ) ) {
 					$item['size'] = intval( $row->cat_pages );
 					$item['pages'] = $row->cat_pages - $row->cat_subcats - $row->cat_files;
 					$item['files'] = intval( $row->cat_files );
 					$item['subcats'] = intval( $row->cat_subcats );
 				}
-				if ( isset( $prop['hidden'] ) && $row->cat_hidden ) {
-					$item['hidden'] = '';
+				if ( isset( $prop['hidden'] ) ) {
+					$item['hidden'] = (bool)$row->cat_hidden;
 				}
 				$fit = $result->addValue( array( 'query', $this->getModuleName() ), null, $item );
 				if ( !$fit ) {
@@ -140,7 +147,7 @@ class ApiQueryAllCategories extends ApiQueryGeneratorBase {
 		}
 
 		if ( is_null( $resultPageSet ) ) {
-			$result->setIndexedTagName_internal( array( 'query', $this->getModuleName() ), 'c' );
+			$result->addIndexedTagName( array( 'query', $this->getModuleName() ), 'c' );
 		} else {
 			$resultPageSet->populateFromTitles( $pages );
 		}
@@ -149,7 +156,9 @@ class ApiQueryAllCategories extends ApiQueryGeneratorBase {
 	public function getAllowedParams() {
 		return array(
 			'from' => null,
-			'continue' => null,
+			'continue' => array(
+				ApiBase::PARAM_HELP_MSG => 'api-help-param-continue',
+			),
 			'to' => null,
 			'prefix' => null,
 			'dir' => array(
@@ -177,54 +186,18 @@ class ApiQueryAllCategories extends ApiQueryGeneratorBase {
 			'prop' => array(
 				ApiBase::PARAM_TYPE => array( 'size', 'hidden' ),
 				ApiBase::PARAM_DFLT => '',
-				ApiBase::PARAM_ISMULTI => true
+				ApiBase::PARAM_ISMULTI => true,
+				ApiBase::PARAM_HELP_MSG_PER_VALUE => array(),
 			),
 		);
 	}
 
-	public function getParamDescription() {
+	protected function getExamplesMessages() {
 		return array(
-			'from' => 'The category to start enumerating from',
-			'continue' => 'When more results are available, use this to continue',
-			'to' => 'The category to stop enumerating at',
-			'prefix' => 'Search for all category titles that begin with this value',
-			'dir' => 'Direction to sort in',
-			'min' => 'Minimum number of category members',
-			'max' => 'Maximum number of category members',
-			'limit' => 'How many categories to return',
-			'prop' => array(
-				'Which properties to get',
-				' size    - Adds number of pages in the category',
-				' hidden  - Tags categories that are hidden with __HIDDENCAT__',
-			),
-		);
-	}
-
-	public function getResultProperties() {
-		return array(
-			'' => array(
-				'*' => 'string'
-			),
-			'size' => array(
-				'size' => 'integer',
-				'pages' => 'integer',
-				'files' => 'integer',
-				'subcats' => 'integer'
-			),
-			'hidden' => array(
-				'hidden' => 'boolean'
-			)
-		);
-	}
-
-	public function getDescription() {
-		return 'Enumerate all categories';
-	}
-
-	public function getExamples() {
-		return array(
-			'api.php?action=query&list=allcategories&acprop=size',
-			'api.php?action=query&generator=allcategories&gacprefix=List&prop=info',
+			'action=query&list=allcategories&acprop=size'
+				=> 'apihelp-query+allcategories-example-size',
+			'action=query&generator=allcategories&gacprefix=List&prop=info'
+				=> 'apihelp-query+allcategories-example-generator',
 		);
 	}
 

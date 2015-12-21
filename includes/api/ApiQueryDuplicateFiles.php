@@ -31,7 +31,7 @@
  */
 class ApiQueryDuplicateFiles extends ApiQueryGeneratorBase {
 
-	public function __construct( $query, $moduleName ) {
+	public function __construct( ApiQuery $query, $moduleName ) {
 		parent::__construct( $query, $moduleName, 'df' );
 	}
 
@@ -52,7 +52,7 @@ class ApiQueryDuplicateFiles extends ApiQueryGeneratorBase {
 	 */
 	private function run( $resultPageSet = null ) {
 		$params = $this->extractRequestParams();
-		$namespaces = $this->getPageSet()->getAllTitlesByNamespace();
+		$namespaces = $this->getPageSet()->getGoodAndMissingTitlesByNamespace();
 		if ( empty( $namespaces[NS_FILE] ) ) {
 			return;
 		}
@@ -95,7 +95,8 @@ class ApiQueryDuplicateFiles extends ApiQueryGeneratorBase {
 			$sha1s[$file->getName()] = $file->getSha1();
 		}
 
-		// find all files with the hashes, result format is: array( hash => array( dup1, dup2 ), hash1 => ... )
+		// find all files with the hashes, result format is:
+		// array( hash => array( dup1, dup2 ), hash1 => ... )
 		$filesToFindBySha1s = array_unique( array_values( $sha1s ) );
 		if ( $params['localonly'] ) {
 			$filesBySha1s = RepoGroup::singleton()->getLocalRepo()->findBySha1s( $filesToFindBySha1s );
@@ -136,11 +137,9 @@ class ApiQueryDuplicateFiles extends ApiQueryGeneratorBase {
 					$r = array(
 						'name' => $dupName,
 						'user' => $dupFile->getUser( 'text' ),
-						'timestamp' => wfTimestamp( TS_ISO_8601, $dupFile->getTimestamp() )
+						'timestamp' => wfTimestamp( TS_ISO_8601, $dupFile->getTimestamp() ),
+						'shared' => !$dupFile->isLocal(),
 					);
-					if ( !$dupFile->isLocal() ) {
-						$r['shared'] = '';
-					}
 					$fit = $this->addPageSubItem( $pageId, $r );
 					if ( !$fit ) {
 						$this->setContinueEnumParameter( 'continue', $image . '|' . $dupName );
@@ -166,7 +165,9 @@ class ApiQueryDuplicateFiles extends ApiQueryGeneratorBase {
 				ApiBase::PARAM_MAX => ApiBase::LIMIT_BIG1,
 				ApiBase::PARAM_MAX2 => ApiBase::LIMIT_BIG2
 			),
-			'continue' => null,
+			'continue' => array(
+				ApiBase::PARAM_HELP_MSG => 'api-help-param-continue',
+			),
 			'dir' => array(
 				ApiBase::PARAM_DFLT => 'ascending',
 				ApiBase::PARAM_TYPE => array(
@@ -178,38 +179,16 @@ class ApiQueryDuplicateFiles extends ApiQueryGeneratorBase {
 		);
 	}
 
-	public function getParamDescription() {
+	protected function getExamplesMessages() {
 		return array(
-			'limit' => 'How many duplicate files to return',
-			'continue' => 'When more results are available, use this to continue',
-			'dir' => 'The direction in which to list',
-			'localonly' => 'Look only for files in the local repository',
-		);
-	}
-
-	public function getResultProperties() {
-		return array(
-			'' => array(
-				'name' => 'string',
-				'user' => 'string',
-				'timestamp' => 'timestamp',
-				'shared' => 'boolean',
-			)
-		);
-	}
-
-	public function getDescription() {
-		return 'List all files that are duplicates of the given file(s) based on hash values';
-	}
-
-	public function getExamples() {
-		return array(
-			'api.php?action=query&titles=File:Albert_Einstein_Head.jpg&prop=duplicatefiles',
-			'api.php?action=query&generator=allimages&prop=duplicatefiles',
+			'action=query&titles=File:Albert_Einstein_Head.jpg&prop=duplicatefiles'
+				=> 'apihelp-query+duplicatefiles-example-simple',
+			'action=query&generator=allimages&prop=duplicatefiles'
+				=> 'apihelp-query+duplicatefiles-example-generated',
 		);
 	}
 
 	public function getHelpUrls() {
-		return 'https://www.mediawiki.org/wiki/API:Properties#duplicatefiles_.2F_df';
+		return 'https://www.mediawiki.org/wiki/API:Duplicatefiles';
 	}
 }

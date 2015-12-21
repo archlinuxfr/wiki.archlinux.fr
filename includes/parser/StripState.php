@@ -37,40 +37,45 @@ class StripState {
 	const UNSTRIP_RECURSION_LIMIT = 20;
 
 	/**
-	 * @param $prefix string
+	 * @param string|null $prefix
+	 * @since 1.26 The prefix argument should be omitted, as the strip marker
+	 *  prefix string is now a constant.
 	 */
-	function __construct( $prefix ) {
-		$this->prefix = $prefix;
+	public function __construct( $prefix = null ) {
+		if ( $prefix !== null ) {
+			wfDeprecated( __METHOD__ . ' with called with $prefix argument' .
+				' (call with no arguments instead)', '1.26' );
+		}
 		$this->data = array(
 			'nowiki' => array(),
 			'general' => array()
 		);
-		$this->regex = "/{$this->prefix}([^\x7f]+)" . Parser::MARKER_SUFFIX . '/';
+		$this->regex = '/' . Parser::MARKER_PREFIX . "([^\x7f]+)" . Parser::MARKER_SUFFIX . '/';
 		$this->circularRefGuard = array();
 	}
 
 	/**
 	 * Add a nowiki strip item
-	 * @param $marker
-	 * @param $value
+	 * @param string $marker
+	 * @param string $value
 	 */
-	function addNoWiki( $marker, $value ) {
+	public function addNoWiki( $marker, $value ) {
 		$this->addItem( 'nowiki', $marker, $value );
 	}
 
 	/**
-	 * @param $marker
-	 * @param $value
+	 * @param string $marker
+	 * @param string $value
 	 */
-	function addGeneral( $marker, $value ) {
+	public function addGeneral( $marker, $value ) {
 		$this->addItem( 'general', $marker, $value );
 	}
 
 	/**
 	 * @throws MWException
-	 * @param $type
-	 * @param $marker
-	 * @param $value
+	 * @param string $type
+	 * @param string $marker
+	 * @param string $value
 	 */
 	protected function addItem( $type, $marker, $value ) {
 		if ( !preg_match( $this->regex, $marker, $m ) ) {
@@ -81,34 +86,34 @@ class StripState {
 	}
 
 	/**
-	 * @param $text
+	 * @param string $text
 	 * @return mixed
 	 */
-	function unstripGeneral( $text ) {
+	public function unstripGeneral( $text ) {
 		return $this->unstripType( 'general', $text );
 	}
 
 	/**
-	 * @param $text
+	 * @param string $text
 	 * @return mixed
 	 */
-	function unstripNoWiki( $text ) {
+	public function unstripNoWiki( $text ) {
 		return $this->unstripType( 'nowiki', $text );
 	}
 
 	/**
-	 * @param  $text
+	 * @param string $text
 	 * @return mixed
 	 */
-	function unstripBoth( $text ) {
+	public function unstripBoth( $text ) {
 		$text = $this->unstripType( 'general', $text );
 		$text = $this->unstripType( 'nowiki', $text );
 		return $text;
 	}
 
 	/**
-	 * @param $type
-	 * @param $text
+	 * @param string $type
+	 * @param string $text
 	 * @return mixed
 	 */
 	protected function unstripType( $type, $text ) {
@@ -117,17 +122,15 @@ class StripState {
 			return $text;
 		}
 
-		wfProfileIn( __METHOD__ );
 		$oldType = $this->tempType;
 		$this->tempType = $type;
 		$text = preg_replace_callback( $this->regex, array( $this, 'unstripCallback' ), $text );
 		$this->tempType = $oldType;
-		wfProfileOut( __METHOD__ );
 		return $text;
 	}
 
 	/**
-	 * @param $m array
+	 * @param array $m
 	 * @return array
 	 */
 	protected function unstripCallback( $m ) {
@@ -146,7 +149,11 @@ class StripState {
 			}
 			$this->circularRefGuard[$marker] = true;
 			$this->recursionLevel++;
-			$ret = $this->unstripType( $this->tempType, $this->data[$this->tempType][$marker] );
+			$value = $this->data[$this->tempType][$marker];
+			if ( $value instanceof Closure ) {
+				$value = $value();
+			}
+			$ret = $this->unstripType( $this->tempType, $value );
 			$this->recursionLevel--;
 			unset( $this->circularRefGuard[$marker] );
 			return $ret;
@@ -159,15 +166,15 @@ class StripState {
 	 * Get a StripState object which is sufficient to unstrip the given text.
 	 * It will contain the minimum subset of strip items necessary.
 	 *
-	 * @param $text string
+	 * @param string $text
 	 *
 	 * @return StripState
 	 */
-	function getSubState( $text ) {
-		$subState = new StripState( $this->prefix );
+	public function getSubState( $text ) {
+		$subState = new StripState();
 		$pos = 0;
 		while ( true ) {
-			$startPos = strpos( $text, $this->prefix, $pos );
+			$startPos = strpos( $text, Parser::MARKER_PREFIX, $pos );
 			$endPos = strpos( $text, Parser::MARKER_SUFFIX, $pos );
 			if ( $startPos === false || $endPos === false ) {
 				break;
@@ -195,12 +202,12 @@ class StripState {
 	 * will not be preserved. The strings in the $texts array will have their
 	 * strip markers rewritten, the resulting array of strings will be returned.
 	 *
-	 * @param $otherState StripState
-	 * @param $texts Array
-	 * @return Array
+	 * @param StripState $otherState
+	 * @param array $texts
+	 * @return array
 	 */
-	function merge( $otherState, $texts ) {
-		$mergePrefix = Parser::getRandomString();
+	public function merge( $otherState, $texts ) {
+		$mergePrefix = wfRandomString( 16 );
 
 		foreach ( $otherState->data as $type => $items ) {
 			foreach ( $items as $key => $value ) {
@@ -215,21 +222,21 @@ class StripState {
 	}
 
 	/**
-	 * @param $m
+	 * @param array $m
 	 * @return string
 	 */
 	protected function mergeCallback( $m ) {
 		$key = $m[1];
-		return "{$this->prefix}{$this->tempMergePrefix}-$key" . Parser::MARKER_SUFFIX;
+		return Parser::MARKER_PREFIX . $this->tempMergePrefix . '-' . $key . Parser::MARKER_SUFFIX;
 	}
 
 	/**
 	 * Remove any strip markers found in the given text.
 	 *
-	 * @param $text Input string
+	 * @param string $text Input string
 	 * @return string
 	 */
-	function killMarkers( $text ) {
+	public function killMarkers( $text ) {
 		return preg_replace( $this->regex, '', $text );
 	}
 }

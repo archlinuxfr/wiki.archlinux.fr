@@ -27,7 +27,7 @@
  */
 class ApiParse extends ApiBase {
 
-	/** @var String $section */
+	/** @var string $section */
 	private $section = null;
 
 	/** @var Content $content */
@@ -60,13 +60,21 @@ class ApiParse extends ApiBase {
 		$format = $params['contentformat'];
 
 		if ( !is_null( $page ) && ( !is_null( $text ) || $titleProvided ) ) {
-			$this->dieUsage( 'The page parameter cannot be used together with the text and title parameters', 'params' );
+			$this->dieUsage(
+				'The page parameter cannot be used together with the text and title parameters',
+				'params'
+			);
 		}
 
 		$prop = array_flip( $params['prop'] );
 
 		if ( isset( $params['section'] ) ) {
 			$this->section = $params['section'];
+			if ( !preg_match( '/^((T-)?\d+|new)$/', $this->section ) ) {
+				$this->dieUsage(
+					"The section parameter must be a valid section id or 'new'", "invalidsection"
+				);
+			}
 		} else {
 			$this->section = false;
 		}
@@ -76,22 +84,21 @@ class ApiParse extends ApiBase {
 		// TODO: Does this still need $wgTitle?
 		global $wgParser, $wgTitle;
 
-		// Currently unnecessary, code to act as a safeguard against any change in current behavior of uselang
-		$oldLang = null;
-		if ( isset( $params['uselang'] ) && $params['uselang'] != $this->getContext()->getLanguage()->getCode() ) {
-			$oldLang = $this->getContext()->getLanguage(); // Backup language
-			$this->getContext()->setLanguage( Language::factory( $params['uselang'] ) );
-		}
-
 		$redirValues = null;
 
 		// Return result
 		$result = $this->getResult();
 
 		if ( !is_null( $oldid ) || !is_null( $pageid ) || !is_null( $page ) ) {
+			if ( $this->section === 'new' ) {
+					$this->dieUsage(
+						'section=new cannot be combined with oldid, pageid or page parameters. ' .
+						'Please use text', 'params'
+					);
+			}
 			if ( !is_null( $oldid ) ) {
 				// Don't use the parser cache
-				$rev = Revision::newFromID( $oldid );
+				$rev = Revision::newFromId( $oldid );
 				if ( !$rev ) {
 					$this->dieUsage( "There is no revision ID $oldid", 'missingrev' );
 				}
@@ -105,7 +112,10 @@ class ApiParse extends ApiBase {
 				$popts = $this->makeParserOptions( $pageObj, $params );
 
 				// If for some reason the "oldid" is actually the current revision, it may be cached
-				if ( $rev->isCurrent() ) {
+				// Deliberately comparing $pageObj->getLatest() with $rev->getId(), rather than
+				// checking $rev->isCurrent(), because $pageObj is what actually ends up being used,
+				// and if its ->getLatest() is outdated, $rev->isCurrent() won't tell us that.
+				if ( $rev->getId() == $pageObj->getLatest() ) {
 					// May get from/save to parser cache
 					$p_result = $this->getParsedContent( $pageObj, $popts,
 						$pageid, isset( $prop['wikitext'] ) );
@@ -122,24 +132,22 @@ class ApiParse extends ApiBase {
 			} else { // Not $oldid, but $pageid or $page
 				if ( $params['redirects'] ) {
 					$reqParams = array(
-						'action' => 'query',
 						'redirects' => '',
 					);
-					if ( !is_null ( $pageid ) ) {
+					if ( !is_null( $pageid ) ) {
 						$reqParams['pageids'] = $pageid;
 					} else { // $page
 						$reqParams['titles'] = $page;
 					}
 					$req = new FauxRequest( $reqParams );
 					$main = new ApiMain( $req );
-					$main->execute();
-					$data = $main->getResultData();
-					$redirValues = isset( $data['query']['redirects'] )
-						? $data['query']['redirects']
-						: array();
+					$pageSet = new ApiPageSet( $main );
+					$pageSet->execute();
+					$redirValues = $pageSet->getRedirectTitlesAsResult( $this->getResult() );
+
 					$to = $page;
-					foreach ( (array)$redirValues as $r ) {
-						$to = $r['to'];
+					foreach ( $pageSet->getRedirectTitles() as $title ) {
+						$to = $title->getFullText();
 					}
 					$pageParams = array( 'title' => $to );
 				} elseif ( !is_null( $pageid ) ) {
@@ -161,24 +169,43 @@ class ApiParse extends ApiBase {
 
 				$popts = $this->makeParserOptions( $pageObj, $params );
 
-				// Potentially cached
-				$p_result = $this->getParsedContent( $pageObj, $popts, $pageid,
-					isset( $prop['wikitext'] ) );
+				// Don't pollute the parser cache when setting options that aren't
+				// in ParserOptions::optionsHash()
+				/// @todo: This should be handled closer to the actual cache instead of here, see T110269
+				$suppressCache =
+					$params['disablepp'] ||
+					$params['disablelimitreport'] ||
+					$params['preview'] ||
+					$params['sectionpreview'] ||
+					$params['disabletidy'];
+
+				if ( $suppressCache ) {
+					$this->content = $this->getContent( $pageObj, $pageid );
+					$p_result = $this->content->getParserOutput( $titleObj, null, $popts );
+				} else {
+					// Potentially cached
+					$p_result = $this->getParsedContent( $pageObj, $popts, $pageid,
+						isset( $prop['wikitext'] ) );
+				}
 			}
 		} else { // Not $oldid, $pageid, $page. Hence based on $text
 			$titleObj = Title::newFromText( $title );
 			if ( !$titleObj || $titleObj->isExternal() ) {
 				$this->dieUsageMsg( array( 'invalidtitle', $title ) );
 			}
-			if ( !$titleObj->canExist() ) {
-				$this->dieUsage( "Namespace doesn't allow actual pages", 'pagecannotexist' );
-			}
 			$wgTitle = $titleObj;
-			$pageObj = WikiPage::factory( $titleObj );
+			if ( $titleObj->canExist() ) {
+				$pageObj = WikiPage::factory( $titleObj );
+			} else {
+				// Do like MediaWiki::initializeArticle()
+				$article = Article::newFromTitle( $titleObj, $this->getContext() );
+				$pageObj = $article->getPage();
+			}
 
 			$popts = $this->makeParserOptions( $pageObj, $params );
+			$textProvided = !is_null( $text );
 
-			if ( is_null( $text ) ) {
+			if ( !$textProvided ) {
 				if ( $titleProvided && ( $prop || $params['generatexml'] ) ) {
 					$this->setWarning(
 						"'title' used without 'text', and parsed page properties were requested " .
@@ -191,7 +218,7 @@ class ApiParse extends ApiBase {
 
 			// If we are parsing text, do not use the content model of the default
 			// API title, but default to wikitext to keep BC.
-			if ( !$titleProvided && is_null( $model ) ) {
+			if ( $textProvided && !$titleProvided && is_null( $model ) ) {
 				$model = CONTENT_MODEL_WIKITEXT;
 				$this->setWarning( "No 'title' or 'contentmodel' was given, assuming $model." );
 			}
@@ -203,7 +230,14 @@ class ApiParse extends ApiBase {
 			}
 
 			if ( $this->section !== false ) {
-				$this->content = $this->getSectionContent( $this->content, $titleObj->getText() );
+				if ( $this->section === 'new' ) {
+					// Insert the section title above the content.
+					if ( !is_null( $params['sectiontitle'] ) && $params['sectiontitle'] !== '' ) {
+						$this->content = $this->content->addSectionHeader( $params['sectiontitle'] );
+					}
+				} else {
+					$this->content = $this->getSectionContent( $this->content, $titleObj->getPrefixedText() );
+				}
 			}
 
 			if ( $params['pst'] || $params['onlypst'] ) {
@@ -212,13 +246,21 @@ class ApiParse extends ApiBase {
 			if ( $params['onlypst'] ) {
 				// Build a result and bail out
 				$result_array = array();
-				$result_array['text'] = array();
-				ApiResult::setContent( $result_array['text'], $this->pstContent->serialize( $format ) );
+				$result_array['text'] = $this->pstContent->serialize( $format );
+				$result_array[ApiResult::META_BC_SUBELEMENTS][] = 'text';
 				if ( isset( $prop['wikitext'] ) ) {
-					$result_array['wikitext'] = array();
-					ApiResult::setContent( $result_array['wikitext'], $this->content->serialize( $format ) );
+					$result_array['wikitext'] = $this->content->serialize( $format );
+					$result_array[ApiResult::META_BC_SUBELEMENTS][] = 'wikitext';
 				}
+				if ( !is_null( $params['summary'] ) ||
+					( !is_null( $params['sectiontitle'] ) && $this->section === 'new' )
+				) {
+					$result_array['parsedsummary'] = $this->formatSummary( $titleObj, $params );
+					$result_array[ApiResult::META_BC_SUBELEMENTS][] = 'parsedsummary';
+				}
+
 				$result->addValue( null, $this->getModuleName(), $result_array );
+
 				return;
 			}
 
@@ -233,6 +275,7 @@ class ApiParse extends ApiBase {
 		$result_array = array();
 
 		$result_array['title'] = $titleObj->getPrefixedText();
+		$result_array['pageid'] = $pageid ? $pageid : $pageObj->getId();
 
 		if ( !is_null( $oldid ) ) {
 			$result_array['revid'] = intval( $oldid );
@@ -242,24 +285,30 @@ class ApiParse extends ApiBase {
 			$result_array['redirects'] = $redirValues;
 		}
 
+		if ( $params['disabletoc'] ) {
+			$p_result->setTOCEnabled( false );
+		}
+
 		if ( isset( $prop['text'] ) ) {
-			$result_array['text'] = array();
-			ApiResult::setContent( $result_array['text'], $p_result->getText() );
+			$result_array['text'] = $p_result->getText();
+			$result_array[ApiResult::META_BC_SUBELEMENTS][] = 'text';
 		}
 
-		if ( !is_null( $params['summary'] ) ) {
-			$result_array['parsedsummary'] = array();
-			ApiResult::setContent( $result_array['parsedsummary'], Linker::formatComment( $params['summary'], $titleObj ) );
+		if ( !is_null( $params['summary'] ) ||
+			( !is_null( $params['sectiontitle'] ) && $this->section === 'new' )
+		) {
+			$result_array['parsedsummary'] = $this->formatSummary( $titleObj, $params );
+			$result_array[ApiResult::META_BC_SUBELEMENTS][] = 'parsedsummary';
 		}
 
-		if ( isset( $prop['langlinks'] ) || isset( $prop['languageshtml'] ) ) {
+		if ( isset( $prop['langlinks'] ) ) {
 			$langlinks = $p_result->getLanguageLinks();
 
 			if ( $params['effectivelanglinks'] ) {
 				// Link flags are ignored for now, but may in the future be
 				// included in the result.
 				$linkFlags = array();
-				wfRunHooks( 'LanguageLinks', array( $titleObj, &$langlinks, &$linkFlags ) );
+				Hooks::run( 'LanguageLinks', array( $titleObj, &$langlinks, &$linkFlags ) );
 			}
 		} else {
 			$langlinks = false;
@@ -268,19 +317,12 @@ class ApiParse extends ApiBase {
 		if ( isset( $prop['langlinks'] ) ) {
 			$result_array['langlinks'] = $this->formatLangLinks( $langlinks );
 		}
-		if ( isset( $prop['languageshtml'] ) ) {
-			$languagesHtml = $this->languagesHtml( $langlinks );
-
-			$result_array['languageshtml'] = array();
-			ApiResult::setContent( $result_array['languageshtml'], $languagesHtml );
-		}
 		if ( isset( $prop['categories'] ) ) {
 			$result_array['categories'] = $this->formatCategoryLinks( $p_result->getCategories() );
 		}
 		if ( isset( $prop['categorieshtml'] ) ) {
-			$categoriesHtml = $this->categoriesHtml( $p_result->getCategories() );
-			$result_array['categorieshtml'] = array();
-			ApiResult::setContent( $result_array['categorieshtml'], $categoriesHtml );
+			$result_array['categorieshtml'] = $this->categoriesHtml( $p_result->getCategories() );
+			$result_array[ApiResult::META_BC_SUBELEMENTS][] = 'categorieshtml';
 		}
 		if ( isset( $prop['links'] ) ) {
 			$result_array['links'] = $this->formatLinks( $p_result->getLinks() );
@@ -300,14 +342,14 @@ class ApiParse extends ApiBase {
 
 		if ( isset( $prop['displaytitle'] ) ) {
 			$result_array['displaytitle'] = $p_result->getDisplayTitle() ?
-							$p_result->getDisplayTitle() :
-							$titleObj->getPrefixedText();
+				$p_result->getDisplayTitle() :
+				$titleObj->getPrefixedText();
 		}
 
 		if ( isset( $prop['headitems'] ) || isset( $prop['headhtml'] ) ) {
 			$context = $this->getContext();
 			$context->setTitle( $titleObj );
-			$context->getOutput()->addParserOutputNoText( $p_result );
+			$context->getOutput()->addParserOutputMetadata( $p_result );
 
 			if ( isset( $prop['headitems'] ) ) {
 				$headItems = $this->formatHeadItems( $p_result->getHeadItems() );
@@ -320,9 +362,42 @@ class ApiParse extends ApiBase {
 			}
 
 			if ( isset( $prop['headhtml'] ) ) {
-				$result_array['headhtml'] = array();
-				ApiResult::setContent( $result_array['headhtml'], $context->getOutput()->headElement( $context->getSkin() ) );
+				$result_array['headhtml'] = $context->getOutput()->headElement( $context->getSkin() );
+				$result_array[ApiResult::META_BC_SUBELEMENTS][] = 'headhtml';
 			}
+		}
+
+		if ( isset( $prop['modules'] ) ) {
+			$result_array['modules'] = array_values( array_unique( $p_result->getModules() ) );
+			$result_array['modulescripts'] = array_values( array_unique( $p_result->getModuleScripts() ) );
+			$result_array['modulestyles'] = array_values( array_unique( $p_result->getModuleStyles() ) );
+			// To be removed in 1.27
+			$result_array['modulemessages'] = array();
+			$this->setWarning( 'modulemessages is deprecated since MediaWiki 1.26' );
+		}
+
+		if ( isset( $prop['jsconfigvars'] ) ) {
+			$result_array['jsconfigvars'] =
+				ApiResult::addMetadataToResultVars( $p_result->getJsConfigVars() );
+		}
+
+		if ( isset( $prop['encodedjsconfigvars'] ) ) {
+			$result_array['encodedjsconfigvars'] = FormatJson::encode(
+				$p_result->getJsConfigVars(), false, FormatJson::ALL_OK
+			);
+			$result_array[ApiResult::META_SUBELEMENTS][] = 'encodedjsconfigvars';
+		}
+
+		if ( isset( $prop['modules'] ) &&
+			!isset( $prop['jsconfigvars'] ) && !isset( $prop['encodedjsconfigvars'] ) ) {
+			$this->setWarning( "Property 'modules' was set but not 'jsconfigvars' " .
+				"or 'encodedjsconfigvars'. Configuration variables are necessary " .
+				"for proper module usage." );
+		}
+
+		if ( isset( $prop['indicators'] ) ) {
+			$result_array['indicators'] = (array)$p_result->getIndicators();
+			ApiResult::setArrayType( $result_array['indicators'], 'BCkvp', 'name' );
 		}
 
 		if ( isset( $prop['iwlinks'] ) ) {
@@ -330,31 +405,44 @@ class ApiParse extends ApiBase {
 		}
 
 		if ( isset( $prop['wikitext'] ) ) {
-			$result_array['wikitext'] = array();
-			ApiResult::setContent( $result_array['wikitext'], $this->content->serialize( $format ) );
+			$result_array['wikitext'] = $this->content->serialize( $format );
+			$result_array[ApiResult::META_BC_SUBELEMENTS][] = 'wikitext';
 			if ( !is_null( $this->pstContent ) ) {
-				$result_array['psttext'] = array();
-				ApiResult::setContent( $result_array['psttext'], $this->pstContent->serialize( $format ) );
+				$result_array['psttext'] = $this->pstContent->serialize( $format );
+				$result_array[ApiResult::META_BC_SUBELEMENTS][] = 'psttext';
 			}
 		}
 		if ( isset( $prop['properties'] ) ) {
-			$result_array['properties'] = $this->formatProperties( $p_result->getProperties() );
+			$result_array['properties'] = (array)$p_result->getProperties();
+			ApiResult::setArrayType( $result_array['properties'], 'BCkvp', 'name' );
 		}
 
-		if ( $params['generatexml'] ) {
+		if ( isset( $prop['limitreportdata'] ) ) {
+			$result_array['limitreportdata'] =
+				$this->formatLimitReportData( $p_result->getLimitReportData() );
+		}
+		if ( isset( $prop['limitreporthtml'] ) ) {
+			$result_array['limitreporthtml'] = EditPage::getPreviewLimitReport( $p_result );
+			$result_array[ApiResult::META_BC_SUBELEMENTS][] = 'limitreporthtml';
+		}
+
+		if ( isset( $prop['parsetree'] ) || $params['generatexml'] ) {
+			if ( !isset( $prop['parsetree'] ) ) {
+				$this->logFeatureUsage( 'action=parse&generatexml' );
+			}
 			if ( $this->content->getModel() != CONTENT_MODEL_WIKITEXT ) {
-				$this->dieUsage( "generatexml is only supported for wikitext content", "notwikitext" );
+				$this->dieUsage( "parsetree is only supported for wikitext content", "notwikitext" );
 			}
 
-			$wgParser->startExternalParse( $titleObj, $popts, OT_PREPROCESS );
+			$wgParser->startExternalParse( $titleObj, $popts, Parser::OT_PREPROCESS );
 			$dom = $wgParser->preprocessToDom( $this->content->getNativeData() );
 			if ( is_callable( array( $dom, 'saveXML' ) ) ) {
 				$xml = $dom->saveXML();
 			} else {
 				$xml = $dom->__toString();
 			}
-			$result_array['parsetree'] = array();
-			ApiResult::setContent( $result_array['parsetree'], $xml );
+			$result_array['parsetree'] = $xml;
+			$result_array[ApiResult::META_BC_SUBELEMENTS][] = 'parsetree';
 		}
 
 		$result_mapping = array(
@@ -368,14 +456,16 @@ class ApiParse extends ApiBase {
 			'iwlinks' => 'iw',
 			'sections' => 's',
 			'headitems' => 'hi',
+			'modules' => 'm',
+			'indicators' => 'ind',
+			'modulescripts' => 'm',
+			'modulestyles' => 'm',
+			'modulemessages' => 'm',
 			'properties' => 'pp',
+			'limitreportdata' => 'lr',
 		);
 		$this->setIndexedTagNames( $result_array, $result_mapping );
 		$result->addValue( null, $this->getModuleName(), $result_array );
-
-		if ( !is_null( $oldLang ) ) {
-			$this->getContext()->setLanguage( $oldLang ); // Reset language to $oldLang
-		}
 	}
 
 	/**
@@ -387,48 +477,73 @@ class ApiParse extends ApiBase {
 	 * @return ParserOptions
 	 */
 	protected function makeParserOptions( WikiPage $pageObj, array $params ) {
-		wfProfileIn( __METHOD__ );
 
 		$popts = $pageObj->makeParserOptions( $this->getContext() );
-		$popts->enableLimitReport( !$params['disablepp'] );
+		$popts->enableLimitReport( !$params['disablepp'] && !$params['disablelimitreport'] );
 		$popts->setIsPreview( $params['preview'] || $params['sectionpreview'] );
 		$popts->setIsSectionPreview( $params['sectionpreview'] );
+		$popts->setEditSection( !$params['disableeditsection'] );
+		if ( $params['disabletidy'] ) {
+			$popts->setTidy( false );
+		}
 
-		wfProfileOut( __METHOD__ );
 		return $popts;
 	}
 
 	/**
-	 * @param $page WikiPage
-	 * @param $popts ParserOptions
-	 * @param $pageId Int
-	 * @param $getWikitext Bool
+	 * @param WikiPage $page
+	 * @param ParserOptions $popts
+	 * @param int $pageId
+	 * @param bool $getWikitext
 	 * @return ParserOutput
 	 */
 	private function getParsedContent( WikiPage $page, $popts, $pageId = null, $getWikitext = false ) {
-		$this->content = $page->getContent( Revision::RAW ); //XXX: really raw?
+		$this->content = $this->getContent( $page, $pageId );
 
 		if ( $this->section !== false && $this->content !== null ) {
-			$this->content = $this->getSectionContent(
-				$this->content,
-				!is_null( $pageId ) ? 'page id ' . $pageId : $page->getTitle()->getText() );
-
 			// Not cached (save or load)
 			return $this->content->getParserOutput( $page->getTitle(), null, $popts );
-		} else {
-			// Try the parser cache first
-			// getParserOutput will save to Parser cache if able
-			$pout = $page->getParserOutput( $popts );
-			if ( !$pout ) {
-				$this->dieUsage( "There is no revision ID {$page->getLatest()}", 'missingrev' );
-			}
-			if ( $getWikitext ) {
-				$this->content = $page->getContent( Revision::RAW );
-			}
-			return $pout;
 		}
+
+		// Try the parser cache first
+		// getParserOutput will save to Parser cache if able
+		$pout = $page->getParserOutput( $popts );
+		if ( !$pout ) {
+			$this->dieUsage( "There is no revision ID {$page->getLatest()}", 'missingrev' );
+		}
+		if ( $getWikitext ) {
+			$this->content = $page->getContent( Revision::RAW );
+		}
+
+		return $pout;
 	}
 
+	/**
+	 * Get the content for the given page and the requested section.
+	 *
+	 * @param WikiPage $page
+	 * @param int $pageId
+	 * @return Content
+	 */
+	private function getContent( WikiPage $page, $pageId = null ) {
+		$content = $page->getContent( Revision::RAW ); //XXX: really raw?
+
+		if ( $this->section !== false && $content !== null ) {
+			$content = $this->getSectionContent(
+				$content,
+				!is_null( $pageId ) ? 'page id ' . $pageId : $page->getTitle()->getPrefixedText()
+			);
+		}
+		return $content;
+	}
+
+	/**
+	 * Extract the requested section from the given Content
+	 *
+	 * @param Content $content
+	 * @param string $what Identifies the content in error messages, e.g. page title.
+	 * @return Content|bool
+	 */
 	private function getSectionContent( Content $content, $what ) {
 		// Not cached (save or load)
 		$section = $content->getSection( $this->section );
@@ -439,7 +554,33 @@ class ApiParse extends ApiBase {
 			$this->dieUsage( "Sections are not supported by " . $what, 'nosuchsection' );
 			$section = false;
 		}
+
 		return $section;
+	}
+
+	/**
+	 * This mimicks the behavior of EditPage in formatting a summary
+	 *
+	 * @param Title $title of the page being parsed
+	 * @param Array $params the API parameters of the request
+	 * @return Content|bool
+	 */
+	private function formatSummary( $title, $params ) {
+		global $wgParser;
+		$summary = !is_null( $params['summary'] ) ? $params['summary'] : '';
+		$sectionTitle = !is_null( $params['sectiontitle'] ) ? $params['sectiontitle'] : '';
+
+		if ( $this->section === 'new' && ( $sectionTitle === '' || $summary === '' ) ) {
+			if ( $sectionTitle !== '' ) {
+				$summary = $params['sectiontitle'];
+			}
+			if ( $summary !== '' ) {
+				$summary = wfMessage( 'newsectionsummary' )
+					->rawParams( $wgParser->stripSectionName( $summary ) )
+						->inContentLanguage()->text();
+			}
+		}
+		return Linker::formatComment( $summary, $title, $this->section === 'new' );
 	}
 
 	private function formatLangLinks( $links ) {
@@ -452,64 +593,67 @@ class ApiParse extends ApiBase {
 			$entry['lang'] = $bits[0];
 			if ( $title ) {
 				$entry['url'] = wfExpandUrl( $title->getFullURL(), PROTO_CURRENT );
+				// localised language name in 'uselang' language
+				$entry['langname'] = Language::fetchLanguageName(
+					$title->getInterwiki(),
+					$this->getLanguage()->getCode()
+				);
+
+				// native language name
+				$entry['autonym'] = Language::fetchLanguageName( $title->getInterwiki() );
 			}
-			ApiResult::setContent( $entry, $bits[1] );
+			ApiResult::setContentValue( $entry, 'title', $bits[1] );
 			$result[] = $entry;
 		}
+
 		return $result;
 	}
 
 	private function formatCategoryLinks( $links ) {
 		$result = array();
+
+		if ( !$links ) {
+			return $result;
+		}
+
+		// Fetch hiddencat property
+		$lb = new LinkBatch;
+		$lb->setArray( array( NS_CATEGORY => $links ) );
+		$db = $this->getDB();
+		$res = $db->select( array( 'page', 'page_props' ),
+			array( 'page_title', 'pp_propname' ),
+			$lb->constructSet( 'page', $db ),
+			__METHOD__,
+			array(),
+			array( 'page_props' => array(
+				'LEFT JOIN', array( 'pp_propname' => 'hiddencat', 'pp_page = page_id' )
+			) )
+		);
+		$hiddencats = array();
+		foreach ( $res as $row ) {
+			$hiddencats[$row->page_title] = isset( $row->pp_propname );
+		}
+
 		foreach ( $links as $link => $sortkey ) {
 			$entry = array();
 			$entry['sortkey'] = $sortkey;
-			ApiResult::setContent( $entry, $link );
+			ApiResult::setContentValue( $entry, 'category', $link );
+			if ( !isset( $hiddencats[$link] ) ) {
+				$entry['missing'] = true;
+			} elseif ( $hiddencats[$link] ) {
+				$entry['hidden'] = true;
+			}
 			$result[] = $entry;
 		}
+
 		return $result;
 	}
 
 	private function categoriesHtml( $categories ) {
 		$context = $this->getContext();
 		$context->getOutput()->addCategoryLinks( $categories );
+
 		return $context->getSkin()->getCategories();
-	}
-
-	/**
-	 * @deprecated since 1.18 No modern skin generates language links this way, please use language links
-	 *                        data to generate your own HTML.
-	 * @param $languages array
-	 * @return string
-	 */
-	private function languagesHtml( $languages ) {
-		wfDeprecated( __METHOD__, '1.18' );
-
-		global $wgContLang, $wgHideInterlanguageLinks;
-
-		if ( $wgHideInterlanguageLinks || count( $languages ) == 0 ) {
-			return '';
-		}
-
-		$s = htmlspecialchars( wfMessage( 'otherlanguages' )->text() . wfMessage( 'colon-separator' )->text() );
-
-		$langs = array();
-		foreach ( $languages as $l ) {
-			$nt = Title::newFromText( $l );
-			$text = Language::fetchLanguageName( $nt->getInterwiki() );
-
-			$langs[] = Html::element( 'a',
-				array( 'href' => $nt->getFullURL(), 'title' => $nt->getText(), 'class' => 'external' ),
-				$text == '' ? $l : $text );
-		}
-
-		$s .= implode( wfMessage( 'pipe-separator' )->escaped(), $langs );
-
-		if ( $wgContLang->isRTL() ) {
-			$s = Html::rawElement( 'span', array( 'dir' => 'LTR' ), $s );
-		}
-
-		return $s;
 	}
 
 	private function formatLinks( $links ) {
@@ -518,13 +662,12 @@ class ApiParse extends ApiBase {
 			foreach ( $nslinks as $title => $id ) {
 				$entry = array();
 				$entry['ns'] = $ns;
-				ApiResult::setContent( $entry, Title::makeTitle( $ns, $title )->getFullText() );
-				if ( $id != 0 ) {
-					$entry['exists'] = '';
-				}
+				ApiResult::setContentValue( $entry, 'title', Title::makeTitle( $ns, $title )->getFullText() );
+				$entry['exists'] = $id != 0;
 				$result[] = $entry;
 			}
 		}
+
 		return $result;
 	}
 
@@ -540,10 +683,11 @@ class ApiParse extends ApiBase {
 					$entry['url'] = wfExpandUrl( $title->getFullURL(), PROTO_CURRENT );
 				}
 
-				ApiResult::setContent( $entry, $title->getFullText() );
+				ApiResult::setContentValue( $entry, 'title', $title->getFullText() );
 				$result[] = $entry;
 			}
 		}
+
 		return $result;
 	}
 
@@ -552,20 +696,10 @@ class ApiParse extends ApiBase {
 		foreach ( $headItems as $tag => $content ) {
 			$entry = array();
 			$entry['tag'] = $tag;
-			ApiResult::setContent( $entry, $content );
+			ApiResult::setContentValue( $entry, 'content', $content );
 			$result[] = $entry;
 		}
-		return $result;
-	}
 
-	private function formatProperties( $properties ) {
-		$result = array();
-		foreach ( $properties as $name => $value ) {
-			$entry = array();
-			$entry['name'] = $name;
-			ApiResult::setContent( $entry, $value );
-			$result[] = $entry;
-		}
 		return $result;
 	}
 
@@ -574,16 +708,35 @@ class ApiParse extends ApiBase {
 		foreach ( $css as $file => $link ) {
 			$entry = array();
 			$entry['file'] = $file;
-			ApiResult::setContent( $entry, $link );
+			ApiResult::setContentValue( $entry, 'link', $link );
 			$result[] = $entry;
 		}
+
+		return $result;
+	}
+
+	private function formatLimitReportData( $limitReportData ) {
+		$result = array();
+		$apiResult = $this->getResult();
+
+		foreach ( $limitReportData as $name => $value ) {
+			$entry = array();
+			$entry['name'] = $name;
+			if ( !is_array( $value ) ) {
+				$value = array( $value );
+			}
+			ApiResult::setIndexedTagNameRecursive( $value, 'param' );
+			$entry = array_merge( $entry, $value );
+			$result[] = $entry;
+		}
+
 		return $result;
 	}
 
 	private function setIndexedTagNames( &$array, $mapping ) {
 		foreach ( $mapping as $key => $name ) {
 			if ( isset( $array[$key] ) ) {
-				$this->getResult()->setIndexedTagName( $array[$key], $name );
+				ApiResult::setIndexedTagName( $array[$key], $name );
 			}
 		}
 	}
@@ -591,7 +744,9 @@ class ApiParse extends ApiBase {
 	public function getAllowedParams() {
 		return array(
 			'title' => null,
-			'text' => null,
+			'text' => array(
+				ApiBase::PARAM_TYPE => 'text',
+			),
 			'summary' => null,
 			'page' => null,
 			'pageid' => array(
@@ -602,12 +757,12 @@ class ApiParse extends ApiBase {
 				ApiBase::PARAM_TYPE => 'integer',
 			),
 			'prop' => array(
-				ApiBase::PARAM_DFLT => 'text|langlinks|categories|links|templates|images|externallinks|sections|revid|displaytitle|iwlinks|properties',
+				ApiBase::PARAM_DFLT => 'text|langlinks|categories|links|templates|' .
+					'images|externallinks|sections|revid|displaytitle|iwlinks|properties',
 				ApiBase::PARAM_ISMULTI => true,
 				ApiBase::PARAM_TYPE => array(
 					'text',
 					'langlinks',
-					'languageshtml',
 					'categories',
 					'categorieshtml',
 					'links',
@@ -619,20 +774,45 @@ class ApiParse extends ApiBase {
 					'displaytitle',
 					'headitems',
 					'headhtml',
+					'modules',
+					'jsconfigvars',
+					'encodedjsconfigvars',
+					'indicators',
 					'iwlinks',
 					'wikitext',
 					'properties',
-				)
+					'limitreportdata',
+					'limitreporthtml',
+					'parsetree',
+				),
+				ApiBase::PARAM_HELP_MSG_PER_VALUE => array(
+					'parsetree' => array( 'apihelp-parse-paramvalue-prop-parsetree', CONTENT_MODEL_WIKITEXT ),
+				),
 			),
 			'pst' => false,
 			'onlypst' => false,
 			'effectivelanglinks' => false,
-			'uselang' => null,
 			'section' => null,
-			'disablepp' => false,
-			'generatexml' => false,
+			'sectiontitle' => array(
+				ApiBase::PARAM_TYPE => 'string',
+			),
+			'disablepp' => array(
+				ApiBase::PARAM_DFLT => false,
+				ApiBase::PARAM_DEPRECATED => true,
+			),
+			'disablelimitreport' => false,
+			'disableeditsection' => false,
+			'disabletidy' => false,
+			'generatexml' => array(
+				ApiBase::PARAM_DFLT => false,
+				ApiBase::PARAM_HELP_MSG => array(
+					'apihelp-parse-param-generatexml', CONTENT_MODEL_WIKITEXT
+				),
+				ApiBase::PARAM_DEPRECATED => true,
+			),
 			'preview' => false,
 			'sectionpreview' => false,
+			'disabletoc' => false,
 			'contentformat' => array(
 				ApiBase::PARAM_TYPE => ContentHandler::getAllContentFormats(),
 			),
@@ -642,102 +822,16 @@ class ApiParse extends ApiBase {
 		);
 	}
 
-	public function getParamDescription() {
-		$p = $this->getModulePrefix();
-		$wikitext = CONTENT_MODEL_WIKITEXT;
+	protected function getExamplesMessages() {
 		return array(
-			'text' => "Text to parse. Use {$p}title or {$p}contentmodel to control the content model",
-			'summary' => 'Summary to parse',
-			'redirects' => "If the {$p}page or the {$p}pageid parameter is set to a redirect, resolve it",
-			'title' => "Title of page the text belongs to. " .
-				"If omitted, \"API\" is used as the title with content model $wikitext",
-			'page' => "Parse the content of this page. Cannot be used together with {$p}text and {$p}title",
-			'pageid' => "Parse the content of this page. Overrides {$p}page",
-			'oldid' => "Parse the content of this revision. Overrides {$p}page and {$p}pageid",
-			'prop' => array(
-				'Which pieces of information to get',
-				' text           - Gives the parsed text of the wikitext',
-				' langlinks      - Gives the language links in the parsed wikitext',
-				' categories     - Gives the categories in the parsed wikitext',
-				' categorieshtml - Gives the HTML version of the categories',
-				' languageshtml  - Gives the HTML version of the language links',
-				' links          - Gives the internal links in the parsed wikitext',
-				' templates      - Gives the templates in the parsed wikitext',
-				' images         - Gives the images in the parsed wikitext',
-				' externallinks  - Gives the external links in the parsed wikitext',
-				' sections       - Gives the sections in the parsed wikitext',
-				' revid          - Adds the revision ID of the parsed page',
-				' displaytitle   - Adds the title of the parsed wikitext',
-				' headitems      - Gives items to put in the <head> of the page',
-				' headhtml       - Gives parsed <head> of the page',
-				' iwlinks        - Gives interwiki links in the parsed wikitext',
-				' wikitext       - Gives the original wikitext that was parsed',
-				' properties     - Gives various properties defined in the parsed wikitext',
-			),
-			'effectivelanglinks' => array(
-				'Includes language links supplied by extensions',
-				'(for use with prop=langlinks|languageshtml)',
-			),
-			'pst' => array(
-				'Do a pre-save transform on the input before parsing it',
-				"Only valid when used with {$p}text",
-			),
-			'onlypst' => array(
-				'Do a pre-save transform (PST) on the input, but don\'t parse it',
-				'Returns the same wikitext, after a PST has been applied.',
-				"Only valid when used with {$p}text",
-			),
-			'uselang' => 'Which language to parse the request in',
-			'section' => 'Only retrieve the content of this section number',
-			'disablepp' => 'Disable the PP Report from the parser output',
-			'generatexml' => "Generate XML parse tree (requires contentmodel=$wikitext)",
-			'preview' => 'Parse in preview mode',
-			'sectionpreview' => 'Parse in section preview mode (enables preview mode too)',
-			'contentformat' => array(
-				'Content serialization format used for the input text',
-				"Only valid when used with {$p}text",
-			),
-			'contentmodel' => array(
-				"Content model of the input text. Default is the model of the " .
-				"specified ${p}title, or $wikitext if ${p}title is not specified",
-				"Only valid when used with {$p}text",
-			),
-		);
-	}
-
-	public function getDescription() {
-		$p = $this->getModulePrefix();
-		return array(
-			'Parses content and returns parser output',
-			'See the various prop-Modules of action=query to get information from the current version of a page',
-			'There are several ways to specify the text to parse:',
-			"1) Specify a page or revision, using {$p}page, {$p}pageid, or {$p}oldid.",
-			"2) Specify content explicitly, using {$p}text, {$p}title, and {$p}contentmodel.",
-			"3) Specify only a summary to parse. {$p}prop should be given an empty value.",
-		);
-	}
-
-	public function getPossibleErrors() {
-		return array_merge( parent::getPossibleErrors(), array(
-			array( 'code' => 'params', 'info' => 'The page parameter cannot be used together with the text and title parameters' ),
-			array( 'code' => 'missingrev', 'info' => 'There is no revision ID oldid' ),
-			array( 'code' => 'permissiondenied', 'info' => 'You don\'t have permission to view deleted revisions' ),
-			array( 'code' => 'missingtitle', 'info' => 'The page you specified doesn\'t exist' ),
-			array( 'code' => 'nosuchsection', 'info' => 'There is no section sectionnumber in page' ),
-			array( 'nosuchpageid' ),
-			array( 'invalidtitle', 'title' ),
-			array( 'code' => 'parseerror', 'info' => 'Failed to parse the given text.' ),
-			array( 'code' => 'notwikitext', 'info' => 'The requested operation is only supported on wikitext content.' ),
-			array( 'code' => 'pagecannotexist', 'info' => "Namespace doesn't allow actual pages" ),
-		) );
-	}
-
-	public function getExamples() {
-		return array(
-			'api.php?action=parse&page=Project:Sandbox' => 'Parse a page',
-			'api.php?action=parse&text={{Project:Sandbox}}' => 'Parse wikitext',
-			'api.php?action=parse&text={{PAGENAME}}&title=Test' => 'Parse wikitext, specifying the page title',
-			'api.php?action=parse&summary=Some+[[link]]&prop=' => 'Parse a summary',
+			'action=parse&page=Project:Sandbox'
+				=> 'apihelp-parse-example-page',
+			'action=parse&text={{Project:Sandbox}}&contentmodel=wikitext'
+				=> 'apihelp-parse-example-text',
+			'action=parse&text={{PAGENAME}}&title=Test'
+				=> 'apihelp-parse-example-texttitle',
+			'action=parse&summary=Some+[[link]]&prop='
+				=> 'apihelp-parse-example-summary',
 		);
 	}
 

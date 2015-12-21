@@ -54,14 +54,14 @@ class LanguageEo extends Language {
 	 * editor behavior; the original server-side translation system dates to 2002-2003
 	 * when many browsers with really bad Unicode support were still in use.
 	 *
-	 * @param string $in input character set
-	 * @param string $out output character set
-	 * @param string $string text to be converted
+	 * @param string $in Input character set
+	 * @param string $out Output character set
+	 * @param string $string Text to be converted
 	 * @return string
 	 */
 	function iconv( $in, $out, $string ) {
 		if ( strcasecmp( $in, 'x' ) == 0 && strcasecmp( $out, 'utf-8' ) == 0 ) {
-			return preg_replace_callback (
+			return preg_replace_callback(
 				'/([cghjsu]x?)((?:xx)*)(?!x)/i',
 				array( $this, 'strrtxuCallback' ), $string );
 		} elseif ( strcasecmp( $in, 'UTF-8' ) == 0 && strcasecmp( $out, 'x' ) == 0 ) {
@@ -74,7 +74,7 @@ class LanguageEo extends Language {
 	}
 
 	/**
-	 * @param $matches array
+	 * @param array $matches
 	 * @return string
 	 */
 	function strrtuxCallback( $matches ) {
@@ -91,7 +91,7 @@ class LanguageEo extends Language {
 	}
 
 	/**
-	 * @param $matches array
+	 * @param array $matches
 	 * @return string
 	 */
 	function strrtxuCallback( $matches ) {

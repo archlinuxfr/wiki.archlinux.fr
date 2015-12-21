@@ -28,12 +28,11 @@
  * @ingroup SpecialPage
  */
 class BrokenRedirectsPage extends QueryPage {
-
 	function __construct( $name = 'BrokenRedirects' ) {
 		parent::__construct( $name );
 	}
 
-	function isExpensive() {
+	public function isExpensive() {
 		return true;
 	}
 
@@ -49,7 +48,7 @@ class BrokenRedirectsPage extends QueryPage {
 		return $this->msg( 'brokenredirectstext' )->parseAsBlock();
 	}
 
-	function getQueryInfo() {
+	public function getQueryInfo() {
 		$dbr = wfGetDB( DB_SLAVE );
 
 		return array(
@@ -148,7 +147,8 @@ class BrokenRedirectsPage extends QueryPage {
 			);
 		}
 
-		$out .= $this->msg( 'parentheses' )->rawParams( $this->getLanguage()->pipeList( $links ) )->escaped();
+		$out .= $this->msg( 'parentheses' )->rawParams( $this->getLanguage()
+			->pipeList( $links ) )->escaped();
 		$out .= " {$arr} {$to}";
 
 		return $out;

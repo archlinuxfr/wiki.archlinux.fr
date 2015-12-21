@@ -33,7 +33,7 @@ class ApiQueryPageProps extends ApiQueryBase {
 
 	private $params;
 
-	public function __construct( $query, $moduleName ) {
+	public function __construct( ApiQuery $query, $moduleName ) {
 		parent::__construct( $query, $moduleName, 'pp' );
 	}
 
@@ -104,17 +104,19 @@ class ApiQueryPageProps extends ApiQueryBase {
 	 * Add page properties to an ApiResult, adding a continue
 	 * parameter if it doesn't fit.
 	 *
-	 * @param $result ApiResult
-	 * @param $page int
-	 * @param $props array
+	 * @param ApiResult $result
+	 * @param int $page
+	 * @param array $props
 	 * @return bool True if it fits in the result
 	 */
 	private function addPageProps( $result, $page, $props ) {
+		ApiResult::setArrayType( $props, 'assoc' );
 		$fit = $result->addValue( array( 'query', 'pages', $page ), 'pageprops', $props );
 
 		if ( !$fit ) {
 			$this->setContinueEnumParameter( 'continue', $page );
 		}
+
 		return $fit;
 	}
 
@@ -124,31 +126,23 @@ class ApiQueryPageProps extends ApiQueryBase {
 
 	public function getAllowedParams() {
 		return array(
-			'continue' => null,
+			'continue' => array(
+				ApiBase::PARAM_HELP_MSG => 'api-help-param-continue',
+			),
 			'prop' => array(
 				ApiBase::PARAM_ISMULTI => true,
 			),
 		);
 	}
 
-	public function getParamDescription() {
+	protected function getExamplesMessages() {
 		return array(
-			'continue' => 'When more results are available, use this to continue',
-			'prop' => 'Only list these props. Useful for checking whether a certain page uses a certain page prop',
-		);
-	}
-
-	public function getDescription() {
-		return 'Get various properties defined in the page content';
-	}
-
-	public function getExamples() {
-		return array(
-			'api.php?action=query&prop=pageprops&titles=Category:Foo',
+			'action=query&prop=pageprops&titles=Main%20Page|MediaWiki'
+				=> 'apihelp-query+pageprops-example-simple',
 		);
 	}
 
 	public function getHelpUrls() {
-		return 'https://www.mediawiki.org/wiki/API:Properties#pageprops_.2F_pp';
+		return 'https://www.mediawiki.org/wiki/API:Pageprops';
 	}
 }

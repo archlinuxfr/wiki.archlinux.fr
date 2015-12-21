@@ -31,6 +31,8 @@ class SqliteUpdater extends DatabaseUpdater {
 
 	protected function getCoreUpdateList() {
 		return array(
+			array( 'disableContentHandlerUseDB' ),
+
 			// 1.14
 			array( 'addField', 'site_stats', 'ss_active_users', 'patch-ss_active_users.sql' ),
 			array( 'doActiveUsersInit' ),
@@ -97,6 +99,8 @@ class SqliteUpdater extends DatabaseUpdater {
 			array( 'addField', 'archive', 'ar_content_format', 'patch-archive-ar_content_format.sql' ),
 			array( 'addField', 'archive', 'ar_content_model', 'patch-archive-ar_content_model.sql' ),
 			array( 'addField', 'page', 'page_content_model', 'patch-page-page_content_model.sql' ),
+			array( 'enableContentHandlerUseDB' ),
+
 			array( 'dropField', 'site_stats', 'ss_admins', 'patch-drop-ss_admins.sql' ),
 			array( 'dropField', 'recentchanges', 'rc_moved_to_title', 'patch-rc_moved.sql' ),
 			array( 'addTable', 'sites', 'patch-sites.sql' ),
@@ -111,9 +115,34 @@ class SqliteUpdater extends DatabaseUpdater {
 			array( 'addIndex', 'page_props', 'pp_propname_page',
 				'patch-page_props-propname-page-index.sql' ),
 			array( 'addIndex', 'image', 'img_media_mime', 'patch-img_media_mime-index.sql' ),
+
+			// 1.22
 			array( 'addIndex', 'iwlinks', 'iwl_prefix_from_title', 'patch-iwlinks-from-title-index.sql' ),
 			array( 'addField', 'archive', 'ar_id', 'patch-archive-ar_id.sql' ),
 			array( 'addField', 'externallinks', 'el_id', 'patch-externallinks-el_id.sql' ),
+
+			// 1.23
+			array( 'addField', 'recentchanges', 'rc_source', 'patch-rc_source.sql' ),
+			array( 'addIndex', 'logging', 'log_user_text_type_time',
+				'patch-logging_user_text_type_time_index.sql' ),
+			array( 'addIndex', 'logging', 'log_user_text_time', 'patch-logging_user_text_time_index.sql' ),
+			array( 'addField', 'page', 'page_links_updated', 'patch-page_links_updated.sql' ),
+			array( 'addField', 'user', 'user_password_expires', 'patch-user_password_expire.sql' ),
+
+			// 1.24
+			array( 'addField', 'page_props', 'pp_sortkey', 'patch-pp_sortkey.sql' ),
+			array( 'dropField', 'recentchanges', 'rc_cur_time', 'patch-drop-rc_cur_time.sql' ),
+			array( 'addIndex', 'watchlist', 'wl_user_notificationtimestamp', 'patch-watchlist-user-notificationtimestamp-index.sql' ),
+			array( 'addField', 'page', 'page_lang', 'patch-page-page_lang.sql' ),
+			array( 'addField', 'pagelinks', 'pl_from_namespace', 'patch-pl_from_namespace.sql' ),
+			array( 'addField', 'templatelinks', 'tl_from_namespace', 'patch-tl_from_namespace.sql' ),
+			array( 'addField', 'imagelinks', 'il_from_namespace', 'patch-il_from_namespace.sql' ),
+
+			// 1.25
+			array( 'dropTable', 'hitcounter' ),
+			array( 'dropField', 'site_stats', 'ss_total_views', 'patch-drop-ss_total_views.sql' ),
+			array( 'dropField', 'page', 'page_counter', 'patch-drop-page_counter.sql' ),
+			array( 'modifyField', 'filearchive', 'fa_deleted_reason', 'patch-editsummary-length.sql' ),
 		);
 	}
 
@@ -143,13 +172,6 @@ class SqliteUpdater extends DatabaseUpdater {
 			$this->applyPatch( 'searchindex-fts3.sql', false, "Adding FTS3 search capabilities" );
 		} else {
 			$this->output( "...fulltext search table appears to be in order.\n" );
-		}
-	}
-
-	protected function doEnableProfiling() {
-		global $wgProfileToDatabase;
-		if ( $wgProfileToDatabase === true && !$this->db->tableExists( 'profiling', __METHOD__ ) ) {
-			$this->applyPatch( 'patch-profiling.sql', false, 'Add profiling table' );
 		}
 	}
 }

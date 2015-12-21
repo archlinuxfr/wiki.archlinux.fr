@@ -28,25 +28,34 @@
  * @see Database
  */
 class DatabaseMysql extends DatabaseMysqlBase {
-
 	/**
-	 * @param $sql string
-	 * @return resource
+	 * @param string $sql
+	 * @return resource False on error
 	 */
 	protected function doQuery( $sql ) {
+		$conn = $this->getBindingHandle();
+
 		if ( $this->bufferResults() ) {
-			$ret = mysql_query( $sql, $this->mConn );
+			$ret = mysql_query( $sql, $conn );
 		} else {
-			$ret = mysql_unbuffered_query( $sql, $this->mConn );
+			$ret = mysql_unbuffered_query( $sql, $conn );
 		}
+
 		return $ret;
 	}
 
+	/**
+	 * @param string $realServer
+	 * @return bool|resource MySQL Database connection or false on failure to connect
+	 * @throws DBConnectionError
+	 */
 	protected function mysqlConnect( $realServer ) {
-		# Fail now
-		# Otherwise we get a suppressed fatal error, which is very hard to track down
+		# Avoid a suppressed fatal error, which is very hard to track down
 		if ( !extension_loaded( 'mysql' ) ) {
-			throw new DBConnectionError( $this, "MySQL functions missing, have you compiled PHP with the --with-mysql option?\n" );
+			throw new DBConnectionError(
+				$this,
+				"MySQL functions missing, have you compiled PHP with the --with-mysql option?\n"
+			);
 		}
 
 		$connFlags = 0;
@@ -65,6 +74,9 @@ class DatabaseMysql extends DatabaseMysqlBase {
 
 		$conn = false;
 
+		# The kernel's default SYN retransmission period is far too slow for us,
+		# so we use a short timeout plus a manual retry. Retrying means that a small
+		# but finite rate of SYN packet loss won't cause user-visible errors.
 		for ( $i = 0; $i < $numAttempts && !$conn; $i++ ) {
 			if ( $i > 1 ) {
 				usleep( 1000 );
@@ -81,17 +93,35 @@ class DatabaseMysql extends DatabaseMysqlBase {
 	}
 
 	/**
+	 * @param string $charset
+	 * @return bool
+	 */
+	protected function mysqlSetCharset( $charset ) {
+		$conn = $this->getBindingHandle();
+
+		if ( function_exists( 'mysql_set_charset' ) ) {
+			return mysql_set_charset( $charset, $conn );
+		} else {
+			return $this->query( 'SET NAMES ' . $charset, __METHOD__ );
+		}
+	}
+
+	/**
 	 * @return bool
 	 */
 	protected function closeConnection() {
-		return mysql_close( $this->mConn );
+		$conn = $this->getBindingHandle();
+
+		return mysql_close( $conn );
 	}
 
 	/**
 	 * @return int
 	 */
 	function insertId() {
-		return mysql_insert_id( $this->mConn );
+		$conn = $this->getBindingHandle();
+
+		return mysql_insert_id( $conn );
 	}
 
 	/**
@@ -109,23 +139,21 @@ class DatabaseMysql extends DatabaseMysqlBase {
 	 * @return int
 	 */
 	function affectedRows() {
-		return mysql_affected_rows( $this->mConn );
+		$conn = $this->getBindingHandle();
+
+		return mysql_affected_rows( $conn );
 	}
 
 	/**
-	 * @param $db
+	 * @param string $db
 	 * @return bool
 	 */
 	function selectDB( $db ) {
-		$this->mDBname = $db;
-		return mysql_select_db( $db, $this->mConn );
-	}
+		$conn = $this->getBindingHandle();
 
-	/**
-	 * @return string
-	 */
-	function getServerVersion() {
-		return mysql_get_server_info( $this->mConn );
+		$this->mDBname = $db;
+
+		return mysql_select_db( $db, $conn );
 	}
 
 	protected function mysqlFreeResult( $res ) {
@@ -156,6 +184,10 @@ class DatabaseMysql extends DatabaseMysqlBase {
 		return mysql_field_name( $res, $n );
 	}
 
+	protected function mysqlFieldType( $res, $n ) {
+		return mysql_field_type( $res, $n );
+	}
+
 	protected function mysqlDataSeek( $res, $row ) {
 		return mysql_data_seek( $res, $row );
 	}
@@ -165,10 +197,14 @@ class DatabaseMysql extends DatabaseMysqlBase {
 	}
 
 	protected function mysqlRealEscapeString( $s ) {
-		return mysql_real_escape_string( $s, $this->mConn );
+		$conn = $this->getBindingHandle();
+
+		return mysql_real_escape_string( $s, $conn );
 	}
 
 	protected function mysqlPing() {
-		return mysql_ping( $this->mConn );
+		$conn = $this->getBindingHandle();
+
+		return mysql_ping( $conn );
 	}
 }

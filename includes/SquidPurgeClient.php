@@ -28,12 +28,26 @@
  * Could be replaced by curl_multi_exec() or some such.
  */
 class SquidPurgeClient {
-	var $host, $port, $ip;
+	/** @var string */
+	protected $host;
 
-	var $readState = 'idle';
-	var $writeBuffer = '';
-	var $requests = array();
-	var $currentRequestIndex;
+	/** @var int */
+	protected $port;
+
+	/** @var string|bool */
+	protected $ip;
+
+	/** @var string */
+	protected $readState = 'idle';
+
+	/** @var string */
+	protected $writeBuffer = '';
+
+	/** @var array */
+	protected $requests = array();
+
+	/** @var mixed */
+	protected $currentRequestIndex;
 
 	const EINTR = 4;
 	const EAGAIN = 11;
@@ -41,17 +55,20 @@ class SquidPurgeClient {
 	const BUFFER_SIZE = 8192;
 
 	/**
-	 * The socket resource, or null for unconnected, or false for disabled due to error
+	 * @var resource|null The socket resource, or null for unconnected, or false
+	 *   for disabled due to error.
 	 */
-	var $socket;
+	protected $socket;
 
-	var $readBuffer;
+	/** @var string */
+	protected $readBuffer;
 
-	var $bodyRemaining;
+	/** @var int */
+	protected $bodyRemaining;
 
 	/**
-	 * @param $server string
-	 * @param $options array
+	 * @param string $server
+	 * @param array $options
 	 */
 	public function __construct( $server, $options = array() ) {
 		$parts = explode( ':', $server, 2 );
@@ -78,9 +95,9 @@ class SquidPurgeClient {
 		}
 		$this->socket = socket_create( AF_INET, SOCK_STREAM, SOL_TCP );
 		socket_set_nonblock( $this->socket );
-		wfSuppressWarnings();
+		MediaWiki\suppressWarnings();
 		$ok = socket_connect( $this->socket, $ip, $this->port );
-		wfRestoreWarnings();
+		MediaWiki\restoreWarnings();
 		if ( !$ok ) {
 			$error = socket_last_error( $this->socket );
 			if ( $error !== self::EINPROGRESS ) {
@@ -126,6 +143,8 @@ class SquidPurgeClient {
 	/**
 	 * Get the host's IP address.
 	 * Does not support IPv6 at present due to the lack of a convenient interface in PHP.
+	 * @throws MWException
+	 * @return string
 	 */
 	protected function getIP() {
 		if ( $this->ip === null ) {
@@ -134,12 +153,12 @@ class SquidPurgeClient {
 			} elseif ( IP::isIPv6( $this->host ) ) {
 				throw new MWException( '$wgSquidServers does not support IPv6' );
 			} else {
-				wfSuppressWarnings();
+				MediaWiki\suppressWarnings();
 				$this->ip = gethostbyname( $this->host );
 				if ( $this->ip === $this->host ) {
 					$this->ip = false;
 				}
-				wfRestoreWarnings();
+				MediaWiki\restoreWarnings();
 			}
 		}
 		return $this->ip;
@@ -159,11 +178,11 @@ class SquidPurgeClient {
 	 */
 	public function close() {
 		if ( $this->socket ) {
-			wfSuppressWarnings();
+			MediaWiki\suppressWarnings();
 			socket_set_block( $this->socket );
 			socket_shutdown( $this->socket );
 			socket_close( $this->socket );
-			wfRestoreWarnings();
+			MediaWiki\restoreWarnings();
 		}
 		$this->socket = null;
 		$this->readBuffer = '';
@@ -173,7 +192,7 @@ class SquidPurgeClient {
 	/**
 	 * Queue a purge operation
 	 *
-	 * @param $url string
+	 * @param string $url
 	 */
 	public function queuePurge( $url ) {
 		global $wgSquidPurgeUseHostHeader;
@@ -233,9 +252,9 @@ class SquidPurgeClient {
 			$buf = substr( $this->writeBuffer, 0, self::BUFFER_SIZE );
 			$flags = 0;
 		}
-		wfSuppressWarnings();
+		MediaWiki\suppressWarnings();
 		$bytesSent = socket_send( $socket, $buf, strlen( $buf ), $flags );
-		wfRestoreWarnings();
+		MediaWiki\restoreWarnings();
 
 		if ( $bytesSent === false ) {
 			$error = socket_last_error( $socket );
@@ -259,9 +278,9 @@ class SquidPurgeClient {
 		}
 
 		$buf = '';
-		wfSuppressWarnings();
+		MediaWiki\suppressWarnings();
 		$bytesRead = socket_recv( $socket, $buf, self::BUFFER_SIZE, 0 );
-		wfRestoreWarnings();
+		MediaWiki\restoreWarnings();
 		if ( $bytesRead === false ) {
 			$error = socket_last_error( $socket );
 			if ( $error != self::EAGAIN && $error != self::EINTR ) {
@@ -323,8 +342,7 @@ class SquidPurgeClient {
 	}
 
 	/**
-	 * @param $line
-	 * @return
+	 * @param string $line
 	 */
 	protected function processStatusLine( $line ) {
 		if ( !preg_match( '!^HTTP/(\d+)\.(\d+) (\d{3}) (.*)$!', $line, $m ) ) {
@@ -343,7 +361,7 @@ class SquidPurgeClient {
 	}
 
 	/**
-	 * @param $line string
+	 * @param string $line
 	 */
 	protected function processHeaderLine( $line ) {
 		if ( preg_match( '/^Content-Length: (\d+)$/i', $line, $m ) ) {
@@ -370,23 +388,22 @@ class SquidPurgeClient {
 	}
 
 	/**
-	 * @param $msg string
+	 * @param string $msg
 	 */
 	protected function log( $msg ) {
-		wfDebugLog( 'squid', __CLASS__ . " ($this->host): $msg\n" );
+		wfDebugLog( 'squid', __CLASS__ . " ($this->host): $msg" );
 	}
 }
 
 class SquidPurgeClientPool {
+	/** @var array Array of SquidPurgeClient */
+	protected $clients = array();
+
+	/** @var int */
+	protected $timeout = 5;
 
 	/**
-	 * @var array of SquidPurgeClient
-	 */
-	var $clients = array();
-	var $timeout = 5;
-
-	/**
-	 * @param $options array
+	 * @param array $options
 	 */
 	function __construct( $options = array() ) {
 		if ( isset( $options['timeout'] ) ) {
@@ -395,7 +412,7 @@ class SquidPurgeClientPool {
 	}
 
 	/**
-	 * @param $client SquidPurgeClient
+	 * @param SquidPurgeClient $client
 	 * @return void
 	 */
 	public function addClient( $client ) {
@@ -425,9 +442,9 @@ class SquidPurgeClientPool {
 			}
 			$exceptSockets = null;
 			$timeout = min( $startTime + $this->timeout - microtime( true ), 1 );
-			wfSuppressWarnings();
+			MediaWiki\suppressWarnings();
 			$numReady = socket_select( $readSockets, $writeSockets, $exceptSockets, $timeout );
-			wfRestoreWarnings();
+			MediaWiki\restoreWarnings();
 			if ( $numReady === false ) {
 				wfDebugLog( 'squid', __METHOD__ . ': Error in stream_select: ' .
 					socket_strerror( socket_last_error() ) . "\n" );

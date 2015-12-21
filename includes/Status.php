@@ -38,127 +38,136 @@
  * so that a lack of error-handling will be explicit.
  */
 class Status {
-	var $ok = true;
-	var $value;
+	/** @var StatusValue */
+	protected $sv;
 
-	/** Counters for batch operations */
-	public $successCount = 0, $failCount = 0;
-	/** Array to indicate which items of the batch operations were successful */
+	/** @var mixed */
+	public $value;
+	/** @var array Map of (key => bool) to indicate success of each part of batch operations */
 	public $success = array();
+	/** @var int Counter for batch operations */
+	public $successCount = 0;
+	/** @var int Counter for batch operations */
+	public $failCount = 0;
 
-	/*semi-private*/ var $errors = array();
-	/*semi-private*/ var $cleanCallback = false;
+	/** @var callable */
+	public $cleanCallback = false;
+
+	/**
+	 * @param StatusValue $sv [optional]
+	 */
+	public function __construct( StatusValue $sv = null ) {
+		$this->sv = ( $sv === null ) ? new StatusValue() : $sv;
+		// B/C field aliases
+		$this->value =& $this->sv->value;
+		$this->successCount =& $this->sv->successCount;
+		$this->failCount =& $this->sv->failCount;
+		$this->success =& $this->sv->success;
+	}
+
+	/**
+	 * Succinct helper method to wrap a StatusValue
+	 *
+	 * This is is useful when formatting StatusValue objects:
+	 * @code
+	 *     $this->getOutput()->addHtml( Status::wrap( $sv )->getHTML() );
+	 * @endcode
+	 *
+	 * @param StatusValue|Status $sv
+	 * @return Status
+	 */
+	public static function wrap( $sv ) {
+		return $sv instanceof Status ? $sv : new self( $sv );
+	}
 
 	/**
 	 * Factory function for fatal errors
 	 *
-	 * @param string|Message $message message name or object
+	 * @param string|Message $message Message name or object
 	 * @return Status
 	 */
-	static function newFatal( $message /*, parameters...*/ ) {
-		$params = func_get_args();
-		$result = new self;
-		call_user_func_array( array( &$result, 'error' ), $params );
-		$result->ok = false;
-		return $result;
+	public static function newFatal( $message /*, parameters...*/ ) {
+		return new self( call_user_func_array(
+			array( 'StatusValue', 'newFatal' ), func_get_args()
+		) );
 	}
 
 	/**
 	 * Factory function for good results
 	 *
-	 * @param $value Mixed
+	 * @param mixed $value
 	 * @return Status
 	 */
-	static function newGood( $value = null ) {
-		$result = new self;
-		$result->value = $value;
-		return $result;
+	public static function newGood( $value = null ) {
+		$sv = new StatusValue();
+		$sv->value = $value;
+
+		return new self( $sv );
 	}
 
 	/**
 	 * Change operation result
 	 *
-	 * @param $ok Boolean: whether the operation completed
-	 * @param $value Mixed
+	 * @param bool $ok Whether the operation completed
+	 * @param mixed $value
 	 */
-	function setResult( $ok, $value = null ) {
-		$this->ok = $ok;
-		$this->value = $value;
+	public function setResult( $ok, $value = null ) {
+		$this->sv->setResult( $ok, $value );
 	}
 
 	/**
 	 * Returns whether the operation completed and didn't have any error or
 	 * warnings
 	 *
-	 * @return Boolean
+	 * @return bool
 	 */
-	function isGood() {
-		return $this->ok && !$this->errors;
+	public function isGood() {
+		return $this->sv->isGood();
 	}
 
 	/**
 	 * Returns whether the operation completed
 	 *
-	 * @return Boolean
+	 * @return bool
 	 */
-	function isOK() {
-		return $this->ok;
+	public function isOK() {
+		return $this->sv->isOK();
 	}
 
 	/**
 	 * Add a new warning
 	 *
-	 * @param string|Message $message message name or object
+	 * @param string|Message $message Message name or object
 	 */
-	function warning( $message /*, parameters... */ ) {
-		$params = array_slice( func_get_args(), 1 );
-		$this->errors[] = array(
-			'type' => 'warning',
-			'message' => $message,
-			'params' => $params );
+	public function warning( $message /*, parameters... */ ) {
+		call_user_func_array( array( $this->sv, 'warning' ), func_get_args() );
 	}
 
 	/**
 	 * Add an error, do not set fatal flag
 	 * This can be used for non-fatal errors
 	 *
-	 * @param string|Message $message message name or object
+	 * @param string|Message $message Message name or object
 	 */
-	function error( $message /*, parameters... */ ) {
-		$params = array_slice( func_get_args(), 1 );
-		$this->errors[] = array(
-			'type' => 'error',
-			'message' => $message,
-			'params' => $params );
+	public function error( $message /*, parameters... */ ) {
+		call_user_func_array( array( $this->sv, 'error' ), func_get_args() );
 	}
 
 	/**
 	 * Add an error and set OK to false, indicating that the operation
 	 * as a whole was fatal
 	 *
-	 * @param string|Message $message message name or object
+	 * @param string|Message $message Message name or object
 	 */
-	function fatal( $message /*, parameters... */ ) {
-		$params = array_slice( func_get_args(), 1 );
-		$this->errors[] = array(
-			'type' => 'error',
-			'message' => $message,
-			'params' => $params );
-		$this->ok = false;
+	public function fatal( $message /*, parameters... */ ) {
+		call_user_func_array( array( $this->sv, 'fatal' ), func_get_args() );
 	}
 
 	/**
-	 * Sanitize the callback parameter on wakeup, to avoid arbitrary execution.
-	 */
-	function __wakeup() {
-		$this->cleanCallback = false;
-	}
-
-	/**
-	 * @param $params array
+	 * @param array $params
 	 * @return array
 	 */
-	protected function cleanParams( $params ) {
+	protected function cleanParams( array $params ) {
 		if ( !$this->cleanCallback ) {
 			return $params;
 		}
@@ -172,30 +181,32 @@ class Status {
 	/**
 	 * Get the error list as a wikitext formatted list
 	 *
-	 * @param string $shortContext a short enclosing context message name, to
+	 * @param string|bool $shortContext A short enclosing context message name, to
 	 *        be used when there is a single error
-	 * @param string $longContext a long enclosing context message name, for a list
-	 * @return String
+	 * @param string|bool $longContext A long enclosing context message name, for a list
+	 * @return string
 	 */
-	function getWikiText( $shortContext = false, $longContext = false ) {
-		if ( count( $this->errors ) == 0 ) {
-			if ( $this->ok ) {
-				$this->fatal( 'internalerror_info',
+	public function getWikiText( $shortContext = false, $longContext = false ) {
+		$rawErrors = $this->sv->getErrors();
+		if ( count( $rawErrors ) == 0 ) {
+			if ( $this->sv->isOK() ) {
+				$this->sv->fatal( 'internalerror_info',
 					__METHOD__ . " called for a good result, this is incorrect\n" );
 			} else {
-				$this->fatal( 'internalerror_info',
+				$this->sv->fatal( 'internalerror_info',
 					__METHOD__ . ": Invalid result object: no error text but not OK\n" );
 			}
+			$rawErrors = $this->sv->getErrors(); // just added a fatal
 		}
-		if ( count( $this->errors ) == 1 ) {
-			$s = $this->getErrorMessage( $this->errors[0] )->plain();
+		if ( count( $rawErrors ) == 1 ) {
+			$s = $this->getErrorMessage( $rawErrors[0] )->plain();
 			if ( $shortContext ) {
 				$s = wfMessage( $shortContext, $s )->plain();
 			} elseif ( $longContext ) {
 				$s = wfMessage( $longContext, "* $s\n" )->plain();
 			}
 		} else {
-			$errors = $this->getErrorMessageArray( $this->errors );
+			$errors = $this->getErrorMessageArray( $rawErrors );
 			foreach ( $errors as &$error ) {
 				$error = $error->plain();
 			}
@@ -212,23 +223,27 @@ class Status {
 	/**
 	 * Get the error list as a Message object
 	 *
-	 * @param string $shortContext a short enclosing context message name, to
-	 *        be used when there is a single error
-	 * @param string $longContext a long enclosing context message name, for a list
+	 * @param string|string[] $shortContext A short enclosing context message name (or an array of
+	 * message names), to be used when there is a single error.
+	 * @param string|string[] $longContext A long enclosing context message name (or an array of
+	 * message names), for a list.
+	 *
 	 * @return Message
 	 */
-	function getMessage( $shortContext = false, $longContext = false ) {
-		if ( count( $this->errors ) == 0 ) {
-			if ( $this->ok ) {
-				$this->fatal( 'internalerror_info',
+	public function getMessage( $shortContext = false, $longContext = false ) {
+		$rawErrors = $this->sv->getErrors();
+		if ( count( $rawErrors ) == 0 ) {
+			if ( $this->sv->isOK() ) {
+				$this->sv->fatal( 'internalerror_info',
 					__METHOD__ . " called for a good result, this is incorrect\n" );
 			} else {
-				$this->fatal( 'internalerror_info',
+				$this->sv->fatal( 'internalerror_info',
 					__METHOD__ . ": Invalid result object: no error text but not OK\n" );
 			}
+			$rawErrors = $this->sv->getErrors(); // just added a fatal
 		}
-		if ( count( $this->errors ) == 1 ) {
-			$s = $this->getErrorMessage( $this->errors[0] );
+		if ( count( $rawErrors ) == 1 ) {
+			$s = $this->getErrorMessage( $rawErrors[0] );
 			if ( $shortContext ) {
 				$s = wfMessage( $shortContext, $s );
 			} elseif ( $longContext ) {
@@ -237,20 +252,20 @@ class Status {
 				$s = wfMessage( $longContext, $wrapper );
 			}
 		} else {
-			$msgs =  $this->getErrorMessageArray( $this->errors );
+			$msgs = $this->getErrorMessageArray( $rawErrors );
 			$msgCount = count( $msgs );
 
 			if ( $shortContext ) {
 				$msgCount++;
 			}
 
-			$wrapper = new RawMessage( '* $' . implode( "\n* \$", range( 1, $msgCount ) ) );
-			$s = $wrapper->params( $msgs )->parse();
+			$s = new RawMessage( '* $' . implode( "\n* \$", range( 1, $msgCount ) ) );
+			$s->params( $msgs )->parse();
 
 			if ( $longContext ) {
-				$s = wfMessage( $longContext, $wrapper );
+				$s = wfMessage( $longContext, $s );
 			} elseif ( $shortContext ) {
-				$wrapper = new RawMessage( "\n\$1\n", $wrapper );
+				$wrapper = new RawMessage( "\n\$1\n", $s );
 				$wrapper->parse();
 				$s = wfMessage( $shortContext, $wrapper );
 			}
@@ -261,12 +276,12 @@ class Status {
 
 	/**
 	 * Return the message for a single error.
-	 * @param $error Mixed With an array & two values keyed by
+	 * @param mixed $error With an array & two values keyed by
 	 * 'message' and 'params', use those keys-value pairs.
 	 * Otherwise, if its an array, just use the first value as the
 	 * message and the remaining items as the params.
 	 *
-	 * @return String
+	 * @return Message
 	 */
 	protected function getErrorMessage( $error ) {
 		if ( is_array( $error ) ) {
@@ -289,20 +304,21 @@ class Status {
 	/**
 	 * Get the error message as HTML. This is done by parsing the wikitext error
 	 * message.
-	 *
-	 * @note: this does not perform a full wikitext to HTML conversion, it merely applies
-	 *        a message transformation.
-	 * @todo figure out whether that is actually The Right Thing.
+	 * @param string $shortContext A short enclosing context message name, to
+	 *        be used when there is a single error
+	 * @param string $longContext A long enclosing context message name, for a list
+	 * @return string
 	 */
 	public function getHTML( $shortContext = false, $longContext = false ) {
 		$text = $this->getWikiText( $shortContext, $longContext );
-		return MessageCache::singleton()->transform( $text, true );
+		$out = MessageCache::singleton()->parse( $text, null, true, true );
+		return $out instanceof ParserOutput ? $out->getText() : $out;
 	}
 
 	/**
-	 * Return an array with the wikitext for each item in the array.
-	 * @param $errors Array
-	 * @return Array
+	 * Return an array with a Message object for each error.
+	 * @param array $errors
+	 * @return Message[]
 	 */
 	protected function getErrorMessageArray( $errors ) {
 		return array_map( array( $this, 'getErrorMessage' ), $errors );
@@ -311,17 +327,11 @@ class Status {
 	/**
 	 * Merge another status object into this one
 	 *
-	 * @param $other Status Other Status object
-	 * @param $overwriteValue Boolean: whether to override the "value" member
+	 * @param Status $other Other Status object
+	 * @param bool $overwriteValue Whether to override the "value" member
 	 */
-	function merge( $other, $overwriteValue = false ) {
-		$this->errors = array_merge( $this->errors, $other->errors );
-		$this->ok = $this->ok && $other->ok;
-		if ( $overwriteValue ) {
-			$this->value = $other->value;
-		}
-		$this->successCount += $other->successCount;
-		$this->failCount += $other->failCount;
+	public function merge( $other, $overwriteValue = false ) {
+		$this->sv->merge( $other->sv, $overwriteValue );
 	}
 
 	/**
@@ -329,9 +339,10 @@ class Status {
 	 *
 	 * @return array A list in which each entry is an array with a message key as its first element.
 	 *         The remaining array elements are the message parameters.
+	 * @deprecated 1.25
 	 */
-	function getErrorsArray() {
-		return $this->getStatusArray( "error" );
+	public function getErrorsArray() {
+		return $this->getStatusArray( 'error' );
 	}
 
 	/**
@@ -339,23 +350,30 @@ class Status {
 	 *
 	 * @return array A list in which each entry is an array with a message key as its first element.
 	 *         The remaining array elements are the message parameters.
+	 * @deprecated 1.25
 	 */
-	function getWarningsArray() {
-		return $this->getStatusArray( "warning" );
+	public function getWarningsArray() {
+		return $this->getStatusArray( 'warning' );
 	}
 
 	/**
-	 * Returns a list of status messages of the given type
-	 * @param $type String
+	 * Returns a list of status messages of the given type (or all if false)
 	 *
-	 * @return Array
+	 * @note: this handles RawMessage poorly
+	 *
+	 * @param string $type
+	 * @return array
 	 */
-	protected function getStatusArray( $type ) {
+	protected function getStatusArray( $type = false ) {
 		$result = array();
-		foreach ( $this->errors as $error ) {
-			if ( $error['type'] === $type ) {
-				if ( $error['message'] instanceof Message ) {
-					$result[] = array_merge( array( $error['message']->getKey() ), $error['message']->getParams() );
+
+		foreach ( $this->sv->getErrors() as $error ) {
+			if ( $type === false || $error['type'] === $type ) {
+				if ( $error['message'] instanceof MessageSpecifier ) {
+					$result[] = array_merge(
+						array( $error['message']->getKey() ),
+						$error['message']->getParams()
+					);
 				} elseif ( $error['params'] ) {
 					$result[] = array_merge( array( $error['message'] ), $error['params'] );
 				} else {
@@ -363,6 +381,7 @@ class Status {
 				}
 			}
 		}
+
 		return $result;
 	}
 
@@ -370,36 +389,23 @@ class Status {
 	 * Returns a list of status messages of the given type, with message and
 	 * params left untouched, like a sane version of getStatusArray
 	 *
-	 * @param $type String
+	 * @param string $type
 	 *
-	 * @return Array
+	 * @return array
 	 */
 	public function getErrorsByType( $type ) {
-		$result = array();
-		foreach ( $this->errors as $error ) {
-			if ( $error['type'] === $type ) {
-				$result[] = $error;
-			}
-		}
-		return $result;
+		return $this->sv->getErrorsByType( $type );
 	}
 
 	/**
 	 * Returns true if the specified message is present as a warning or error
 	 *
-	 * Note, due to the lack of tools for comparing Message objects, this
-	 * function will not work when using a Message object as a parameter.
+	 * @param string|Message $message Message key or object to search for
 	 *
-	 * @param string $msg message name
-	 * @return Boolean
+	 * @return bool
 	 */
-	function hasMessage( $msg ) {
-		foreach ( $this->errors as $error ) {
-			if ( $error['message'] === $msg ) {
-				return true;
-			}
-		}
-		return false;
+	public function hasMessage( $message ) {
+		return $this->sv->hasMessage( $message );
 	}
 
 	/**
@@ -409,25 +415,72 @@ class Status {
 	 * Note, due to the lack of tools for comparing Message objects, this
 	 * function will not work when using a Message object as the search parameter.
 	 *
-	 * @param $source Message|String: Message key or object to search for
-	 * @param $dest Message|String: Replacement message key or object
+	 * @param Message|string $source Message key or object to search for
+	 * @param Message|string $dest Replacement message key or object
 	 * @return bool Return true if the replacement was done, false otherwise.
 	 */
-	function replaceMessage( $source, $dest ) {
-		$replaced = false;
-		foreach ( $this->errors as $index => $error ) {
-			if ( $error['message'] === $source ) {
-				$this->errors[$index]['message'] = $dest;
-				$replaced = true;
-			}
-		}
-		return $replaced;
+	public function replaceMessage( $source, $dest ) {
+		return $this->sv->replaceMessage( $source, $dest );
 	}
 
 	/**
 	 * @return mixed
 	 */
 	public function getValue() {
-		return $this->value;
+		return $this->sv->getValue();
+	}
+
+	/**
+	 * Backwards compatibility logic
+	 *
+	 * @param string $name
+	 */
+	function __get( $name ) {
+		if ( $name === 'ok' ) {
+			return $this->sv->isOK();
+		} elseif ( $name === 'errors' ) {
+			return $this->sv->getErrors();
+		}
+		throw new Exception( "Cannot get '$name' property." );
+	}
+
+	/**
+	 * Backwards compatibility logic
+	 *
+	 * @param string $name
+	 * @param mixed $value
+	 */
+	function __set( $name, $value ) {
+		if ( $name === 'ok' ) {
+			$this->sv->setOK( $value );
+		} elseif ( !property_exists( $this, $name ) ) {
+			// Caller is using undeclared ad-hoc properties
+			$this->$name = $value;
+		} else {
+			throw new Exception( "Cannot set '$name' property." );
+		}
+	}
+
+	/**
+	 * @return string
+	 */
+	public function __toString() {
+		return $this->sv->__toString();
+	}
+
+	/**
+	 * Don't save the callback when serializing, because Closures can't be
+	 * serialized and we're going to clear it in __wakeup anyway.
+	 */
+	function __sleep() {
+		$keys = array_keys( get_object_vars( $this ) );
+		return array_diff( $keys, array( 'cleanCallback' ) );
+	}
+
+	/**
+	 * Sanitize the callback parameter on wakeup, to avoid arbitrary execution.
+	 */
+	function __wakeup() {
+		$this->cleanCallback = false;
 	}
 }

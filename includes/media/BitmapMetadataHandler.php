@@ -21,6 +21,8 @@
  * @ingroup Media
  */
 
+use MediaWiki\Logger\LoggerFactory;
+
 /**
  * Class to deal with reconciling and extracting metadata from bitmap images.
  * This is meant to comply with http://www.metadataworkinggroup.org/pdf/mwg_guidance.pdf
@@ -28,12 +30,14 @@
  * This sort of acts as an intermediary between MediaHandler::getMetadata
  * and the various metadata extractors.
  *
- * @todo other image formats.
+ * @todo Other image formats.
  * @ingroup Media
  */
 class BitmapMetadataHandler {
-
+	/** @var array */
 	private $metadata = array();
+
+	/** @var array Metadata priority */
 	private $metaPriority = array(
 		20 => array( 'other' ),
 		40 => array( 'native' ),
@@ -44,6 +48,8 @@ class BitmapMetadataHandler {
 		100 => array( 'iptc-bad-hash' ),
 		120 => array( 'exif' ),
 	);
+
+	/** @var string */
 	private $iptcType = 'iptc-no-hash';
 
 	/**
@@ -57,7 +63,7 @@ class BitmapMetadataHandler {
 	private function doApp13( $app13 ) {
 		try {
 			$this->iptcType = JpegMetadataExtractor::doPSIR( $app13 );
-		} catch ( MWException $e ) {
+		} catch ( Exception $e ) {
 			// Error reading the iptc hash information.
 			// This probably means the App13 segment is something other than what we expect.
 			// However, still try to read it, and treat it as if the hash didn't exist.
@@ -76,8 +82,8 @@ class BitmapMetadataHandler {
 	 *
 	 * Parameters are passed to the Exif class.
 	 *
-	 * @param $filename string
-	 * @param $byteOrder string
+	 * @param string $filename
+	 * @param string $byteOrder
 	 */
 	function getExif( $filename, $byteOrder ) {
 		global $wgShowEXIF;
@@ -89,11 +95,12 @@ class BitmapMetadataHandler {
 			}
 		}
 	}
+
 	/** Add misc metadata. Warning: atm if the metadata category
 	 * doesn't have a priority, it will be silently discarded.
 	 *
-	 * @param array $metaArray array of metadata values
-	 * @param string $type type. defaults to other. if two things have the same type they're merged
+	 * @param array $metaArray Array of metadata values
+	 * @param string $type Type. defaults to other. if two things have the same type they're merged
 	 */
 	function addMetadata( $metaArray, $type = 'other' ) {
 		if ( isset( $this->metadata[$type] ) ) {
@@ -111,12 +118,12 @@ class BitmapMetadataHandler {
 	 *
 	 * This function is generally called by the media handlers' getMetadata()
 	 *
-	 * @return Array metadata array
+	 * @return array Metadata array
 	 */
 	function getMetadataArray() {
 		// this seems a bit ugly... This is all so its merged in right order
 		// based on the MWG recomendation.
-		$temp = Array();
+		$temp = array();
 		krsort( $this->metaPriority );
 		foreach ( $this->metaPriority as $pri ) {
 			foreach ( $pri as $type ) {
@@ -138,22 +145,23 @@ class BitmapMetadataHandler {
 				}
 			}
 		}
+
 		return $temp;
 	}
 
 	/** Main entry point for jpeg's.
 	 *
-	 * @param string $filename filename (with full path)
-	 * @return array metadata result array.
-	 * @throws MWException on invalid file.
+	 * @param string $filename Filename (with full path)
+	 * @return array Metadata result array.
+	 * @throws MWException On invalid file.
 	 */
 	static function Jpeg( $filename ) {
-		$showXMP = function_exists( 'xml_parser_create_ns' );
+		$showXMP = XMPReader::isSupported();
 		$meta = new self();
 
 		$seg = JpegMetadataExtractor::segmentSplitter( $filename );
 		if ( isset( $seg['COM'] ) && isset( $seg['COM'][0] ) ) {
-			$meta->addMetadata( Array( 'JPEGFileComment' => $seg['COM'] ), 'native' );
+			$meta->addMetadata( array( 'JPEGFileComment' => $seg['COM'] ), 'native' );
 		}
 		if ( isset( $seg['PSIR'] ) && count( $seg['PSIR'] ) > 0 ) {
 			foreach ( $seg['PSIR'] as $curPSIRValue ) {
@@ -161,14 +169,13 @@ class BitmapMetadataHandler {
 			}
 		}
 		if ( isset( $seg['XMP'] ) && $showXMP ) {
-			$xmp = new XMPReader();
+			$xmp = new XMPReader( LoggerFactory::getInstance( 'XMP' ) );
 			$xmp->parse( $seg['XMP'] );
 			foreach ( $seg['XMP_ext'] as $xmpExt ) {
 				/* Support for extended xmp in jpeg files
 				 * is not well tested and a bit fragile.
 				 */
 				$xmp->parseExtended( $xmpExt );
-
 			}
 			$res = $xmp->getResults();
 			foreach ( $res as $type => $array ) {
@@ -178,6 +185,7 @@ class BitmapMetadataHandler {
 		if ( isset( $seg['byteOrder'] ) ) {
 			$meta->getExif( $filename, $seg['byteOrder'] );
 		}
+
 		return $meta->getMetadataArray();
 	}
 
@@ -186,16 +194,18 @@ class BitmapMetadataHandler {
 	 * merge the png various tEXt chunks to that
 	 * are interesting, but for now it only does XMP
 	 *
-	 * @param string $filename full path to file
-	 * @return Array Array for storage in img_metadata.
+	 * @param string $filename Full path to file
+	 * @return array Array for storage in img_metadata.
 	 */
 	public static function PNG( $filename ) {
-		$showXMP = function_exists( 'xml_parser_create_ns' );
+		$showXMP = XMPReader::isSupported();
 
 		$meta = new self();
 		$array = PNGMetadataExtractor::getMetadata( $filename );
-		if ( isset( $array['text']['xmp']['x-default'] ) && $array['text']['xmp']['x-default'] !== '' && $showXMP ) {
-			$xmp = new XMPReader();
+		if ( isset( $array['text']['xmp']['x-default'] )
+			&& $array['text']['xmp']['x-default'] !== '' && $showXMP
+		) {
+			$xmp = new XMPReader( LoggerFactory::getInstance( 'XMP' ) );
 			$xmp->parse( $array['text']['xmp']['x-default'] );
 			$xmpRes = $xmp->getResults();
 			foreach ( $xmpRes as $type => $xmpSection ) {
@@ -207,6 +217,7 @@ class BitmapMetadataHandler {
 		unset( $array['text'] );
 		$array['metadata'] = $meta->getMetadataArray();
 		$array['metadata']['_MW_PNG_VERSION'] = PNGMetadataExtractor::VERSION;
+
 		return $array;
 	}
 
@@ -215,8 +226,8 @@ class BitmapMetadataHandler {
 	 * They don't really have native metadata, so just merges together
 	 * XMP and image comment.
 	 *
-	 * @param string $filename full path to file
-	 * @return Array metadata array
+	 * @param string $filename Full path to file
+	 * @return array Metadata array
 	 */
 	public static function GIF( $filename ) {
 
@@ -227,14 +238,13 @@ class BitmapMetadataHandler {
 			$meta->addMetadata( array( 'GIFFileComment' => $baseArray['comment'] ), 'native' );
 		}
 
-		if ( $baseArray['xmp'] !== '' && function_exists( 'xml_parser_create_ns' ) ) {
-			$xmp = new XMPReader();
+		if ( $baseArray['xmp'] !== '' && XMPReader::isSupported() ) {
+			$xmp = new XMPReader( LoggerFactory::getInstance( 'XMP' ) );
 			$xmp->parse( $baseArray['xmp'] );
 			$xmpRes = $xmp->getResults();
 			foreach ( $xmpRes as $type => $xmpSection ) {
 				$meta->addMetadata( $xmpSection, $type );
 			}
-
 		}
 
 		unset( $baseArray['comment'] );
@@ -242,6 +252,7 @@ class BitmapMetadataHandler {
 
 		$baseArray['metadata'] = $meta->getMetadataArray();
 		$baseArray['metadata']['_MW_GIF_VERSION'] = GIFMetadataExtractor::VERSION;
+
 		return $baseArray;
 	}
 
@@ -251,13 +262,12 @@ class BitmapMetadataHandler {
 	 * but needs some further processing because PHP's exif support
 	 * is stupid...)
 	 *
-	 * @todo Add XMP support, so this function actually makes
-	 * sense to put here.
+	 * @todo Add XMP support, so this function actually makes sense to put here.
 	 *
 	 * The various exceptions this throws are caught later.
-	 * @param $filename String
+	 * @param string $filename
 	 * @throws MWException
-	 * @return Array The metadata.
+	 * @return array The metadata.
 	 */
 	public static function Tiff( $filename ) {
 		if ( file_exists( $filename ) ) {
@@ -269,6 +279,7 @@ class BitmapMetadataHandler {
 			$data = $exif->getFilteredData();
 			if ( $data ) {
 				$data['MEDIAWIKI_EXIF_VERSION'] = Exif::version();
+
 				return $data;
 			} else {
 				throw new MWException( "Could not extract data from tiff file $filename" );
@@ -277,12 +288,13 @@ class BitmapMetadataHandler {
 			throw new MWException( "File doesn't exist - $filename" );
 		}
 	}
+
 	/**
 	 * Read the first 2 bytes of a tiff file to figure out
 	 * Little Endian or Big Endian. Needed for exif stuff.
 	 *
 	 * @param string $filename The filename
-	 * @return String 'BE' or 'LE' or false
+	 * @return string 'BE' or 'LE' or false
 	 */
 	static function getTiffByteOrder( $filename ) {
 		$fh = fopen( $filename, 'rb' );

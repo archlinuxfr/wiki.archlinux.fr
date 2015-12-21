@@ -31,7 +31,6 @@
  * @ingroup API
  */
 class ApiOptions extends ApiBase {
-
 	/**
 	 * Changes preferences of the current user.
 	 */
@@ -51,6 +50,14 @@ class ApiOptions extends ApiBase {
 
 		if ( isset( $params['optionvalue'] ) && !isset( $params['optionname'] ) ) {
 			$this->dieUsageMsg( array( 'missingparam', 'optionname' ) );
+		}
+
+		// Load the user from the master to reduce CAS errors on double post (T95839)
+		if ( wfGetLB()->getServerCount() > 1 ) {
+			$user = User::newFromId( $user->getId() );
+			if ( !$user->loadFromId( User::READ_LATEST ) ) {
+				$this->dieUsage( 'Anonymous users cannot change preferences', 'notloggedin' );
+			}
 		}
 
 		if ( $params['reset'] ) {
@@ -76,11 +83,17 @@ class ApiOptions extends ApiBase {
 		$prefs = Preferences::getPreferences( $user, $this->getContext() );
 		$prefsKinds = $user->getOptionKinds( $this->getContext(), $changes );
 
+		$htmlForm = null;
 		foreach ( $changes as $key => $value ) {
 			switch ( $prefsKinds[$key] ) {
 				case 'registered':
 					// Regular option.
+					if ( $htmlForm === null ) {
+						// We need a dummy HTMLForm for the validate callback...
+						$htmlForm = new HTMLForm( array(), $this );
+					}
 					$field = HTMLForm::loadInputFromParameters( $key, $prefs[$key] );
+					$field->mParent = $htmlForm;
 					$validation = $field->validate( $value, $user->getOptions() );
 					break;
 				case 'registered-multiselect':
@@ -98,6 +111,9 @@ class ApiOptions extends ApiBase {
 					} else {
 						$validation = true;
 					}
+					break;
+				case 'special':
+					$validation = "cannot be set by this module";
 					break;
 				case 'unused':
 				default:
@@ -133,10 +149,6 @@ class ApiOptions extends ApiBase {
 		$optionKinds[] = 'all';
 
 		return array(
-			'token' => array(
-				ApiBase::PARAM_TYPE => 'string',
-				ApiBase::PARAM_REQUIRED => true
-			),
 			'reset' => false,
 			'resetkinds' => array(
 				ApiBase::PARAM_TYPE => $optionKinds,
@@ -155,61 +167,23 @@ class ApiOptions extends ApiBase {
 		);
 	}
 
-	public function getResultProperties() {
-		return array(
-			'' => array(
-				'*' => array(
-					ApiBase::PROP_TYPE => array(
-						'success'
-					)
-				)
-			)
-		);
-	}
-
-	public function getParamDescription() {
-		return array(
-			'token' => 'An options token previously obtained through the action=tokens',
-			'reset' => 'Resets preferences to the site defaults',
-			'resetkinds' => 'List of types of options to reset when the "reset" option is set',
-			'change' => 'List of changes, formatted name=value (e.g. skin=vector), value cannot contain pipe characters. If no value is given (not even an equals sign), e.g., optionname|otheroption|..., the option will be reset to its default value',
-			'optionname' => 'A name of a option which should have an optionvalue set',
-			'optionvalue' => 'A value of the option specified by the optionname, can contain pipe characters',
-		);
-	}
-
-	public function getDescription() {
-		return array(
-			'Change preferences of the current user',
-			'Only options which are registered in core or in one of installed extensions,',
-			'or as options with keys prefixed with \'userjs-\' (intended to be used by user scripts), can be set.'
-		);
-	}
-
-	public function getPossibleErrors() {
-		return array_merge( parent::getPossibleErrors(), array(
-			array( 'code' => 'notloggedin', 'info' => 'Anonymous users cannot change preferences' ),
-			array( 'code' => 'nochanges', 'info' => 'No changes were requested' ),
-		) );
-	}
-
 	public function needsToken() {
-		return true;
-	}
-
-	public function getTokenSalt() {
-		return '';
+		return 'csrf';
 	}
 
 	public function getHelpUrls() {
 		return 'https://www.mediawiki.org/wiki/API:Options';
 	}
 
-	public function getExamples() {
+	protected function getExamplesMessages() {
 		return array(
-			'api.php?action=options&reset=&token=123ABC',
-			'api.php?action=options&change=skin=vector|hideminor=1&token=123ABC',
-			'api.php?action=options&reset=&change=skin=monobook&optionname=nickname&optionvalue=[[User:Beau|Beau]]%20([[User_talk:Beau|talk]])&token=123ABC',
+			'action=options&reset=&token=123ABC'
+				=> 'apihelp-options-example-reset',
+			'action=options&change=skin=vector|hideminor=1&token=123ABC'
+				=> 'apihelp-options-example-change',
+			'action=options&reset=&change=skin=monobook&optionname=nickname&' .
+				'optionvalue=[[User:Beau|Beau]]%20([[User_talk:Beau|talk]])&token=123ABC'
+				=> 'apihelp-options-example-complex',
 		);
 	}
 }

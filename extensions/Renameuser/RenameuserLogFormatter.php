@@ -1,8 +1,8 @@
 <?php
+
 /**
  * LogFormatter for renameuser/renameuser logs
  */
-
 class RenameuserLogFormatter extends LogFormatter {
 
 	protected function getMessageParameters() {
@@ -52,6 +52,7 @@ class RenameuserLogFormatter extends LogFormatter {
 				$link = '[[' . $title->getPrefixedText() . ']]';
 			}
 		}
+
 		return $link;
 	}
 
@@ -67,5 +68,26 @@ class RenameuserLogFormatter extends LogFormatter {
 		}
 
 		return $key;
+	}
+
+	public function getPreloadTitles() {
+		$params = $this->extractParameters();
+		if ( !isset( $params[3] ) ) {
+			// Very old log format, everything in comment - legaciest
+			return array();
+		}
+		if ( !isset( $params[4] ) ) {
+			// Old log format - legacier
+			$newUserName = $params[3];
+		} else {
+			$newUserName = $params[4];
+		}
+
+		$title = Title::makeTitleSafe( NS_USER, $newUserName );
+		if ( $title ) {
+			return array( $title );
+		}
+
+		return array();
 	}
 }

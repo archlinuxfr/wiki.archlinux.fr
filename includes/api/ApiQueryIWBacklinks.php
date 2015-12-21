@@ -31,7 +31,7 @@
  */
 class ApiQueryIWBacklinks extends ApiQueryGeneratorBase {
 
-	public function __construct( $query, $moduleName ) {
+	public function __construct( ApiQuery $query, $moduleName ) {
 		parent::__construct( $query, $moduleName, 'iwbl' );
 	}
 
@@ -44,7 +44,7 @@ class ApiQueryIWBacklinks extends ApiQueryGeneratorBase {
 	}
 
 	/**
-	 * @param $resultPageSet ApiPageSet
+	 * @param ApiPageSet $resultPageSet
 	 * @return void
 	 */
 	public function run( $resultPageSet = null ) {
@@ -92,14 +92,14 @@ class ApiQueryIWBacklinks extends ApiQueryGeneratorBase {
 				$this->addOption( 'ORDER BY', array(
 					'iwl_title' . $sort,
 					'iwl_from' . $sort
-				));
+				) );
 			}
 		} else {
 			$this->addOption( 'ORDER BY', array(
 				'iwl_prefix' . $sort,
 				'iwl_title' . $sort,
 				'iwl_from' . $sort
-			));
+			) );
 		}
 
 		$this->addOption( 'LIMIT', $params['limit'] + 1 );
@@ -111,10 +111,15 @@ class ApiQueryIWBacklinks extends ApiQueryGeneratorBase {
 		$count = 0;
 		$result = $this->getResult();
 		foreach ( $res as $row ) {
-			if ( ++ $count > $params['limit'] ) {
-				// We've reached the one extra which shows that there are additional pages to be had. Stop here...
-				// Continue string preserved in case the redirect query doesn't pass the limit
-				$this->setContinueEnumParameter( 'continue', "{$row->iwl_prefix}|{$row->iwl_title}|{$row->iwl_from}" );
+			if ( ++$count > $params['limit'] ) {
+				// We've reached the one extra which shows that there are
+				// additional pages to be had. Stop here...
+				// Continue string preserved in case the redirect query doesn't
+				// pass the limit
+				$this->setContinueEnumParameter(
+					'continue',
+					"{$row->iwl_prefix}|{$row->iwl_title}|{$row->iwl_from}"
+				);
 				break;
 			}
 
@@ -127,7 +132,7 @@ class ApiQueryIWBacklinks extends ApiQueryGeneratorBase {
 				ApiQueryBase::addTitleInfo( $entry, $title );
 
 				if ( $row->page_is_redirect ) {
-					$entry['redirect'] = '';
+					$entry['redirect'] = true;
 				}
 
 				if ( $iwprefix ) {
@@ -140,14 +145,17 @@ class ApiQueryIWBacklinks extends ApiQueryGeneratorBase {
 
 				$fit = $result->addValue( array( 'query', $this->getModuleName() ), null, $entry );
 				if ( !$fit ) {
-					$this->setContinueEnumParameter( 'continue', "{$row->iwl_prefix}|{$row->iwl_title}|{$row->iwl_from}" );
+					$this->setContinueEnumParameter(
+						'continue',
+						"{$row->iwl_prefix}|{$row->iwl_title}|{$row->iwl_from}"
+					);
 					break;
 				}
 			}
 		}
 
 		if ( is_null( $resultPageSet ) ) {
-			$result->setIndexedTagName_internal( array( 'query', $this->getModuleName() ), 'iw' );
+			$result->addIndexedTagName( array( 'query', $this->getModuleName() ), 'iw' );
 		} else {
 			$resultPageSet->populateFromTitles( $pages );
 		}
@@ -161,7 +169,9 @@ class ApiQueryIWBacklinks extends ApiQueryGeneratorBase {
 		return array(
 			'prefix' => null,
 			'title' => null,
-			'continue' => null,
+			'continue' => array(
+				ApiBase::PARAM_HELP_MSG => 'api-help-param-continue',
+			),
 			'limit' => array(
 				ApiBase::PARAM_DFLT => 10,
 				ApiBase::PARAM_TYPE => 'limit',
@@ -176,6 +186,7 @@ class ApiQueryIWBacklinks extends ApiQueryGeneratorBase {
 					'iwprefix',
 					'iwtitle',
 				),
+				ApiBase::PARAM_HELP_MSG_PER_VALUE => array(),
 			),
 			'dir' => array(
 				ApiBase::PARAM_DFLT => 'ascending',
@@ -187,56 +198,12 @@ class ApiQueryIWBacklinks extends ApiQueryGeneratorBase {
 		);
 	}
 
-	public function getParamDescription() {
+	protected function getExamplesMessages() {
 		return array(
-			'prefix' => 'Prefix for the interwiki',
-			'title' => "Interwiki link to search for. Must be used with {$this->getModulePrefix()}prefix",
-			'continue' => 'When more results are available, use this to continue',
-			'prop' => array(
-				'Which properties to get',
-				' iwprefix       - Adds the prefix of the interwiki',
-				' iwtitle        - Adds the title of the interwiki',
-			),
-			'limit' => 'How many total pages to return',
-			'dir' => 'The direction in which to list',
-		);
-	}
-
-	public function getResultProperties() {
-		return array(
-			'' => array(
-				'pageid' => 'integer',
-				'ns' => 'namespace',
-				'title' => 'string',
-				'redirect' => 'boolean'
-			),
-			'iwprefix' => array(
-				'iwprefix' => 'string'
-			),
-			'iwtitle' => array(
-				'iwtitle' => 'string'
-			)
-		);
-	}
-
-	public function getDescription() {
-		return array( 'Find all pages that link to the given interwiki link.',
-			'Can be used to find all links with a prefix, or',
-			'all links to a title (with a given prefix).',
-			'Using neither parameter is effectively "All IW Links"',
-		);
-	}
-
-	public function getPossibleErrors() {
-		return array_merge( parent::getPossibleErrors(), array(
-			array( 'missingparam', 'prefix' ),
-		) );
-	}
-
-	public function getExamples() {
-		return array(
-			'api.php?action=query&list=iwbacklinks&iwbltitle=Test&iwblprefix=wikibooks',
-			'api.php?action=query&generator=iwbacklinks&giwbltitle=Test&giwblprefix=wikibooks&prop=info'
+			'action=query&list=iwbacklinks&iwbltitle=Test&iwblprefix=wikibooks'
+				=> 'apihelp-query+iwbacklinks-example-simple',
+			'action=query&generator=iwbacklinks&giwbltitle=Test&giwblprefix=wikibooks&prop=info'
+				=> 'apihelp-query+iwbacklinks-example-generator',
 		);
 	}
 

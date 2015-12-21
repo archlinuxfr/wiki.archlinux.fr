@@ -29,36 +29,43 @@
  */
 class ApiQueryFileRepoInfo extends ApiQueryBase {
 
-	public function __construct( $query, $moduleName ) {
+	public function __construct( ApiQuery $query, $moduleName ) {
 		parent::__construct( $query, $moduleName, 'fri' );
 	}
 
 	protected function getInitialisedRepoGroup() {
 		$repoGroup = RepoGroup::singleton();
-
-		if ( !$repoGroup->reposInitialised ) {
-			$repoGroup->initialiseRepos();
-		}
+		$repoGroup->initialiseRepos();
 
 		return $repoGroup;
 	}
 
 	public function execute() {
+		$conf = $this->getConfig();
+
 		$params = $this->extractRequestParams();
 		$props = array_flip( $params['prop'] );
 
 		$repos = array();
 
 		$repoGroup = $this->getInitialisedRepoGroup();
+		$foreignTargets = $conf->get( 'ForeignUploadTargets' );
 
-		$repoGroup->forEachForeignRepo( function ( $repo ) use ( &$repos, $props ) {
-			$repos[] = array_intersect_key( $repo->getInfo(), $props );
+		$repoGroup->forEachForeignRepo( function ( $repo ) use ( &$repos, $props, $foreignTargets ) {
+			$repoProps = $repo->getInfo();
+			$repoProps['canUpload'] = in_array( $repoProps['name'], $foreignTargets );
+
+			$repos[] = array_intersect_key( $repoProps, $props );
 		} );
 
-		$repos[] = array_intersect_key( $repoGroup->localRepo->getInfo(), $props );
+		$localInfo = $repoGroup->getLocalRepo()->getInfo();
+		$localInfo['canUpload'] = $conf->get( 'EnableUploads' );
+		$repos[] = array_intersect_key( $localInfo, $props );
 
 		$result = $this->getResult();
-		$result->setIndexedTagName( $repos, 'repo' );
+		ApiResult::setIndexedTagName( $repos, 'repo' );
+		ApiResult::setArrayTypeRecursive( $repos, 'assoc' );
+		ApiResult::setArrayType( $repos, 'array' );
 		$result->addValue( array( 'query' ), 'repos', $repos );
 	}
 
@@ -86,30 +93,24 @@ class ApiQueryFileRepoInfo extends ApiQueryBase {
 			$props = array_merge( $props, array_keys( $repo->getInfo() ) );
 		} );
 
-		return array_values( array_unique( array_merge( $props, array_keys( $repoGroup->localRepo->getInfo() ) ) ) );
+		$propValues = array_values( array_unique( array_merge(
+			$props,
+			array_keys( $repoGroup->getLocalRepo()->getInfo() )
+		) ) );
+
+		$propValues[] = 'canUpload';
+
+		return $propValues;
 	}
 
-	public function getParamDescription() {
-		$p = $this->getModulePrefix();
+	protected function getExamplesMessages() {
 		return array(
-			'prop' => array(
-				'Which repository properties to get (there may be more available on some wikis):',
-				' apiurl      - URL to the repository API - helpful for getting image info from the host.',
-				' name        - The key of the repository - used in e.g. $wgForeignFileRepos and imageinfo return values.',
-				' displayname - The human-readable name of the repository wiki.',
-				' rooturl     - Root URL for image paths.',
-				' local       - Whether that repository is the local one or not.',
-			),
+			'action=query&meta=filerepoinfo&friprop=apiurl|name|displayname'
+				=> 'apihelp-query+filerepoinfo-example-simple',
 		);
 	}
 
-	public function getDescription() {
-		return 'Return meta information about image repositories configured on the wiki.';
-	}
-
-	public function getExamples() {
-		return array(
-			'api.php?action=query&meta=filerepoinfo&friprop=apiurl|name|displayname',
-		);
+	public function getHelpUrls() {
+		return 'https://www.mediawiki.org/wiki/API:Filerepoinfo';
 	}
 }

@@ -3,7 +3,7 @@
  * Script that postprocesses XML dumps from dumpBackup.php to add page text
  *
  * Copyright (C) 2005 Brion Vibber <brion@pobox.com>
- * http://www.mediawiki.org/
+ * https://www.mediawiki.org/
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,7 +28,6 @@ $originalDir = getcwd();
 
 require_once __DIR__ . '/commandLine.inc';
 require_once __DIR__ . '/backupTextPass.inc';
-
 
 $dumper = new TextPassDumper( $argv );
 
@@ -60,7 +59,9 @@ Options:
   --server=h  Force reading from MySQL server h
   --current	  Base ETA on number of pages in database instead of all revisions
   --spawn	  Spawn a subprocess for loading text records
+  --buffersize=<size> Buffer size in bytes to use for reading the stub.
+              (Default: 512KB, Minimum: 4KB)
   --help      Display this help message
 ENDS
-);
+	);
 }

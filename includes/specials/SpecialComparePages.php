@@ -43,17 +43,19 @@ class SpecialComparePages extends SpecialPage {
 	/**
 	 * Show a form for filtering namespace and username
 	 *
-	 * @param $par String
-	 * @return String
+	 * @param string $par
+	 * @return string
 	 */
 	public function execute( $par ) {
 		$this->setHeaders();
 		$this->outputHeader();
 
+		# Form (.mw-searchInput enables suggestions)
 		$form = new HTMLForm( array(
 			'Page1' => array(
 				'type' => 'text',
 				'name' => 'page1',
+				'cssclass' => 'mw-searchInput',
 				'label-message' => 'compare-page1',
 				'size' => '40',
 				'section' => 'page1',
@@ -70,6 +72,7 @@ class SpecialComparePages extends SpecialPage {
 			'Page2' => array(
 				'type' => 'text',
 				'name' => 'page2',
+				'cssclass' => 'mw-searchInput',
 				'label-message' => 'compare-page2',
 				'size' => '40',
 				'section' => 'page2',

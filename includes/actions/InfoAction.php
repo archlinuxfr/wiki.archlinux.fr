@@ -33,7 +33,7 @@ class InfoAction extends FormlessAction {
 	/**
 	 * Returns the name of the action this object responds to.
 	 *
-	 * @return string lowercase
+	 * @return string Lowercase name
 	 */
 	public function getName() {
 		return 'info';
@@ -62,14 +62,18 @@ class InfoAction extends FormlessAction {
 	 *
 	 * @since 1.22
 	 * @param Title $title Title to clear cache for
+	 * @param int|null $revid Revision id to clear
 	 */
-	public static function invalidateCache( Title $title ) {
-		global $wgMemc;
-		// Clear page info.
-		$revision = WikiPage::factory( $title )->getRevision();
-		if ( $revision !== null ) {
-			$key = wfMemcKey( 'infoaction', sha1( $title->getPrefixedText() ), $revision->getId() );
-			$wgMemc->delete( $key );
+	public static function invalidateCache( Title $title, $revid = null ) {
+		$cache = ObjectCache::getMainWANInstance();
+
+		if ( !$revid ) {
+			$revision = Revision::newFromTitle( $title, 0, Revision::READ_LATEST );
+			$revid = $revision ? $revision->getId() : null;
+		}
+		if ( $revid !== null ) {
+			$key = wfMemcKey( 'infoaction', sha1( $title->getPrefixedText() ), $revid );
+			$cache->delete( $key );
 		}
 	}
 
@@ -114,7 +118,7 @@ class InfoAction extends FormlessAction {
 		$pageInfo = $this->pageInfo();
 
 		// Allow extensions to add additional information
-		wfRunHooks( 'InfoAction', array( $this->getContext(), &$pageInfo ) );
+		Hooks::run( 'InfoAction', array( $this->getContext(), &$pageInfo ) );
 
 		// Render page information
 		foreach ( $pageInfo as $header => $infoTable ) {
@@ -153,6 +157,7 @@ class InfoAction extends FormlessAction {
 	 */
 	protected function makeHeader( $header ) {
 		$spanAttribs = array( 'class' => 'mw-headline', 'id' => Sanitizer::escapeId( $header ) );
+
 		return Html::rawElement( 'h2', array(), Html::element( 'span', $spanAttribs, $header ) );
 	}
 
@@ -192,24 +197,25 @@ class InfoAction extends FormlessAction {
 	 * @return array
 	 */
 	protected function pageInfo() {
-		global $wgContLang, $wgRCMaxAge, $wgMemc,
-			$wgUnwatchedPageThreshold, $wgPageInfoTransclusionLimit;
+		global $wgContLang;
 
 		$user = $this->getUser();
 		$lang = $this->getLanguage();
 		$title = $this->getTitle();
 		$id = $title->getArticleID();
+		$config = $this->context->getConfig();
 
+		$cache = ObjectCache::getMainWANInstance();
 		$memcKey = wfMemcKey( 'infoaction',
 			sha1( $title->getPrefixedText() ), $this->page->getLatest() );
-		$pageCounts = $wgMemc->get( $memcKey );
+		$pageCounts = $cache->get( $memcKey );
 		$version = isset( $pageCounts['cacheversion'] ) ? $pageCounts['cacheversion'] : false;
 		if ( $pageCounts === false || $version !== self::CACHE_VERSION ) {
 			// Get page information that would be too "expensive" to retrieve by normal means
-			$pageCounts = self::pageCounts( $title );
+			$pageCounts = $this->pageCounts( $title );
 			$pageCounts['cacheversion'] = self::CACHE_VERSION;
 
-			$wgMemc->set( $memcKey, $pageCounts );
+			$cache->set( $memcKey, $pageCounts );
 		}
 
 		// Get page properties
@@ -232,7 +238,7 @@ class InfoAction extends FormlessAction {
 
 		// Display title
 		$displayTitle = $title->getPrefixedText();
-		if ( !empty( $pageProperties['displaytitle'] ) ) {
+		if ( isset( $pageProperties['displaytitle'] ) ) {
 			$displayTitle = $pageProperties['displaytitle'];
 		}
 
@@ -245,19 +251,19 @@ class InfoAction extends FormlessAction {
 			$pageInfo['header-basic'][] = array(
 				$this->msg( 'pageinfo-redirectsto' ),
 				Linker::link( $this->page->getRedirectTarget() ) .
-				$this->msg( 'word-separator' )->text() .
-				$this->msg( 'parentheses', Linker::link(
+				$this->msg( 'word-separator' )->escaped() .
+				$this->msg( 'parentheses' )->rawParams( Linker::link(
 					$this->page->getRedirectTarget(),
 					$this->msg( 'pageinfo-redirectsto-info' )->escaped(),
 					array(),
 					array( 'action' => 'info' )
-				) )->text()
+				) )->escaped()
 			);
 		}
 
 		// Default sort key
 		$sortKey = $title->getCategorySortkey();
-		if ( !empty( $pageProperties['defaultsort'] ) ) {
+		if ( isset( $pageProperties['defaultsort'] ) ) {
 			$sortKey = $pageProperties['defaultsort'];
 		}
 
@@ -274,14 +280,38 @@ class InfoAction extends FormlessAction {
 
 		// Language in which the page content is (supposed to be) written
 		$pageLang = $title->getPageLanguage()->getCode();
-		$pageInfo['header-basic'][] = array( $this->msg( 'pageinfo-language' ),
+
+		if ( $config->get( 'PageLanguageUseDB' )
+			&& $this->getTitle()->userCan( 'pagelang', $this->getUser() )
+		) {
+			// Link to Special:PageLanguage with pre-filled page title if user has permissions
+			$titleObj = SpecialPage::getTitleFor( 'PageLanguage', $title->getPrefixedText() );
+			$langDisp = Linker::link(
+				$titleObj,
+				$this->msg( 'pageinfo-language' )->escaped()
+			);
+		} else {
+			// Display just the message
+			$langDisp = $this->msg( 'pageinfo-language' )->escaped();
+		}
+
+		$pageInfo['header-basic'][] = array( $langDisp,
 			Language::fetchLanguageName( $pageLang, $lang->getCode() )
-			. ' ' . $this->msg( 'parentheses', $pageLang ) );
+			. ' ' . $this->msg( 'parentheses', $pageLang )->escaped() );
+
+		// Content model of the page
+		$pageInfo['header-basic'][] = array(
+			$this->msg( 'pageinfo-content-model' ),
+			htmlspecialchars( ContentHandler::getLocalizedName( $title->getContentModel() ) )
+		);
 
 		// Search engine status
 		$pOutput = new ParserOutput();
 		if ( isset( $pageProperties['noindex'] ) ) {
 			$pOutput->setIndexPolicy( 'noindex' );
+		}
+		if ( isset( $pageProperties['index'] ) ) {
+			$pOutput->setIndexPolicy( 'index' );
 		}
 
 		// Use robot policy logic
@@ -291,26 +321,39 @@ class InfoAction extends FormlessAction {
 			$this->msg( 'pageinfo-robot-policy' ), $this->msg( "pageinfo-robot-${policy['index']}" )
 		);
 
-		if ( isset( $pageCounts['views'] ) ) {
-			// Number of views
-			$pageInfo['header-basic'][] = array(
-				$this->msg( 'pageinfo-views' ), $lang->formatNum( $pageCounts['views'] )
-			);
-		}
-
+		$unwatchedPageThreshold = $config->get( 'UnwatchedPageThreshold' );
 		if (
 			$user->isAllowed( 'unwatchedpages' ) ||
-			( $wgUnwatchedPageThreshold !== false &&
-			  $pageCounts['watchers'] >= $wgUnwatchedPageThreshold )
+			( $unwatchedPageThreshold !== false &&
+				$pageCounts['watchers'] >= $unwatchedPageThreshold )
 		) {
 			// Number of page watchers
 			$pageInfo['header-basic'][] = array(
-				$this->msg( 'pageinfo-watchers' ), $lang->formatNum( $pageCounts['watchers'] )
+				$this->msg( 'pageinfo-watchers' ),
+				$lang->formatNum( $pageCounts['watchers'] )
 			);
-		} elseif ( $wgUnwatchedPageThreshold !== false ) {
+			if (
+				$config->get( 'ShowUpdatedMarker' ) &&
+				isset( $pageCounts['visitingWatchers'] )
+			) {
+				$minToDisclose = $config->get( 'UnwatchedPageSecret' );
+				if ( $pageCounts['visitingWatchers'] > $minToDisclose ||
+					$user->isAllowed( 'unwatchedpages' ) ) {
+					$pageInfo['header-basic'][] = array(
+						$this->msg( 'pageinfo-visiting-watchers' ),
+						$lang->formatNum( $pageCounts['visitingWatchers'] )
+					);
+				} else {
+					$pageInfo['header-basic'][] = array(
+						$this->msg( 'pageinfo-visiting-watchers' ),
+						$this->msg( 'pageinfo-few-visiting-watchers' )
+					);
+				}
+			}
+		} elseif ( $unwatchedPageThreshold !== false ) {
 			$pageInfo['header-basic'][] = array(
 				$this->msg( 'pageinfo-watchers' ),
-				$this->msg( 'pageinfo-few-watchers' )->numParams( $wgUnwatchedPageThreshold )
+				$this->msg( 'pageinfo-few-watchers' )->numParams( $unwatchedPageThreshold )
 			);
 		}
 
@@ -321,7 +364,11 @@ class InfoAction extends FormlessAction {
 				$whatLinksHere,
 				$this->msg( 'pageinfo-redirects-name' )->escaped(),
 				array(),
-				array( 'hidelinks' => 1, 'hidetrans' => 1 )
+				array(
+					'hidelinks' => 1,
+					'hidetrans' => 1,
+					'hideimages' => $title->getNamespace() == NS_FILE
+				)
 			),
 			$this->msg( 'pageinfo-redirects-value' )
 				->numParams( count( $title->getRedirectsHere() ) )
@@ -350,18 +397,30 @@ class InfoAction extends FormlessAction {
 
 		if ( $title->inNamespace( NS_CATEGORY ) ) {
 			$category = Category::newFromTitle( $title );
+
+			// $allCount is the total number of cat members,
+			// not the count of how many members are normal pages.
+			$allCount = (int)$category->getPageCount();
+			$subcatCount = (int)$category->getSubcatCount();
+			$fileCount = (int)$category->getFileCount();
+			$pagesCount = $allCount - $subcatCount - $fileCount;
+
 			$pageInfo['category-info'] = array(
 				array(
+					$this->msg( 'pageinfo-category-total' ),
+					$lang->formatNum( $allCount )
+				),
+				array(
 					$this->msg( 'pageinfo-category-pages' ),
-					$lang->formatNum( $category->getPageCount() )
+					$lang->formatNum( $pagesCount )
 				),
 				array(
 					$this->msg( 'pageinfo-category-subcats' ),
-					$lang->formatNum( $category->getSubcatCount() )
+					$lang->formatNum( $subcatCount )
 				),
 				array(
 					$this->msg( 'pageinfo-category-files' ),
-					$lang->formatNum( $category->getFileCount() )
+					$lang->formatNum( $fileCount )
 				)
 			);
 		}
@@ -369,7 +428,7 @@ class InfoAction extends FormlessAction {
 		// Page protection
 		$pageInfo['header-restrictions'] = array();
 
-		// Is this page effected by the cascading protection of something which includes it?
+		// Is this page affected by the cascading protection of something which includes it?
 		if ( $title->isCascadeProtected() ) {
 			$cascadingFrom = '';
 			$sources = $title->getCascadeProtectionSources(); // Array deferencing is in PHP 5.4 :(
@@ -411,6 +470,10 @@ class InfoAction extends FormlessAction {
 					$message = $message->escaped();
 				}
 			}
+			$expiry = $title->getRestrictionExpiry( $restrictionType );
+			$formattedexpiry = $this->msg( 'parentheses',
+				$this->getLanguage()->formatExpiry( $expiry ) )->escaped();
+			$message .= $this->msg( 'word-separator' )->escaped() . $formattedexpiry;
 
 			// Messages: restriction-edit, restriction-move, restriction-create,
 			// restriction-upload
@@ -460,7 +523,7 @@ class InfoAction extends FormlessAction {
 				$this->msg( 'pageinfo-firsttime' ),
 				Linker::linkKnown(
 					$title,
-					$lang->userTimeAndDate( $firstRev->getTimestamp(), $user ),
+					htmlspecialchars( $lang->userTimeAndDate( $firstRev->getTimestamp(), $user ) ),
 					array(),
 					array( 'oldid' => $firstRev->getId() )
 				)
@@ -479,7 +542,7 @@ class InfoAction extends FormlessAction {
 				$this->msg( 'pageinfo-lasttime' ),
 				Linker::linkKnown(
 					$title,
-					$lang->userTimeAndDate( $this->page->getTimestamp(), $user ),
+					htmlspecialchars( $lang->userTimeAndDate( $this->page->getTimestamp(), $user ) ),
 					array(),
 					array( 'oldid' => $this->page->getLatest() )
 				)
@@ -498,7 +561,7 @@ class InfoAction extends FormlessAction {
 
 		// Recent number of edits (within past 30 days)
 		$pageInfo['header-edits'][] = array(
-			$this->msg( 'pageinfo-recent-edits', $lang->formatDuration( $wgRCMaxAge ) ),
+			$this->msg( 'pageinfo-recent-edits', $lang->formatDuration( $config->get( 'RCMaxAge' ) ) ),
 			$lang->formatNum( $pageCounts['recent_edits'] )
 		);
 
@@ -532,9 +595,13 @@ class InfoAction extends FormlessAction {
 			$pageCounts['transclusion']['from'] > 0 ||
 			$pageCounts['transclusion']['to'] > 0
 		) {
-			$options = array( 'LIMIT' => $wgPageInfoTransclusionLimit );
+			$options = array( 'LIMIT' => $config->get( 'PageInfoTransclusionLimit' ) );
 			$transcludedTemplates = $title->getTemplateLinksFrom( $options );
-			$transcludedTargets = $title->getTemplateLinksTo( $options );
+			if ( $config->get( 'MiserMode' ) ) {
+				$transcludedTargets = array();
+			} else {
+				$transcludedTargets = $title->getTemplateLinksTo( $options );
+			}
 
 			// Page properties
 			$pageInfo['header-properties'] = array();
@@ -575,7 +642,7 @@ class InfoAction extends FormlessAction {
 				);
 			}
 
-			if ( $pageCounts['transclusion']['to'] > 0 ) {
+			if ( !$config->get( 'MiserMode' ) && $pageCounts['transclusion']['to'] > 0 ) {
 				if ( $pageCounts['transclusion']['to'] > count( $transcludedTargets ) ) {
 					$more = Linker::link(
 						$whatLinksHere,
@@ -608,28 +675,15 @@ class InfoAction extends FormlessAction {
 	 * @param Title $title Title to get counts for
 	 * @return array
 	 */
-	protected static function pageCounts( Title $title ) {
-		global $wgRCMaxAge, $wgDisableCounters;
-
-		wfProfileIn( __METHOD__ );
+	protected function pageCounts( Title $title ) {
 		$id = $title->getArticleID();
+		$config = $this->context->getConfig();
 
-		$dbr = wfGetDB( DB_SLAVE );
+		$dbrWatchlist = wfGetDB( DB_SLAVE, 'watchlist' );
 		$result = array();
 
-		if ( !$wgDisableCounters ) {
-			// Number of views
-			$views = (int)$dbr->selectField(
-				'page',
-				'page_counter',
-				array( 'page_id' => $id ),
-				__METHOD__
-			);
-			$result['views'] = $views;
-		}
-
 		// Number of page watchers
-		$watchers = (int)$dbr->selectField(
+		$watchers = (int)$dbrWatchlist->selectField(
 			'watchlist',
 			'COUNT(*)',
 			array(
@@ -640,6 +694,27 @@ class InfoAction extends FormlessAction {
 		);
 		$result['watchers'] = $watchers;
 
+		if ( $config->get( 'ShowUpdatedMarker' ) ) {
+			// Threshold: last visited about 26 weeks before latest edit
+			$updated = wfTimestamp( TS_UNIX, $this->page->getTimestamp() );
+			$age = $config->get( 'WatchersMaxAge' );
+			$threshold = $dbrWatchlist->timestamp( $updated - $age );
+			// Number of page watchers who also visited a "recent" edit
+			$visitingWatchers = (int)$dbrWatchlist->selectField(
+				'watchlist',
+				'COUNT(*)',
+				array(
+					'wl_namespace' => $title->getNamespace(),
+					'wl_title' => $title->getDBkey(),
+					'wl_notificationtimestamp >= ' . $dbrWatchlist->addQuotes( $threshold ) .
+					' OR wl_notificationtimestamp IS NULL'
+				),
+				__METHOD__
+			);
+			$result['visitingWatchers'] = $visitingWatchers;
+		}
+
+		$dbr = wfGetDB( DB_SLAVE );
 		// Total number of edits
 		$edits = (int)$dbr->selectField(
 			'revision',
@@ -658,8 +733,8 @@ class InfoAction extends FormlessAction {
 		);
 		$result['authors'] = $authors;
 
-		// "Recent" threshold defined by $wgRCMaxAge
-		$threshold = $dbr->timestamp( time() - $wgRCMaxAge );
+		// "Recent" threshold defined by RCMaxAge setting
+		$threshold = $dbr->timestamp( time() - $config->get( 'RCMaxAge' ) );
 
 		// Recent number of edits
 		$edits = (int)$dbr->selectField(
@@ -713,15 +788,19 @@ class InfoAction extends FormlessAction {
 		}
 
 		// Counts for the number of transclusion links (to/from)
-		$result['transclusion']['to'] = (int)$dbr->selectField(
-			'templatelinks',
-			'COUNT(tl_from)',
-			array(
-				'tl_namespace' => $title->getNamespace(),
-				'tl_title' => $title->getDBkey()
-			),
-			__METHOD__
-		);
+		if ( $config->get( 'MiserMode' ) ) {
+			$result['transclusion']['to'] = 0;
+		} else {
+			$result['transclusion']['to'] = (int)$dbr->selectField(
+				'templatelinks',
+				'COUNT(tl_from)',
+				array(
+					'tl_namespace' => $title->getNamespace(),
+					'tl_title' => $title->getDBkey()
+				),
+				__METHOD__
+			);
+		}
 
 		$result['transclusion']['from'] = (int)$dbr->selectField(
 			'templatelinks',
@@ -730,7 +809,6 @@ class InfoAction extends FormlessAction {
 			__METHOD__
 		);
 
-		wfProfileOut( __METHOD__ );
 		return $result;
 	}
 
@@ -745,25 +823,25 @@ class InfoAction extends FormlessAction {
 
 	/**
 	 * Get a list of contributors of $article
-	 * @return string: html
+	 * @return string Html
 	 */
 	protected function getContributors() {
-		global $wgHiddenPrefs;
-
 		$contributors = $this->page->getContributors();
 		$real_names = array();
 		$user_names = array();
 		$anon_ips = array();
 
 		# Sift for real versus user names
+		/** @var $user User */
 		foreach ( $contributors as $user ) {
 			$page = $user->isAnon()
 				? SpecialPage::getTitleFor( 'Contributions', $user->getName() )
 				: $user->getUserPage();
 
+			$hiddenPrefs = $this->context->getConfig()->get( 'HiddenPrefs' );
 			if ( $user->getID() == 0 ) {
 				$anon_ips[] = Linker::link( $page, htmlspecialchars( $user->getName() ) );
-			} elseif ( !in_array( 'realname', $wgHiddenPrefs ) && $user->getRealName() ) {
+			} elseif ( !in_array( 'realname', $hiddenPrefs ) && $user->getRealName() ) {
 				$real_names[] = Linker::link( $page, htmlspecialchars( $user->getRealName() ) );
 			} else {
 				$user_names[] = Linker::link( $page, htmlspecialchars( $user->getName() ) );
@@ -798,6 +876,7 @@ class InfoAction extends FormlessAction {
 		}
 
 		$count = count( $fulllist );
+
 		# "Based on work by ..."
 		return $count
 			? $this->msg( 'othercontribs' )->rawParams(

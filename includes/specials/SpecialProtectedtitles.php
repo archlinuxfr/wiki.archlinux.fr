@@ -38,11 +38,6 @@ class SpecialProtectedtitles extends SpecialPage {
 		$this->setHeaders();
 		$this->outputHeader();
 
-		// Purge expired entries on one in every 10 queries
-		if ( !mt_rand( 0, 10 ) ) {
-			Title::purgeExpiredRestrictions();
-		}
-
 		$request = $this->getRequest();
 		$type = $request->getVal( $this->IdType );
 		$level = $request->getVal( $this->IdLevel );
@@ -72,18 +67,8 @@ class SpecialProtectedtitles extends SpecialPage {
 	 * @return string
 	 */
 	function formatRow( $row ) {
-		wfProfileIn( __METHOD__ );
-
-		static $infinity = null;
-
-		if ( is_null( $infinity ) ) {
-			$infinity = wfGetDB( DB_SLAVE )->getInfinity();
-		}
-
 		$title = Title::makeTitleSafe( $row->pt_namespace, $row->pt_title );
 		if ( !$title ) {
-			wfProfileOut( __METHOD__ );
-
 			return Html::rawElement(
 				'li',
 				array(),
@@ -107,9 +92,9 @@ class SpecialProtectedtitles extends SpecialPage {
 		$lang = $this->getLanguage();
 		$expiry = strlen( $row->pt_expiry ) ?
 			$lang->formatExpiry( $row->pt_expiry, TS_MW ) :
-			$infinity;
+			'infinity';
 
-		if ( $expiry != $infinity ) {
+		if ( $expiry !== 'infinity' ) {
 			$user = $this->getUser();
 			$description_items[] = $this->msg(
 				'protect-expiring-local',
@@ -119,23 +104,20 @@ class SpecialProtectedtitles extends SpecialPage {
 			)->escaped();
 		}
 
-		wfProfileOut( __METHOD__ );
-
 		// @todo i18n: This should use a comma separator instead of a hard coded comma, right?
 		return '<li>' . $lang->specialList( $link, implode( $description_items, ', ' ) ) . "</li>\n";
 	}
 
 	/**
-	 * @param $namespace Integer:
-	 * @param $type string
-	 * @param $level string
+	 * @param int $namespace
+	 * @param string $type
+	 * @param string $level
 	 * @return string
 	 * @private
 	 */
 	function showOptions( $namespace, $type = 'edit', $level ) {
-		global $wgScript;
-		$action = htmlspecialchars( $wgScript );
-		$title = $this->getTitle();
+		$action = htmlspecialchars( wfScript() );
+		$title = $this->getPageTitle();
 		$special = htmlspecialchars( $title->getPrefixedDBkey() );
 
 		return "<form action=\"$action\" method=\"get\">\n" .
@@ -152,7 +134,7 @@ class SpecialProtectedtitles extends SpecialPage {
 	 * Prepare the namespace filter drop-down; standard namespace
 	 * selector, sans the MediaWiki namespace
 	 *
-	 * @param $namespace Mixed: pre-select namespace
+	 * @param string|null $namespace Pre-select namespace
 	 * @return string
 	 */
 	function getNamespaceMenu( $namespace = null ) {
@@ -175,14 +157,12 @@ class SpecialProtectedtitles extends SpecialPage {
 	 * @private
 	 */
 	function getLevelMenu( $pr_level ) {
-		global $wgRestrictionLevels;
-
 		// Temporary array
 		$m = array( $this->msg( 'restriction-level-all' )->text() => 0 );
 		$options = array();
 
 		// First pass to load the log names
-		foreach ( $wgRestrictionLevels as $type ) {
+		foreach ( $this->getConfig()->get( 'RestrictionLevels' ) as $type ) {
 			if ( $type != '' && $type != '*' ) {
 				// Messages: restriction-level-sysop, restriction-level-autoconfirmed
 				$text = $this->msg( "restriction-level-$type" )->text();
@@ -230,7 +210,6 @@ class ProtectedTitlesPager extends AlphabeticPager {
 	}
 
 	function getStartBody() {
-		wfProfileIn( __METHOD__ );
 		# Do a link batch query
 		$this->mResult->seek( 0 );
 		$lb = new LinkBatch;
@@ -240,7 +219,6 @@ class ProtectedTitlesPager extends AlphabeticPager {
 		}
 
 		$lb->execute();
-		wfProfileOut( __METHOD__ );
 
 		return '';
 	}
@@ -261,7 +239,8 @@ class ProtectedTitlesPager extends AlphabeticPager {
 	 */
 	function getQueryInfo() {
 		$conds = $this->mConds;
-		$conds[] = 'pt_expiry>' . $this->mDb->addQuotes( $this->mDb->timestamp() );
+		$conds[] = 'pt_expiry > ' . $this->mDb->addQuotes( $this->mDb->timestamp() ) .
+			' OR pt_expiry IS NULL';
 		if ( $this->level ) {
 			$conds['pt_create_perm'] = $this->level;
 		}
