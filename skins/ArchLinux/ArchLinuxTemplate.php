@@ -50,6 +50,7 @@ class ArchLinuxTemplate extends BaseTemplate {
 				<p><a id="logo" href="<?php if (isset($wgArchHome)) { echo $wgArchHome; } ?>"></a></p>
 			</div>
 			<div id="archnavbarmenu">
+				<i id="archnavbaropenmenu"></i>
 				<ul id="archnavbarlist">
 					<?php
 					if (isset($wgArchNavBar)) {

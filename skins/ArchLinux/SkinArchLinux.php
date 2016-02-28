@@ -46,6 +46,9 @@ class SkinArchLinux extends SkinTemplate {
 			'skins.archlinux.styles'
 		) );
 
+		$out->addStyle( '//archlinux.fr/commun/archnavbar.css', 'screen' );
+		$out->addStyle( '//archlinux.fr/commun/archfr.css', 'screen' );
+
 		// TODO: Migrate all of these
 		$out->addStyle( $this->stylename . '/IE60Fixes.css', 'screen', 'IE 6' );
 		$out->addStyle( $this->stylename . '/IE70Fixes.css', 'screen', 'IE 7' );
