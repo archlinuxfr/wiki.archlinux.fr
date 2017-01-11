@@ -75,7 +75,7 @@ $wgConfigRegistry = array(
  * MediaWiki version number
  * @since 1.2
  */
-$wgVersion = '1.26.2';
+$wgVersion = '1.26.4';
 
 /**
  * Name of the site. It must be changed in LocalSettings.php
@@ -3091,24 +3091,6 @@ $wgAllowRdfaAttributes = false;
 $wgAllowMicrodataAttributes = false;
 
 /**
- * Should we try to make our HTML output well-formed XML?  If set to false,
- * output will be a few bytes shorter, and the HTML will arguably be more
- * readable.  If set to true, life will be much easier for the authors of
- * screen-scraping bots, and the HTML will arguably be more readable.
- *
- * Setting this to false may omit quotation marks on some attributes, omit
- * slashes from some self-closing tags, omit some ending tags, etc., where
- * permitted by HTML5.  Setting it to true will not guarantee that all pages
- * will be well-formed, although non-well-formed pages should be rare and it's
- * a bug if you find one.  Conversely, setting it to false doesn't mean that
- * all XML-y constructs will be omitted, just that they might be.
- *
- * Because of compatibility with screen-scraping bots, and because it's
- * controversial, this is currently left to true by default.
- */
-$wgWellFormedXml = true;
-
-/**
  * Permit other namespaces in addition to the w3.org default.
  *
  * Use the prefix for the key and the namespace for the value.
@@ -4188,7 +4170,13 @@ $wgDebugTidy = false;
 $wgRawHtml = false;
 
 /**
- * Set a default target for external links, e.g. _blank to pop up a new window
+ * Set a default target for external links, e.g. _blank to pop up a new window.
+ *
+ * This will also set the "noreferrer" and "noopener" link rel to prevent the
+ * attack described at https://mathiasbynens.github.io/rel-noopener/ .
+ * Some older browsers may not support these link attributes, hence
+ * setting $wgExternalLinkTarget to _blank may represent a security risk
+ * to some of your users.
  */
 $wgExternalLinkTarget = false;
 
@@ -4438,9 +4426,9 @@ $wgPasswordConfig = array(
 	),
 	'pbkdf2' => array(
 		'class' => 'Pbkdf2Password',
-		'algo' => 'sha256',
-		'cost' => '10000',
-		'length' => '128',
+		'algo' => 'sha512',
+		'cost' => '30000',
+		'length' => '64',
 	),
 );
 

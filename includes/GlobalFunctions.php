@@ -2812,6 +2812,14 @@ function wfShellExec( $cmd, &$retval = null, $environ = array(),
 	}
 	wfDebug( "wfShellExec: $cmd\n" );
 
+	// Don't try to execute commands that exceed Linux's MAX_ARG_STRLEN.
+	// Other platforms may be more accomodating, but we don't want to be
+	// accomodating, because very long commands probably include user
+	// input. See T129506.
+	if ( strlen( $cmd ) > SHELL_MAX_ARG_STRLEN ) {
+		throw new Exception( __METHOD__ . '(): total length of $cmd must not exceed SHELL_MAX_ARG_STRLEN' );
+	}
+
 	$desc = array(
 		0 => array( 'file', 'php://stdin', 'r' ),
 		1 => array( 'pipe', 'w' ),
@@ -3462,7 +3470,9 @@ function wfResetSessionID() {
 		session_regenerate_id( false );
 	} else {
 		$tmp = $_SESSION;
+		MediaWiki\suppressWarnings(); // hide warnings for unit tests
 		session_destroy();
+		MediaWiki\restoreWarnings();
 		wfSetupSession( MWCryptRand::generateHex( 32 ) );
 		$_SESSION = $tmp;
 	}
