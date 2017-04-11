@@ -77,6 +77,7 @@ $wgResourceLoaderMaxQueryLength = -1;
 $wgGitRepositoryViewers['.+projects\.archlinux\.org/vhosts/wiki\.archlinux\.org\.git(.*)'] = 'https://projects.archlinux.org/vhosts/wiki.archlinux.org.git/commit/?id=%H';
 
 $wgJobRunRate = 0;
+$wgRunJobsAsync = 1;
 
 # Enable subpages in the main namespace (FS#39668)
 $wgNamespacesWithSubpages[NS_MAIN] = true;
@@ -192,6 +193,7 @@ $wgArchNavBar = array(
 			'Forums' => 'https://bbs.archlinux.org/',
 			'Wiki' => 'https://wiki.archlinux.org/',
 			'Bugs' => 'https://bugs.archlinux.org/',
+			'Security' => 'https://security.archlinux.org/',
 			'AUR' => 'https://aur.archlinux.org/',
 			'Download' => 'https://www.archlinux.org/download/'
 		);
@@ -292,6 +294,11 @@ wfLoadExtension( 'ParserFunctions' );
 # Interwiki extension
 wfLoadExtension( 'Interwiki' );
 $wgGroupPermissions['sysop']['interwiki'] = true;
+
+# MobileFrontend extension
+wfLoadExtension( 'MobileFrontend' );
+$wgMFAutodetectMobileView = true;
+$wgMFVaryOnUA = true;
 
 ##
 ## Temporary settings for maintenance

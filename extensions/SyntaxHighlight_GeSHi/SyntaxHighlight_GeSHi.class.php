@@ -48,11 +48,8 @@ class SyntaxHighlight_GeSHi {
 		if ( $wgPygmentizePath === false ) {
 			$wgPygmentizePath = __DIR__ . '/pygments/pygmentize';
 		}
-
-		if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
-			require_once __DIR__ . '/vendor/autoload.php';
-		}
 	}
+
 	/**
 	 * Get the Pygments lexer name for a particular language.
 	 *
@@ -203,7 +200,7 @@ class SyntaxHighlight_GeSHi {
 	 * @return Status Status object, with HTML representing the highlighted
 	 *  code as its value.
 	 */
-	protected static function highlight( $code, $lang = null, $args = array() ) {
+	public static function highlight( $code, $lang = null, $args = array() ) {
 		global $wgPygmentizePath;
 
 		$status = new Status;
@@ -274,7 +271,7 @@ class SyntaxHighlight_GeSHi {
 			$options['nowrap'] = 1;
 		}
 
-		$cache = wfGetMainCache();
+		$cache = ObjectCache::getMainWANInstance();
 		$cacheKey = self::makeCacheKey( $code, $lexer, $options );
 		$output = $cache->get( $cacheKey );
 
@@ -292,7 +289,15 @@ class SyntaxHighlight_GeSHi {
 				->getProcess();
 
 			$process->setInput( $code );
-			$process->run();
+
+			/* Workaround for T151523 (buggy $process->getOutput()).
+				If/when this issue is fixed in HHVM or Symfony,
+				replace this with "$process->run(); $output = $process->getOutput();"
+			*/
+			$output = '';
+			$process->run( function( $type, $capturedOutput ) use ( &$output ) {
+				$output .= $capturedOutput;
+			} );
 
 			if ( !$process->isSuccessful() ) {
 				$status->warning( 'syntaxhighlight-error-pygments-invocation-failure' );
@@ -301,7 +306,6 @@ class SyntaxHighlight_GeSHi {
 				return $status;
 			}
 
-			$output = $process->getOutput();
 			$cache->set( $cacheKey, $output );
 		}
 
@@ -492,6 +496,50 @@ class SyntaxHighlight_GeSHi {
 		return true;
 	}
 
+	/**
+	 * Conditionally register resource loader modules that depends on the
+	 * VisualEditor MediaWiki extension.
+	 *
+	 * @param $resourceLoader
+	 * @return true
+	 */
+	public static function onResourceLoaderRegisterModules( &$resourceLoader ) {
+		if ( ! ExtensionRegistry::getInstance()->isLoaded( 'VisualEditor' ) ) {
+			return;
+		}
+
+		$resourceLoader->register( 'ext.geshi.visualEditor', [
+			'class' => 'ResourceLoaderGeSHiVisualEditorModule',
+			'localBasePath' => __DIR__ . DIRECTORY_SEPARATOR . 'modules',
+			'remoteExtPath' => 'SyntaxHighlight_GeSHi/modules',
+			'scripts' => [
+				've-syntaxhighlight/ve.dm.MWSyntaxHighlightNode.js',
+				've-syntaxhighlight/ve.ce.MWSyntaxHighlightNode.js',
+				've-syntaxhighlight/ve.ui.MWSyntaxHighlightWindow.js',
+				've-syntaxhighlight/ve.ui.MWSyntaxHighlightDialog.js',
+				've-syntaxhighlight/ve.ui.MWSyntaxHighlightDialogTool.js',
+				've-syntaxhighlight/ve.ui.MWSyntaxHighlightInspector.js',
+				've-syntaxhighlight/ve.ui.MWSyntaxHighlightInspectorTool.js',
+			],
+			'styles' => [
+				've-syntaxhighlight/ve.ce.MWSyntaxHighlightNode.css',
+				've-syntaxhighlight/ve.ui.MWSyntaxHighlightDialog.css',
+				've-syntaxhighlight/ve.ui.MWSyntaxHighlightInspector.css',
+			],
+			'dependencies' => [
+				'ext.visualEditor.mwcore',
+			],
+			'messages' => [
+				'syntaxhighlight-visualeditor-mwsyntaxhighlightinspector-code',
+				'syntaxhighlight-visualeditor-mwsyntaxhighlightinspector-language',
+				'syntaxhighlight-visualeditor-mwsyntaxhighlightinspector-none',
+				'syntaxhighlight-visualeditor-mwsyntaxhighlightinspector-showlines',
+				'syntaxhighlight-visualeditor-mwsyntaxhighlightinspector-title',
+			],
+			'targets' => [ 'desktop', 'mobile' ],
+		] );
+	}
+
 	/** Backward-compatibility shim for extensions.  */
 	public static function prepare( $text, $lang ) {
 		wfDeprecated( __METHOD__ );
@@ -500,8 +548,8 @@ class SyntaxHighlight_GeSHi {
 
 	/** Backward-compatibility shim for extensions. */
 	public static function buildHeadItem( $geshi ) {
-			wfDeprecated( __METHOD__ );
-			$geshi->parse_code();
-			return '';
+		wfDeprecated( __METHOD__ );
+		$geshi->parse_code();
+		return '';
 	}
 }
